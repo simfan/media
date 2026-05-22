@@ -1,0 +1,9 @@
+<Solution>
+  <Project Path="../../../../../../Projects/Media/Media/Media.Automations/Media.Automations.csproj" />
+  <Project Path="../../../../../../Projects/Media/Media/Media.Client/Media.Client.csproj" />
+  <Project Path="../../../../../../Projects/Media/Media/Media.Data/Media.Data.csproj" />
+  <Project Path="../../../../../../Projects/Media/Media/Media.Server/Media.Server.csproj" />
+  <Project Path="../../../../../../Projects/Media/Media/Media.Shared/Media.Shared.csproj" />
+  <Project Path="../../../../../../Projects/Media/Media/Media.Tests/Media.Tests.csproj" />
+  <Project Path="../../../../../../Projects/Media/Media/Media/Media.csproj" />
+</Solution>
