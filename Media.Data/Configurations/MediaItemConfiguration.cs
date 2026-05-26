@@ -12,6 +12,9 @@ public class MediaItemConfigutration : IEntityTypeConfiguration<MediaItem>
         builder.ToTable("MediaItems");
 
         //Primary Key
+        builder.HasKey(x => x.Id);
+
+        //Properties
         builder.Property(x => x.Title)
             .IsRequired()
             .HasMaxLength(200);
