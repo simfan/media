@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using Media.Data;
-//using Media.Data.Entities;
+using Media.Data.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 

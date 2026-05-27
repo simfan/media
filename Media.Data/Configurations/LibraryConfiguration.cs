@@ -13,24 +13,24 @@ public class LibraryConfiguration : IEntityTypeConfiguration<Library>
         builder.ToTable("Libraries");
 
         //Primary Key
-        builder.HasKey("Id");
+        builder.HasKey(x => x.Id);
 
         //Properties
-        builder.Property("Name")
+        builder.Property(x => x.Name)
             .IsRequired()
             .HasMaxLength(200);
 
-        builder.Property("Description")
+        builder.Property(x => x.Description)
             .HasMaxLength(500);
 
-        builder.Property("Path")
+        builder.Property(x => x.Path)
             .IsRequired()
             .HasMaxLength(200);
 
-        builder.Property("LibraryType")
+        builder.Property(x => x.LibraryType)
             .IsRequired();
 
-        builder.Property("CreatedDate")
+        builder.Property(x => x.CreatedDate)
             .IsRequired();
 
         //Indexes

@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Media.Data.Entities;
 
 namespace Media.Data.Configurations;
-public class MediaItemConfigutration : IEntityTypeConfiguration<MediaItem> 
+public class MediaItemConfiguration : IEntityTypeConfiguration<MediaItem> 
 {
     public void Configure(EntityTypeBuilder<MediaItem> builder)
     {
@@ -44,12 +44,12 @@ public class MediaItemConfigutration : IEntityTypeConfiguration<MediaItem>
         builder.HasOne(x => x.Library)
             .WithMany(x => x.MediaItems)
             .HasForeignKey(x => x.LibraryId)
-            .OnDelete(DeleteBehaviour.Restrict);
+            .OnDelete(DeleteBehavior.Restrict);
 
         builder.HasMany(x => x.MediaFiles)
             .WithOne(x => x.MediaItem)
             .HasForeignKey(x => x.MediaItemId)
-            .OnDelete(DeleteBehaviour.Cascade);
-
+            .OnDelete(DeleteBehavior.Cascade);
+        
     }
 }

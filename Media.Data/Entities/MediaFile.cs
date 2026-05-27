@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-
-namespace Media.Data
+namespace Media.Data.Entities
 {
     public class MediaFile
     {
@@ -15,6 +14,6 @@ namespace Media.Data
         public string Checksum { get; set; }
         public DateTime CreatedDate { get; set; }
         public DateTime UpdatedDate { get; set; }
-        
+        public MediaItem MediaItem { get; set; }
     }
 }

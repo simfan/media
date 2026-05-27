@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Media.Shared.Enums;
 
-namespace Media.Data
+namespace Media.Data.Entities
 {
     public class MediaItem
     {
@@ -10,10 +11,13 @@ namespace Media.Data
         public string Title { get; set; }
 
         public string Description { get; set; }
-        public string MediaType { get; set; }
+        public MediaTypeValue MediaType { get; set; }
         public DateTime CreatedDate {  get; set; }
         public DateTime UpdatedDate { get; set; }
         public int LibraryId { get; set; }
         public string ThumbnailPath{ get; set; }
+        public List<MediaFile>? MediaFiles { get; set; } 
+        public Library Library { get; set; }
+        
     }
 }
