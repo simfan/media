@@ -1,4 +1,4 @@
-using Media.Data.Contexts;
+using Medias.Data.Contexts;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);

@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using Media.Shared.Enums;
+using Medias.Shared.Enums;
 
-namespace Media.Data.Entities
+namespace Medias.Data.Entities
 {
     public class Library
     {

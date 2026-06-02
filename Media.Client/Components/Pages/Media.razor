@@ -1,6 +1,44 @@
 ﻿@page "/media"
+@using Medias.Shared
+@using Medias.Shared.DTOs
+@inject HttpClient Http
 <h3>Media</h3>
 
+<div>
+    @if (mediaItems == null)
+    {
+        <p>Loading media items...</p>
+    }
+    else
+    {
+        <BSTable>
+            <BSTR>
+                <BSTD>Title</BSTD>
+                <BSTD>Description</BSTD>
+            </BSTR>
+            @foreach (var item in mediaItems)
+            {
+                <BSTR>
+                    <BSTD>@item.Title</BSTD>
+                    <BSTD>@item.Description</BSTD>
+                </BSTR>
+            }
+        </BSTable>
+    }
+</div>
 @code {
-
+    private MediaItemDto[]? mediaItems;
+    private MediaItemDto[]? mediaItems2;
+    protected override async Task OnInitializedAsync()
+    {
+        // Simulate asynchronous loading to demonstrate streaming rendering
+        await Task.Delay(500);
+        mediaItems2 = new[]
+        {
+            new MediaItemDto { Id = 1, Title = "Media Item 1", Description = "Description for Media Item 1" },
+            new MediaItemDto { Id = 2, Title = "Media Item 2", Description = "Description for Media Item 2" },
+            new MediaItemDto { Id = 3, Title = "Media Item 3", Description = "Description for Media Item 3" }
+        };
+        mediaItems = await Http.GetFromJsonAsync<MediaItemDto[]>("api/MediaItem");
+    }
 }

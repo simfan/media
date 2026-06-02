@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Media.Shared
+namespace Medias.Shared
 {
     internal class LibraryDto
     {

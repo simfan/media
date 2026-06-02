@@ -36,6 +36,13 @@ main {
         text-overflow: ellipsis;
     }
 
+div.sidebar ::deep a {
+    color: #f0f;
+    display: block;
+    padding: 0.5rem 1rem;
+    text-decoration: none;
+}
+
 @media (max-width: 640.98px) {
     .top-row {
         justify-content: space-between;

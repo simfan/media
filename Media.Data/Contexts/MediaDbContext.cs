@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using Media.Data;
-using Media.Data.Entities;
+using Medias.Data;
+using Medias.Data.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 
-namespace Media.Data.Contexts
+namespace Medias.Data.Contexts
 {
     public class MediaDbContext : DbContext
     {

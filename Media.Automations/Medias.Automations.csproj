@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Worker">
+﻿<Project Sdk="Microsoft.NET.Sdk.Worker">
 
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
@@ -12,7 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Media.Data\Media.Data.csproj" />
-    <ProjectReference Include="..\Media.Server\Media.Server.csproj" />
+    <ProjectReference Include="..\Media.Data\Medias.Data.csproj" />
+    <ProjectReference Include="..\Media.Server\Medias.Server.csproj" />
   </ItemGroup>
 </Project>

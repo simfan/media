@@ -21,8 +21,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Media.Data\Media.Data.csproj" />
-    <ProjectReference Include="..\Media.Shared\Media.Shared.csproj" />
+    <ProjectReference Include="..\Media.Data\Medias.Data.csproj" />
+    <ProjectReference Include="..\Media.Shared\Medias.Shared.csproj" />
   </ItemGroup>
 
   <ItemGroup>

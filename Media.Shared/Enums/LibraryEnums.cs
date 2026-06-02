@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Media.Shared.Enums
+namespace Medias.Shared.Enums
 {
     public enum LibraryTypeValue
     {

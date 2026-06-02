@@ -8,14 +8,18 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Media.Shared\Media.Shared.csproj" />
+    <ProjectReference Include="..\Media.Shared\Medias.Shared.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="Models\" />
     <Folder Include="Services\" />
     <Folder Include="State\" />
-    <Folder Include="Pages\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="BlazorStrap" Version="5.2.104" />
+    <PackageReference Include="BlazorStrap.V5" Version="5.2.104" />
   </ItemGroup>
 
 </Project>

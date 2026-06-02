@@ -1,15 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using Media.Shared.Enums;
+using Medias.Shared.Enums;
 
-namespace Media.Data.Entities
+namespace Medias.Data.Entities
 {
     public class MediaItem
     {
         public int Id { get; set; }
         public string Title { get; set; }
-
         public string Description { get; set; }
         public MediaTypeValue MediaType { get; set; }
         public DateTime CreatedDate {  get; set; }

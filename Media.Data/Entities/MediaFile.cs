@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-namespace Media.Data.Entities
+namespace Medias.Data.Entities
 {
     public class MediaFile
     {

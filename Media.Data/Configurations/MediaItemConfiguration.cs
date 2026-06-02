@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Media.Data.Entities;
+using Medias.Data.Entities;
 
-namespace Media.Data.Configurations;
+namespace Medias.Data.Configurations;
 public class MediaItemConfiguration : IEntityTypeConfiguration<MediaItem> 
 {
     public void Configure(EntityTypeBuilder<MediaItem> builder)

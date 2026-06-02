@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace Media.Data.Migrations
+namespace Medias.Data.Migrations
 {
     /// <inheritdoc />
     public partial class InitialCommit : Migration
