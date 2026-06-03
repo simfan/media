@@ -1,8 +1,11 @@
-﻿@using Microsoft.AspNetCore.Components;
+﻿@using Blazor.Sonner.Services
+@using Microsoft.AspNetCore.Components;
 @using Medias.Shared.DTOs;
 @using Medias.Shared.Enums;
 @using Medias.Shared.Helpers;
+@using Blazor.Sonner;
 @inject HttpClient Http;
+@inject ToastService Toast;
 
 <BSForm  TValue="MediaItemDto" EditContext="EC" OnValidSubmit="ModifyMediaItem">
     <div>
@@ -66,13 +69,14 @@
             </BSCol>
         </BSRow>
         <BSButton Color="BSColor.Primary" IsSubmit>Save</BSButton>
+        <Blazor.Sonner.Toaster/>
     </div>
 </BSForm>
 @code {
-    [Parameter]
-    public int MediaItemId { get; set; }
-    [Parameter]
-    public UpdateMediaItemDto? MediaItem{ get; set; }
+        [Parameter]
+        public int MediaItemId { get; set; }
+        [Parameter]
+        public UpdateMediaItemDto? MediaItem{ get; set; }
     public CreateMediaItemDto NewMediaItem = new();
 
     private EditContext EC;
@@ -113,6 +117,7 @@
             if(responseValue != null)
             {
                 Console.WriteLine($"Created Media Item with ID: {responseValue.Id}");
+                Toast.Success($"Created Media Item with ID: {responseValue.Id}");
             }
         }
     }

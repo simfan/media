@@ -2,6 +2,7 @@ using System.Net.Http;
 using Microsoft.AspNetCore.Components;
 using Medias.Client.Components;
 using BlazorStrap;
+using Blazor.Sonner.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,6 +11,7 @@ builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 builder.Services.AddBlazorStrap();
 builder.Services.AddControllers();
+builder.Services.AddSonner();
 //builder.Services.AddHttpClient();
 
 //builder.Services.AddScoped(sp => new HttpClient());
