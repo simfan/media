@@ -12,6 +12,14 @@ builder.Services.AddOpenApi();
 builder.Services.AddDbContext<MediaDbContext>(options =>options.UseSqlite(
     builder.Configuration.GetConnectionString("MediaDatabase")));
 
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(policy =>
+        policy.WithOrigins("https://localhost:YOUR_CLIENT_PORT")
+              .AllowAnyHeader()
+              .AllowAnyMethod());
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -21,6 +29,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseCors();
 
 app.UseAuthorization();
 

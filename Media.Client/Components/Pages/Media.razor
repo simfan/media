@@ -11,19 +11,26 @@
     }
     else
     {
-        <BSTable>
-            <BSTR>
-                <BSTD>Title</BSTD>
-                <BSTD>Description</BSTD>
-            </BSTR>
-            @foreach (var item in mediaItems)
-            {
+        @if (mediaItems.Count() > 0)
+        {
+            <BSTable>
                 <BSTR>
-                    <BSTD>@item.Title</BSTD>
-                    <BSTD>@item.Description</BSTD>
+                    <BSTD>Title</BSTD>
+                    <BSTD>Description</BSTD>
                 </BSTR>
-            }
-        </BSTable>
+                @foreach (var item in mediaItems)
+                {
+                    <BSTR>
+                        <BSTD>@item.Title</BSTD>
+                        <BSTD>@item.Description</BSTD>
+                    </BSTR>
+                }
+            </BSTable>
+        }
+        else
+        {
+            <p>No Media Items found. Please add some <a href="/media/create">here</a></p>
+        }
     }
 </div>
 @code {

@@ -11,14 +11,14 @@ namespace Medias.Shared.DTOs
         public string Title { get; set; }
         public string Description { get; set; }
         public MediaTypeValue MediaType { get; set; }
-        public int LibraryId { get; set; }
+        public int? LibraryId { get; set; }
         public string ThumbnailPath { get; set; }
         public DateTime CreatedDate { get; set; }
         public DateTime UpdatedDate { get; set; }
         /*public List<MediaFile>? MediaFiles { get; set; }
         public Library Library { get; set; }*/
 
-
+        
     }
 
     public class CreateMediaItemDto
@@ -26,7 +26,7 @@ namespace Medias.Shared.DTOs
         public string Title { get; set; }
         public string Description { get; set; }
         public MediaTypeValue MediaType { get; set; }
-        public int LibraryId { get; set; }
+        public int? LibraryId { get; set; }
         public string ThumbnailPath { get; set; }
     }
 
@@ -36,7 +36,31 @@ namespace Medias.Shared.DTOs
         public string Title { get; set; }
         public string Description { get; set; }
         public MediaTypeValue MediaType { get; set; }
-        public int LibraryId { get; set; }
+        public int? LibraryId { get; set; }
         public string ThumbnailPath { get; set; }
+
+        public CreateMediaItemDto ToCreateMediaItem()
+        {
+             var newMediaItem = new CreateMediaItemDto()
+            {
+                Title = Title,
+                Description = Description,
+                MediaType = MediaType,
+                LibraryId = LibraryId,
+                ThumbnailPath = ThumbnailPath
+            };
+            return newMediaItem;
+        }
+
+        public UpdateMediaItemDto LoadFromCreate(CreateMediaItemDto createMediaItem, UpdateMediaItemDto existingItem)
+        {
+            existingItem.Title = createMediaItem.Title;
+            existingItem.Description = createMediaItem.Description;
+            existingItem.MediaType = createMediaItem.MediaType;
+            existingItem.LibraryId = createMediaItem.LibraryId;
+            existingItem.ThumbnailPath = createMediaItem.ThumbnailPath;
+            return existingItem;
+        }
+
     }
 }

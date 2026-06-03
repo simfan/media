@@ -15,6 +15,9 @@ builder.Services.AddControllers();
 //builder.Services.AddScoped(sp => new HttpClient());
 
 builder.Services.AddScoped(sp =>
+    new HttpClient { BaseAddress = new Uri("http://localhost:5113") });
+
+/*builder.Services.AddScoped(sp =>
 {
     var navigation = sp.GetRequiredService<NavigationManager>();
 
@@ -22,7 +25,7 @@ builder.Services.AddScoped(sp =>
     {
         BaseAddress = new Uri(navigation.BaseUri)
     };
-});
+});*/
 
 var app = builder.Build();
 

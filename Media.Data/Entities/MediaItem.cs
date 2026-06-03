@@ -13,7 +13,7 @@ namespace Medias.Data.Entities
         public MediaTypeValue MediaType { get; set; }
         public DateTime CreatedDate {  get; set; }
         public DateTime UpdatedDate { get; set; }
-        public int LibraryId { get; set; }
+        public int? LibraryId { get; set; }
         public string ThumbnailPath{ get; set; }
         public List<MediaFile>? MediaFiles { get; set; } 
         public Library Library { get; set; }

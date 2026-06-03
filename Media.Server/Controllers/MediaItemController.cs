@@ -44,7 +44,7 @@ namespace Medias.Server.Controllers
             return mediaItem.ToMediaItemDto();
         }
 
-        [HttpPost("MediaItems")]
+        [HttpPost()]
         public async Task<ActionResult<MediaItemDto>> CreateMediaItem(CreateMediaItemDto createDto)
         {
             var mediaItem = createDto.CreateDtoToMediaItem();

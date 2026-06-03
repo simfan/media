@@ -16,6 +16,7 @@ namespace Medias.Shared.DTOs
         public DateTime CreatedDate { get; set; }
         public DateTime UpdatedDate { get; set; }
         public MediaItemDto MediaItem { get; set; }
+
     }
 
     public class  CreateMediaFileDto

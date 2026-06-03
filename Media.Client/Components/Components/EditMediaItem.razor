@@ -1,0 +1,130 @@
+﻿@using Microsoft.AspNetCore.Components;
+@using Medias.Shared.DTOs;
+@using Medias.Shared.Enums;
+@using Medias.Shared.Helpers;
+@inject HttpClient Http;
+
+<BSForm  TValue="MediaItemDto" EditContext="EC" OnValidSubmit="ModifyMediaItem">
+    <div>
+        <BSRow>
+            <BSCol>
+                @if(MediaItem != null)
+                {
+                    <h1>Edit Media Item</h1>
+                }
+                else
+                {
+                    <h1>Create Media Item</h1>
+                }
+            </BSCol>
+        </BSRow>
+        <BSRow>
+            <BSCol>
+                <div class="@(BS.Form_Floating) mb-1">
+                    <BSInput InputType="InputType.Select" @bind-Value="NewMediaItem.MediaType">
+                        @foreach (var mediaType in Enum.GetValues<MediaTypeValue>())
+                        {
+                            <option value="@mediaType">
+                                @mediaType.GetDisplayName()
+                            </option>
+                        }
+                    </BSInput>
+                    <BSLabel IsFloating="true">Media Type</BSLabel>
+                </div>
+            </BSCol>
+        </BSRow>
+        <BSRow>
+            <BSCol>
+                <div class="@(@BS.Form_Floating) mb-1">
+                <BSInput InputType="InputType.Text" @bind-Value="NewMediaItem.Title"/>
+                <BSLabel IsFloating="true">Title</BSLabel>
+                </div>
+            </BSCol>
+        </BSRow>
+        <BSRow>
+            <BSCol>
+                <div class="@(@BS.Form_Floating) mb-1">
+                    <BSInput InputType="InputType.Text" @bind-Value="NewMediaItem.Description" />
+                    <BSLabel IsFloating="true">Description</BSLabel>
+                </div>
+            </BSCol>
+        </BSRow>
+        <BSRow>
+            <BSCol>
+                <div class="@(@BS.Form_Floating) mb-1">
+                    <BSInput InputType="InputType.Text" @bind-Value="NewMediaItem.ThumbnailPath" />
+                    <BSLabel IsFloating="true">Location</BSLabel>
+                </div>
+            </BSCol>
+        </BSRow>
+        <BSRow>
+            <BSCol>
+                <div class="@(@BS.Form_Floating) mb-1">
+                    <BSInput InputType="InputType.Text" @bind-Value="NewMediaItem.LibraryId" />
+                    <BSLabel IsFloating="true">Library ID (Enter 0 if not assigned)</BSLabel>
+                </div>
+            </BSCol>
+        </BSRow>
+        <BSButton Color="BSColor.Primary" IsSubmit>Save</BSButton>
+    </div>
+</BSForm>
+@code {
+    [Parameter]
+    public int MediaItemId { get; set; }
+    [Parameter]
+    public UpdateMediaItemDto? MediaItem{ get; set; }
+    public CreateMediaItemDto NewMediaItem = new();
+
+    private EditContext EC;
+    private int mediaTypeInt;
+
+    private bool loading;
+
+    protected override void OnParametersSet()
+    {
+        EC = new EditContext(NewMediaItem);
+        if (MediaItem != null)
+        {
+            NewMediaItem = MediaItem.ToCreateMediaItem();
+        }
+    }
+
+    protected async Task ModifyMediaItem()
+    {
+        loading =true;
+        StateHasChanged();
+        if(MediaItemId != 0)
+        {
+            MediaItem = MediaItem?.LoadFromCreate(NewMediaItem, MediaItem);
+            await UpdateMediaItem();
+        }
+        else
+        {
+            await CreateMediaItem();
+        }
+    }
+
+    protected async Task CreateMediaItem()
+    {
+        var response = await Http.PostAsJsonAsync<CreateMediaItemDto>("api/MediaItem", NewMediaItem);
+        if(response.IsSuccessStatusCode)
+        {
+            MediaItemDto responseValue = await response.Content.ReadFromJsonAsync<MediaItemDto>();
+            if(responseValue != null)
+            {
+                Console.WriteLine($"Created Media Item with ID: {responseValue.Id}");
+            }
+        }
+    }
+
+    protected async Task UpdateMediaItem()
+    {
+        var response = await Http.PutAsJsonAsync($"api/MediaItem/{MediaItemId}", MediaItem);
+        if(response.IsSuccessStatusCode)
+        {
+            Console.WriteLine($"Updated Media Item with ID: {MediaItemId}");            
+        }
+    }
+
+
+}
