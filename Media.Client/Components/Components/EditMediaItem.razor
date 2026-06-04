@@ -1,9 +1,9 @@
-﻿@using Blazor.Sonner.Services
-@using Microsoft.AspNetCore.Components;
+﻿@using Microsoft.AspNetCore.Components;
 @using Medias.Shared.DTOs;
 @using Medias.Shared.Enums;
 @using Medias.Shared.Helpers;
 @using Blazor.Sonner;
+@using Blazor.Sonner.Services
 @inject HttpClient Http;
 @inject ToastService Toast;
 
@@ -73,10 +73,10 @@
     </div>
 </BSForm>
 @code {
-        [Parameter]
-        public int MediaItemId { get; set; }
-        [Parameter]
-        public UpdateMediaItemDto? MediaItem{ get; set; }
+    [Parameter]
+    public int MediaItemId { get; set; }
+    [Parameter]
+    public UpdateMediaItemDto? MediaItem{ get; set; }
     public CreateMediaItemDto NewMediaItem = new();
 
     private EditContext EC;
@@ -127,7 +127,8 @@
         var response = await Http.PutAsJsonAsync($"api/MediaItem/{MediaItemId}", MediaItem);
         if(response.IsSuccessStatusCode)
         {
-            Console.WriteLine($"Updated Media Item with ID: {MediaItemId}");            
+            Console.WriteLine($"Updated Media Item with ID: {MediaItemId}");    
+            Toast.Success($"Updated Media Item with ID: {MediaItemId}");
         }
     }
 

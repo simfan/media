@@ -17,8 +17,33 @@ namespace Medias.Shared.DTOs
         public DateTime UpdatedDate { get; set; }
         /*public List<MediaFile>? MediaFiles { get; set; }
         public Library Library { get; set; }*/
+        public CreateMediaItemDto ToCreateMediaItem()
+        {
+            var newMediaItem = new CreateMediaItemDto()
+            {
+                Title = Title,
+                Description = Description,
+                MediaType = MediaType,
+                LibraryId = LibraryId,
+                ThumbnailPath = ThumbnailPath
+            };
+            return newMediaItem;
+        }
 
-        
+
+        public UpdateMediaItemDto ToUpdateMediaItem()
+        {
+            var updatedItem = new UpdateMediaItemDto()
+            {
+                Id = Id,
+                Title = Title,
+                Description = Description,
+                MediaType = MediaType,
+                LibraryId = LibraryId,
+                ThumbnailPath = ThumbnailPath
+            };
+            return updatedItem;
+        }
     }
 
     public class CreateMediaItemDto

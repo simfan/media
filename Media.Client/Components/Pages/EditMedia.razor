@@ -1,8 +1,38 @@
-﻿@page "/media/edit/{id:int}"
-@page "/media/add"
-<h3>EditMedia</h3>
+﻿@page "/media/{Id}/edit"
+@using Microsoft.AspNetCore.Components;
+@using Blazor.Sonner;
+@using Blazor.Sonner.Services
+@using Medias.Client.Components.Components
+@using Medias.Shared.DTOs
+@inject HttpClient Http;
+@inject ToastService Toast
+
+
+
+<h3>Edit Media Item</h3>
+
+<EditMediaItem MediaItemId="MediaId" MediaItem="updateMediaItem"/>
 
 @code {
-        [Parameter]
-        public int Id { get; set; }
+    [Parameter]
+    public string Id { get; set; }
+
+    private int MediaId;
+    private MediaItemDto MediaItem = new MediaItemDto();
+    private UpdateMediaItemDto updateMediaItem = new UpdateMediaItemDto();
+    protected override async Task OnInitializedAsync()
+    {
+        if (int.TryParse(Id, out MediaId ))
+        {
+            // Valid ID, proceed with loading the media item
+            Toast.Show("Loaded Media");
+            MediaItem = await Http.GetFromJsonAsync<MediaItemDto>($"api/MediaItem/{MediaId}");
+            updateMediaItem = MediaItem?.ToUpdateMediaItem();
+        }
+        else
+        {
+            // Invalid ID, handle the error (e.g., show a message or redirect)
+            Toast.Error("Could Not Load MediaId");
+        }
+    }
 }

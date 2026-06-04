@@ -15,14 +15,20 @@
         {
             <BSTable>
                 <BSTR>
+                    <BSTD>Media Type</BSTD>
                     <BSTD>Title</BSTD>
                     <BSTD>Description</BSTD>
+                    <BSTD>Location</BSTD>
+                    <BSTD>Collection</BSTD>
                 </BSTR>
                 @foreach (var item in mediaItems)
                 {
                     <BSTR>
+                        <BSTD>@item.MediaType</BSTD>
                         <BSTD>@item.Title</BSTD>
                         <BSTD>@item.Description</BSTD>
+                        <BSTD>@item.ThumbnailPath</BSTD>
+                        <BSTD>@item.LibraryId</BSTD>
                     </BSTR>
                 }
             </BSTable>
@@ -40,12 +46,7 @@
     {
         // Simulate asynchronous loading to demonstrate streaming rendering
         await Task.Delay(500);
-        mediaItems2 = new[]
-        {
-            new MediaItemDto { Id = 1, Title = "Media Item 1", Description = "Description for Media Item 1" },
-            new MediaItemDto { Id = 2, Title = "Media Item 2", Description = "Description for Media Item 2" },
-            new MediaItemDto { Id = 3, Title = "Media Item 3", Description = "Description for Media Item 3" }
-        };
+        
         mediaItems = await Http.GetFromJsonAsync<MediaItemDto[]>("api/MediaItem");
     }
 }
