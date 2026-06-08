@@ -1,6 +1,82 @@
-﻿@page "/media/{id}"
-<h3>MediaDetail</h3>
+﻿@page "/media/{Id}"
+
+@using Microsoft.AspNetCore.Components;
+@using Blazor.Sonner;
+@using Blazor.Sonner.Services;
+@using Medias.Client.Components.Components;
+@using Medias.Shared.DTOs;
+@using Medias.Shared.Enums;
+@using Medias.Shared.Helpers;
+@inject HttpClient Http;
+@inject ToastService Toast;
+
+
+<div>
+    @switch(mediaItemFull.MediaType)
+    {
+        case MediaTypeValue.Book:
+            // Display book-specific details if needed
+            break;
+        case MediaTypeValue.Movie:
+            if(movieItem != null)
+            {
+                <MovieCard Movie="movieItem" />
+            }
+            break;
+        case MediaTypeValue.TV:
+            // Display TV-specific details if needed
+            break;
+        default:
+            <MediaCard MediaItemFull="mediaItemFull" />
+            break;
+    }
+    
+</div>
 
 @code {
+    [Parameter]
+    public string Id { get; set; }
+
+    private MediaItemDtoFull mediaItemFull = new MediaItemDtoFull();
+    private MovieDto? movieItem = new MovieDto();
+
+    private int mediaId;
+
+    protected override async Task OnInitializedAsync()
+    {
+        if(int.TryParse(Id, out mediaId))
+        {
+            Toast.Show("Loaded Media.");
+            mediaItemFull = await Http.GetFromJsonAsync<MediaItemDtoFull>($"api/MediaItem/{mediaId}");
+            switch(mediaItemFull.MediaType)
+            {
+                case MediaTypeValue.Book:
+                    // Load book-specific details if needed
+                    break;
+                case MediaTypeValue.Movie:
+                    // Load movie-specific details if needed
+                    movieItem = mediaItemFull?.ToMovieDto();
+                    break;
+                case MediaTypeValue.TV:
+                    // Load TV-specific details if needed
+                    break;
+                default:
+                    // Handle unknown media type if necessary
+                    break;
+            }
+        }
+        else
+        {
+            // Invalid ID, handle the error (e.g., show a message or redirect)
+            Toast.Error("Could Not Load MediaId");
+        }
+                         
+            // Load media item details using MediaId
+            // For example:
+            
+             
+            // selectedMediaType = mediaItemFull.MediaType;
+        
+    }
 
 }

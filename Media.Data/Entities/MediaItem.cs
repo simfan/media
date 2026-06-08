@@ -16,7 +16,8 @@ namespace Medias.Data.Entities
         public int? LibraryId { get; set; }
         public string ThumbnailPath{ get; set; }
         public List<MediaFile>? MediaFiles { get; set; } 
-        public Library Library { get; set; }
-        
+        public Library? Library { get; set; }
+        public MovieDetail? MovieDetail { get; set; }
+
     }
 }

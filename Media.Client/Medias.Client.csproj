@@ -8,6 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Media.Automations\Medias.Automations.csproj" />
     <ProjectReference Include="..\Media.Shared\Medias.Shared.csproj" />
   </ItemGroup>
 

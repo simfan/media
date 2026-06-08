@@ -65,5 +65,39 @@ namespace Medias.Data.Conversions
             };
         }
 
+        public static MediaItemDtoFull ToMediaItemDtoFull(this MediaItem entity)
+        {
+            var mediaItemFull = new MediaItemDtoFull
+            {
+                Id = entity.Id,
+                Title = entity.Title,
+                Description = entity.Description,
+                MediaType = entity.MediaType,
+                CreatedDate = entity.CreatedDate,
+                UpdatedDate = entity.UpdatedDate,
+                LibraryId = entity.LibraryId,
+                ThumbnailPath = entity.ThumbnailPath
+                
+            };
+            if(entity.MovieDetail != null)
+            {
+                mediaItemFull.MovieDetails = entity.MovieDetail?.ToMovieDetailsDto();
+            }
+
+            return mediaItemFull;
+        }
+
+        public static MovieDetailsDto ToMovieDetailsDto(this MovieDetail entity)
+        {
+            return new MovieDetailsDto()
+            {
+                Runtime = entity.Runtime,
+                ReleaseDate = entity.ReleaseDate,
+                Director = entity.Director,
+                Studio = entity.Studio,
+                Genre = entity.Genre,
+                Rating = entity.Rating,
+            };
+        }
     }
 }

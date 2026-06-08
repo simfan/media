@@ -1,38 +1,141 @@
 ﻿@page "/media/{Id}/edit"
 @using Microsoft.AspNetCore.Components;
 @using Blazor.Sonner;
-@using Blazor.Sonner.Services
-@using Medias.Client.Components.Components
-@using Medias.Shared.DTOs
+@using Blazor.Sonner.Services;
+@using Medias.Client.Components.Components;
+@using Medias.Shared.DTOs;
+@using Medias.Shared.Enums;
+@using Medias.Shared.Helpers;
+
+
 @inject HttpClient Http;
-@inject ToastService Toast
+@inject ToastService Toast;
 
 
 
 <h3>Edit Media Item</h3>
+<div class="@(BS.Form_Floating) mb-1">
+    <BSInput InputType="InputType.Select" @bind-Value="selectedMediaType" @onchange="MediaTypeChanged">
+        @foreach (var mediaType in Enum.GetValues<MediaTypeValue>())
+        {
+            <option value="@mediaType">
+                @mediaType.GetDisplayName()
+            </option>
+        }
+    </BSInput>
+    <BSLabel IsFloating="true">Media Type</BSLabel>
+                </div>
 
-<EditMediaItem MediaItemId="MediaId" MediaItem="updateMediaItem"/>
+                    @switch (selectedMediaType)
+                        {
+                            @*case MediaTypeValue.Book:
+                                <EditBook MediaItemId="MediaId" MediaItem="updateMediaItem"/>
+                                break;*@
+                            case MediaTypeValue.Movie:
+                                <EditMovie MediaItemId="MediaId" Movie="updateMovie"/>
+                                
+                                break;
+                            @*case MediaTypeValue.TV:
+                                <EditTV MediaItemId="MediaId" MediaItem="updateMediaItem"/>
+                                break;
+                            *@
+                            default:
+                                <EditMediaItem MediaItemId="MediaId" MediaItem="updateMediaItem"/>
+                                break;
+                        }
+                       
 
-@code {
+@code{
     [Parameter]
     public string Id { get; set; }
 
     private int MediaId;
-    private MediaItemDto MediaItem = new MediaItemDto();
+    private MediaItemDto mediaItem = new MediaItemDto();
+    private MediaItemDtoFull mediaItemFull = new MediaItemDtoFull();
+    private MovieDto? movieItem = new MovieDto();
     private UpdateMediaItemDto updateMediaItem = new UpdateMediaItemDto();
+    private UpdateMovieDto updateMovie = new UpdateMovieDto();
+
+    private MediaTypeValue selectedMediaType;
     protected override async Task OnInitializedAsync()
     {
         if (int.TryParse(Id, out MediaId ))
         {
             // Valid ID, proceed with loading the media item
             Toast.Show("Loaded Media");
-            MediaItem = await Http.GetFromJsonAsync<MediaItemDto>($"api/MediaItem/{MediaId}");
-            updateMediaItem = MediaItem?.ToUpdateMediaItem();
+            mediaItemFull = await Http.GetFromJsonAsync<MediaItemDtoFull>($"api/MediaItem/{MediaId}");
+            selectedMediaType = mediaItemFull.MediaType;
+            switch(selectedMediaType)
+            {
+                case MediaTypeValue.Movie:
+                    movieItem = mediaItemFull?.ToMovieDto();
+                    updateMovie = movieItem.ToUpdateMovie();
+                    break;
+                default:
+                    mediaItem = mediaItemFull.ToMediaItemDto();
+                    updateMediaItem = mediaItem?.ToUpdateMediaItem();
+                    break;
+            }
+
+            //updateMediaItem = mediaItem?.ToUpdateMediaItem();
         }
         else
         {
             // Invalid ID, handle the error (e.g., show a message or redirect)
             Toast.Error("Could Not Load MediaId");
         }
+        StateHasChanged();
+    }
+
+    private void MediaTypeChanged(ChangeEventArgs e)
+    {
+        if (Enum.TryParse<MediaTypeValue>(e.Value?.ToString(), out var newMediaType))
+        {
+            //selectedMediaType = newMediaType;
+            MediaItemDto currentItem = new MediaItemDto();
+            if (newMediaType != MediaTypeValue.Other)
+            {
+                switch (selectedMediaType)
+                {
+                        /*case MediaTypeValue.Book:
+                    currentItem = mediaItem?.ToBookDto() ?? new BookDto();
+                break;*/
+        case MediaTypeValue.Movie:
+                    currentItem = movieItem;
+                    break;
+                    /*case MediaTypeValue.TV:
+                    currentItem = mediaItem?.ToTVDto() ?? new TVDto();
+                    break;*/
+                                default:
+            currentItem = new MediaItemDto();
+                    break;
+                }
+
+                switch (newMediaType)
+                {
+                        /*case MediaTypeValue.Book:
+                    //updateMediaItem = mediaItem?.ToUpdateBook();
+                    break;*/
+        case MediaTypeValue.Movie:
+                    //updateMediaItem = mediaItem?.ToUpdateMovie();
+                    movieItem = Helpers.MediaItemConverter<MovieDto>(currentItem);
+                    updateMovie= movieItem.ToUpdateMovie();
+                    break;
+                    /*case MediaTypeValue.TV:
+                    updateMediaItem = mediaItem?.ToUpdateTV();
+                    break;*/
+                                                                                    default:
+                updateMediaItem = mediaItem?.ToUpdateMediaItem();
+                    break;
+                }
+            }
+            else
+            {
+                Helpers.CopyBaseProperties(currentItem, mediaItem);
+            }
+            selectedMediaType = newMediaType;
+            StateHasChanged();
+        }
+
     }
 }

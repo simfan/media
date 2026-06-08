@@ -15,8 +15,9 @@ namespace Medias.Shared.DTOs
         public string ThumbnailPath { get; set; }
         public DateTime CreatedDate { get; set; }
         public DateTime UpdatedDate { get; set; }
-        /*public List<MediaFile>? MediaFiles { get; set; }
-        public Library Library { get; set; }*/
+        public List<MediaFileDto>? MediaFiles { get; set; }
+        public LibraryDto? Library { get; set; }
+        
         public CreateMediaItemDto ToCreateMediaItem()
         {
             var newMediaItem = new CreateMediaItemDto()

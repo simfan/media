@@ -50,5 +50,27 @@ namespace Medias.Shared.Helpers
             target.LibraryId = source.LibraryId;
             target.ThumbnailPath = source.ThumbnailPath;
         }
+
+        public static T MediaItemConverter<T>(MediaItemDto source) where T : MediaItemDto, new()
+        {
+            var target = new T();
+            CopyBaseProperties(source, target);
+            return target;
+        }
+
+        public static T CreateMediaItemConverter<T>(CreateMediaItemDto source) where T : CreateMediaItemDto, new()
+        {
+            var target = new T();
+            CopyCreatedBaseProperties(source, target);
+            return target;
+        }
+        
+        public static T UpdateMediaItemConverter<T>(UpdateMediaItemDto source) where T : UpdateMediaItemDto, new()
+        {
+            var target = new T();
+            CopyUpdatedBaseProperites(source, target);
+            return target;
+        }
+
     }
 }

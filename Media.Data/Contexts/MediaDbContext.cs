@@ -13,8 +13,17 @@ namespace Medias.Data.Contexts
         public DbSet<Library> Libraries { get; set; }
         public DbSet<MediaItem> MediaItems { get; set; }
         public DbSet<MediaFile> MediaFiles { get; set; }
+        public DbSet<MovieDetail> MovieDetails { get; set; }
         public MediaDbContext(DbContextOptions<MediaDbContext> options) : base(options)
         {
         }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.ApplyConfigurationsFromAssembly(typeof(MediaDbContext).Assembly);
+        }
     }
+
 }

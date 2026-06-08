@@ -1,0 +1,45 @@
+﻿
+<BSButton Color="BSColor.Primary" Class="m-2" @onclick="ToggleVideo">
+    @if(isVideo == true)
+    {
+        <span>Watch Video</span>
+    }
+    else
+    {
+        <span>Play Audio</span>
+    }
+</BSButton>
+
+@if (showMediaPlayer)
+{
+
+    <BSCard Class="mb-3">
+        <BSCard CardType="CardType.Header">Media Player</BSCard>
+        <BSCard CardType="CardType.Body">
+            @if (isVideo == true)
+            {
+                mediaUrl = "https://www.w3schools.com/html/mov_bbb.mp4";
+                <video width="100%" controls preload="metadata"><source src="@mediaUrl" type="video/mp4" />Your browser does not support video placback</video>
+            }
+            else
+            {
+                mediaUrl = "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3";
+                <audio controls preload="metadata"><source src="@mediaUrl" type="audio/mpeg" />Your browser does not support audio playback</audio>
+            }
+        </BSCard>
+    </BSCard>
+}
+@code {
+    [Parameter]
+    public bool isVideo { get; set; } = true;
+    private string mediaUrl;
+
+    private bool showMediaPlayer = false;
+
+    private void ToggleVideo()
+    {
+        showMediaPlayer = !showMediaPlayer;
+        StateHasChanged();
+    }
+
+}

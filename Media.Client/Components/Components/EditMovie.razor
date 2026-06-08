@@ -1,9 +1,12 @@
-﻿@using Microsoft.AspNetCore.Components;
+﻿@using Medias.Client.Components.Pages
+@using Microsoft.AspNetCore.Components;
 @using Medias.Shared.DTOs;
 @using Medias.Shared.Enums;
 @using Medias.Shared.Helpers;
+@using Blazor.Sonner;
+@using Blazor.Sonner.Services;
 @inject HttpClient Http;
-
+@inject ToastService Toast;
 
 <BSForm  TValue="MovieDto" EditContext="EC" OnValidSubmit="ModifyMediaItem">
     <div>
@@ -11,18 +14,21 @@
             <BSCol>
                 @if(Movie != null)
                 {
-                    <h1>Edit Media Item</h1>
+                    <h1>Edit Movie</h1>
                 }
                 else
                 {
-                    <h1>Create Media Item</h1>
+                    <h1>Create Movie</h1>
                 }
             </BSCol>
+            <BSCol>
+                <BSButton OnClick="ShowToast">Show Toast</BSButton>
+                </BSCol>
         </BSRow>
-        <BSRow>
+        @*<BSRow>
             <BSCol>
                 <div class="@(BS.Form_Floating) mb-1">
-                    <BSInput InputType="InputType.Select" @bind-Value="NewMovie.MediaType">
+                    @*<BSInput InputType="InputType.Select" @bind-Value="NewMovie.MediaType">
                         @foreach (var mediaType in Enum.GetValues<MediaTypeValue>())
                         {
                             <option value="@mediaType">
@@ -33,7 +39,7 @@
                     <BSLabel IsFloating="true">"Media Type</BSLabel>"
                 </div>
             </BSCol>
-        </BSRow>
+        </BSRow>*@
         <BSRow>
             <BSCol>
                 <div class="@(@BS.Form_Floating) mb-1">
@@ -53,8 +59,51 @@
         <BSRow>
             <BSCol>
                 <div class="@(@BS.Form_Floating) mb-1">
+                    <BSInput InputType="InputType.Text" @bind-Value="NewMovie.Runtime" />
+                    <BSLabel IsFloating="true">Runtime</BSLabel>
+                </div>
+            </BSCol>
+            <BSCol>
+                <div class="@(@BS.Form_Floating) mb-1">
+                    <BSInput InputType="InputType.Text" @bind-Value="NewMovie.ReleaseDate" />
+                    <BSLabel IsFloating="true">Release Date</BSLabel>
+                    </div>
+            </BSCol>
+        </BSRow>
+        <BSRow>
+            <BSCol>
+                <div class="@(@BS.Form_Floating) mb-1">
+                    <BSInput InputType="InputType.Text" @bind-Value="NewMovie.Director" />
+                    <BSLabel IsFloating="true">Director</BSLabel>
+                </div>
+            </BSCol>
+            <BSCol>
+                <div class="@(@BS.Form_Floating) mb-1">
+                    <BSInput InputType="InputType.Text" @bind-Value="NewMovie.Studio" />
+                    <BSLabel IsFloating="true">Studio</BSLabel>
+                </div>
+            </BSCol>
+        </BSRow>
+
+        <BSRow>
+            <BSCol>
+                <div class="@(@BS.Form_Floating) mb-1">
+                    <BSInput InputType="InputType.Text" @bind-Value="NewMovie.Genre" />
+                    <BSLabel IsFloating="true">Genre</BSLabel>
+                </div>
+            </BSCol>
+            <BSCol>
+                <div class="@(@BS.Form_Floating) mb-1">
+                    <BSInput InputType="InputType.Text" @bind-Value="NewMovie.Rating" />
+                    <BSLabel IsFloating="true">Rating</BSLabel>
+                </div>
+            </BSCol>
+        </BSRow>
+        <BSRow>
+            <BSCol>
+                <div class="@(@BS.Form_Floating) mb-1">
                     <BSInput InputType="InputType.Text" @bind-Value="NewMovie.ThumbnailPath" />
-                    <BSLabel IsFloating="true">Location</BSLabel>
+                    <BSLabel IsFloating="true">Thumbnail</BSLabel>
                 </div>
             </BSCol>
         </BSRow>
@@ -66,8 +115,10 @@
                 </div>
             </BSCol>
         </BSRow>
+        <BSButton Color="BSColor.Primary" IsSubmit>Save</BSButton>
     </div>
 </BSForm>
+<Blazor.Sonner.Toaster @rendermode="InteractiveServer" RichColors="@true"/>
 @code {
     [Parameter]
     public int MediaItemId { get; set; }
@@ -89,6 +140,7 @@
 
     protected async Task ModifyMediaItem()
     {
+        NewMovie.MediaType = MediaTypeValue.Movie;
         if(MediaItemId != 0)
         {
             Movie = Movie?.LoadFromCreate(NewMovie, Movie);
@@ -102,13 +154,36 @@
 
     protected async Task CreateMediaItem()
     {
-        await Http.PostAsJsonAsync<CreateMediaItemDto>("api/MediaItem", NewMovie);
+        var response = await Http.PostAsJsonAsync<CreateMovieDto>("api/MediaItem/movie", NewMovie);
+        if(response.IsSuccessStatusCode)
+        {
+            MovieDto responseValue = await response.Content.ReadFromJsonAsync<MovieDto>();
+            if(responseValue != null)
+            {
+                Console.WriteLine($"Created Movie: {responseValue.Title}");
+                Toast.Success($"Created Movie: {responseValue.Title}");
+            }
+        }
+        else
+        {
+            Toast.Error($"Could not create Movie: {response.ReasonPhrase}");
+        }
     }
 
     protected async Task UpdateMediaItem()
     {
-        await Http.PutAsJsonAsync($"api/MediaItem/{MediaItemId}", Movie);        
+        Toast.Show("Updating Movie..."); 
+        var response = await Http.PutAsJsonAsync($"api/MediaItem/{MediaItemId}/movie", Movie);        
+        if(response.IsSuccessStatusCode)
+        {
+            Console.WriteLine($"Updated Movie: {Movie.Title}");    
+            Toast.Success($"Updated Movie:  {Movie.Title}");
+        }
     }
 
+    private void ShowToast()
+    {
+        Toast.Show("This is a toast message!");
+    }
 
 }
