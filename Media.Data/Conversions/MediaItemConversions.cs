@@ -84,6 +84,11 @@ namespace Medias.Data.Conversions
                 mediaItemFull.MovieDetails = entity.MovieDetail?.ToMovieDetailsDto();
             }
 
+            if(entity.TelevisionShowDetail != null)
+            {
+                mediaItemFull.TelevisionShowDetails = entity.TelevisionShowDetail.ToTelevisionShowDto();
+            }
+
             return mediaItemFull;
         }
 
@@ -97,6 +102,70 @@ namespace Medias.Data.Conversions
                 Studio = entity.Studio,
                 Genre = entity.Genre,
                 Rating = entity.Rating,
+            };
+        }
+
+        public static TelevisionShowDto ToTelevisionShowDto(this TelevisionShowDetail entity)
+        {
+            var televisionShowDto = new TelevisionShowDto();
+            televisionShowDto.CreatedBy = entity.CreatedBy;
+            televisionShowDto.Studio = entity.Studio;
+            televisionShowDto.Genre = entity.Genre;
+            televisionShowDto.Rating = entity.Rating;
+            televisionShowDto.Status = entity.Status;
+            televisionShowDto.TmdbTvId = entity.TmdbTvId;
+            televisionShowDto.ImdbId = entity.ImdbId;
+            televisionShowDto.SeasonCount = entity.SeasonCount;
+            televisionShowDto.Seasons?.Clear();
+            televisionShowDto.Seasons = new List<TelevisionSeasonDto>();
+            if(entity.Seasons != null && entity.Seasons.Count > 0)
+            {
+                foreach(var season in entity.Seasons)
+                {
+                    var seasonDto = season.ToTelevisionSeasonDto();
+                    televisionShowDto.Seasons.Add(seasonDto);
+                }
+            }
+            return televisionShowDto;
+        }
+
+        public static TelevisionSeasonDto ToTelevisionSeasonDto(this TelevisionSeason entity)
+        {
+            var televisionSeason = new TelevisionSeasonDto();
+            televisionSeason.SeasonId = entity.SeasonId;
+            televisionSeason.TelevisionShowId = entity.MediaItemId;
+            televisionSeason.SeasonNumber = entity.SeasonNumber;
+            televisionSeason.Name = entity.Name;
+            televisionSeason.Description = entity.Description;
+            televisionSeason.EpisodeCount = entity.EpisodeCount;
+            televisionSeason.Episodes?.Clear();
+            televisionSeason.Episodes = new List<TelevisionEpisodeDto>();
+            if(entity.Episodes != null && entity.Episodes.Count > 0)
+            {
+                foreach(var episode in entity.Episodes)
+                {
+                    var episodeDto = episode.ToTelevisionEpisodeDto();
+                    televisionSeason.Episodes.Add(episodeDto);
+                }
+            }
+            return televisionSeason;
+        }
+
+        public static TelevisionEpisodeDto ToTelevisionEpisodeDto(this TelevisionEpisode entity)
+        {
+            return new TelevisionEpisodeDto()
+            {
+                EpisodeId = entity.EpisodeId,
+                EpisodeNumber = entity.EpisodeNumber,
+                TelevisionShowId = entity.TelevisionShowId,
+                SeasonId = entity.SeasonId,
+                SeasonNumber = entity.SeasonNumber,
+                Title = entity.Title,
+                Description = entity.Description,
+                Director = entity.Director,
+                AirDate = entity.AirDate,
+                Runtime = entity.Runtime,
+                Rating = entity.Rating
             };
         }
     }

@@ -13,6 +13,21 @@ namespace Medias.Shared.Enums
         Photo = 5,
         Document = 6,
         Podcast = 7,
-        Other = 99
+        Other = 99,
     };
+
+    public enum CollectionTypeValue
+    {
+     
+        Movie = 1,
+        TV = 2,
+        Music = 3,
+        Book = 4,
+        Photo = 5,
+        Document = 6,
+        Podcast = 7,
+        Other = 99,
+        Mixed = 100
+    };
+
 }

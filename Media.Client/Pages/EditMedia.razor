@@ -35,10 +35,10 @@
                                 <EditMovie MediaItemId="MediaId" Movie="updateMovie"/>
                                 
                                 break;
-                            @*case MediaTypeValue.TV:
-                                <EditTV MediaItemId="MediaId" MediaItem="updateMediaItem"/>
+                            case MediaTypeValue.TV:
+                                <EditTV MediaItemId="MediaId" Show="updateTvShow" />
                                 break;
-                            *@
+                            
                             default:
                                 <EditMediaItem MediaItemId="MediaId" MediaItem="updateMediaItem"/>
                                 break;
@@ -53,9 +53,10 @@
     private MediaItemDto mediaItem = new MediaItemDto();
     private MediaItemDtoFull mediaItemFull = new MediaItemDtoFull();
     private MovieDto? movieItem = new MovieDto();
+    private TelevisionShowDto tvShow = new TelevisionShowDto();
     private UpdateMediaItemDto updateMediaItem = new UpdateMediaItemDto();
     private UpdateMovieDto updateMovie = new UpdateMovieDto();
-
+    private UpdateTelevisionShowDto updateTvShow = new UpdateTelevisionShowDto();
     private MediaTypeValue selectedMediaType;
     protected override async Task OnInitializedAsync()
     {
@@ -70,6 +71,10 @@
                 case MediaTypeValue.Movie:
                     movieItem = mediaItemFull?.ToMovieDto();
                     updateMovie = movieItem.ToUpdateMovie();
+                    break;
+                case MediaTypeValue.TV:
+                    tvShow = mediaItemFull?.ToTelevisionShowDto(mediaItemFull);
+                    updateTvShow = tvShow.ToUpdateTelevisionShow();
                     break;
                 default:
                     mediaItem = mediaItemFull.ToMediaItemDto();

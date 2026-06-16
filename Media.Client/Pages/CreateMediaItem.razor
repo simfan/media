@@ -2,11 +2,12 @@
 
 @using Microsoft.AspNetCore.Components;
 @using Blazor.Sonner;
-@using Blazor.Sonner.Services
-@using Medias.Client.Components.Components
-@using Medias.Shared.DTOs
-@using Medias.Shared.Enums
-@using Medias.Shared.Helpers
+@using Blazor.Sonner.Services;
+@using Medias.Client.Components.Components;
+@using Medias.Shared.DTOs;
+@using Medias.Shared.Enums;
+@using Medias.Shared.Helpers;
+
 <h3>New Media Item</h3>
 <div class="@(BS.Form_Floating) mb-1">
                     <BSInput InputType="InputType.Select" @bind-Value="selectedMediaType" @onchange="MediaTypeChanged">

@@ -18,6 +18,7 @@ namespace Medias.Data.Entities
         public List<MediaFile>? MediaFiles { get; set; } 
         public Library? Library { get; set; }
         public MovieDetail? MovieDetail { get; set; }
+        public TelevisionShowDetail? TelevisionShowDetail { get; set; }
 
     }
 }

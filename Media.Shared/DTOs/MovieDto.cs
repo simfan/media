@@ -14,7 +14,8 @@ namespace Medias.Shared.DTOs
         public string Genre { get; set; }
         public decimal Rating { get; set; }
         public string? Location { get; set; }
-
+        public int? TmdbMovieId { get; set; }
+        public string?ImdbId { get; set; }
         public CreateMovieDto ToCreateMovie()
         {
             var newMovie = new CreateMovieDto()

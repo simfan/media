@@ -7,6 +7,7 @@ using Medias.Data.Contexts;
 using Medias.Data.Conversions;
 using Medias.Shared.DTOs;
 using Medias.Shared.Enums;
+using Medias.Server.Services;
 
 namespace Medias.Server.Controllers
 {
@@ -15,10 +16,12 @@ namespace Medias.Server.Controllers
         public class MediaItemController : ControllerBase
     {
         private readonly MediaDbContext _context;
+        private readonly IMediaItemService _mediaItemService;
 
-        public MediaItemController(MediaDbContext context)
+        public MediaItemController(MediaDbContext context, IMediaItemService mediaItemService)
         {
             _context = context;
+            _mediaItemService = mediaItemService;
         }
         [HttpGet()]
         public async Task<ActionResult<IEnumerable<MediaItemDto>>> GetMediaItems()
@@ -26,6 +29,7 @@ namespace Medias.Server.Controllers
             var mediaItems = await _context.MediaItems
                 .Include(mi => mi.MediaFiles)
                 .ToListAsync();
+            //var mediaItems2 = _mediaItemService.GetMediaItemsAsync();
             return mediaItems.Select(mi => mi.ToMediaItemDto()).ToList();
         }
 
@@ -49,6 +53,7 @@ namespace Medias.Server.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<MediaItemDtoFull>> GetMediaItemFull(int id)
         {
+            
             var mediaItem = await _context.MediaItems
                 .Include(mi => mi.MediaFiles)
                 .FirstOrDefaultAsync(mi => mi.Id == id);
@@ -65,6 +70,11 @@ namespace Medias.Server.Controllers
                     mediaItem.MovieDetail = movieDetails;
                     break;
                 case MediaTypeValue.TV:
+                    var tvDetails = await _context.TelevisionShowDetails
+                        .Include(tv => tv.Seasons)
+                        .ThenInclude(s => s.Episodes)
+                        .FirstOrDefaultAsync(tv => tv.MediaItemId == id);
+                        mediaItem.TelevisionShowDetail = tvDetails;    
                     break;
             }
             return mediaItem.ToMediaItemDtoFull();
@@ -110,6 +120,21 @@ namespace Medias.Server.Controllers
             return MovieConversions.ToMovieDto(movie);
         }
 
+        [HttpGet("/tv/{id}")]
+        public async Task<ActionResult<TelevisionShowDto>> GetTV(int id) {
+            var tv = await _context.MediaItems
+                   .Include(mi => mi.MediaFiles)
+                   .Include(mi => mi.TelevisionShowDetail)
+                        .ThenInclude(tv => tv.Seasons)
+                        .ThenInclude(ts => ts.Episodes)
+                   .FirstOrDefaultAsync(mi => mi.Id == id && mi.MediaType == MediaTypeValue.TV);
+            if(tv == null)
+            {  
+                return NotFound(); 
+            }
+            return TelevisionConversions.ToTelevisionShowDto(tv);
+        }
+
         [HttpPost()]
         public async Task<ActionResult<MediaItemDto>> CreateMediaItem(CreateMediaItemDto createDto)
         {
@@ -124,14 +149,43 @@ namespace Medias.Server.Controllers
         {
             var mediaItem = createDto.CreateDtoToMediaItem();
             _context.MediaItems.Add(mediaItem);
-            
-            await _context.SaveChangesAsync();
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+                throw;
+            }
             var movieDetails = createDto.CreateDtoToMovieDetail(mediaItem.Id);
             _context.MovieDetails.Add(movieDetails);
             await _context.SaveChangesAsync();
             mediaItem.MovieDetail = movieDetails;
 
             return CreatedAtAction(nameof(GetMovie), new { id = mediaItem.Id }, MovieConversions.ToMovieDto(mediaItem));
+        }
+
+        [HttpPost("tv")]
+        public async Task<ActionResult<TelevisionSeasonDto>> CreateTVShow(CreateTelevisionShowDto createDto)
+        {
+            var mediaItem = createDto.CreateDtoToMediaItem();
+            _context.MediaItems.Add(mediaItem);
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.InnerException.ToString());
+                throw;
+            }
+            var showDetails = createDto.CreateDtoToTelevisionShowDetail(mediaItem.Id);
+            _context.TelevisionShowDetails.Add(showDetails);
+            await _context.SaveChangesAsync();
+            mediaItem.TelevisionShowDetail = showDetails;
+
+            return CreatedAtAction(nameof(GetTV), new { id = mediaItem.Id }, TelevisionConversions.ToTelevisionShowDto(mediaItem));
         }
 
         [HttpPut("{id}")]

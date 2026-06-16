@@ -11,9 +11,13 @@ namespace Medias.Data.Contexts
     public class MediaDbContext : DbContext
     {
         public DbSet<Library> Libraries { get; set; }
-        public DbSet<MediaItem> MediaItems { get; set; }
         public DbSet<MediaFile> MediaFiles { get; set; }
+        public DbSet<MediaItem> MediaItems { get; set; }
         public DbSet<MovieDetail> MovieDetails { get; set; }
+        public DbSet<TelevisionEpisode> TelevisionEpisodes { get; set; }
+        public DbSet<TelevisionSeason> TelevisionSeasons { get; set; }
+        public DbSet<TelevisionShowDetail> TelevisionShowDetails { get; set; }
+        
         public MediaDbContext(DbContextOptions<MediaDbContext> options) : base(options)
         {
         }

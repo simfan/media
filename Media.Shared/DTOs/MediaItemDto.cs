@@ -17,7 +17,7 @@ namespace Medias.Shared.DTOs
         public DateTime UpdatedDate { get; set; }
         public List<MediaFileDto>? MediaFiles { get; set; }
         public LibraryDto? Library { get; set; }
-        
+        //public List<CollectionDto>? Collections { get; set; }
         public CreateMediaItemDto ToCreateMediaItem()
         {
             var newMediaItem = new CreateMediaItemDto()

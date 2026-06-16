@@ -1,0 +1,28 @@
+﻿@using Microsoft.AspNetCore.Components;
+@using Medias.Shared.DTOs;
+<BSCard>
+    <BSCard CardType="CardType.Header">@Show.Title<BSBadge>@Show.MediaType</BSBadge></BSCard>
+    <BSCard CardType="CardType.Body">
+        <p>Description: @Show.Description</p>
+        <p>Created By: @Show.CreatedBy</p>
+        @*<p>Release Date: @Show.ReleaseDate.ToShortDateString()</p>*@
+        <p>Genre: @Show.Genre</p>
+        <p>Status: @Show.Status</p>
+        <p>Rating: <div>@for(int i = 0; i < Show.Rating; i++) { <span>★</span> }</div></p>
+        <p>Seasons: @Show.SeasonCount</p>
+        @if(Show.LibraryId != null)
+        {
+            <p>Library: @Show.LibraryId</p>
+        }
+    </BSCard>
+
+    <MediaPlayer/>
+
+</BSCard>
+
+@code {
+    [Parameter]
+    public TelevisionShowDto Show { get; set; }
+
+    
+}

@@ -18,7 +18,8 @@ namespace Medias.Shared.DTOs
         public List<MediaFileDto>? MediaFiles { get; set; }
         public LibraryDto Library { get; set; }
         public MovieDetailsDto? MovieDetails { get; set; }
-
+        public TelevisionShowDto? TelevisionShowDetails { get; set; }
+        public List<CollectionDto> Collections { get; set; }
         public MediaItemDto ToMediaItemDto ()
         {
             var mediaItemDto = new MediaItemDto() 
@@ -52,6 +53,35 @@ namespace Medias.Shared.DTOs
                 Rating = MovieDetails.Rating
             };
             return movieDto;
+        }
+
+        public TelevisionShowDto ToTelevisionShowDto(MediaItemDtoFull existingItem)
+        {
+            var televisionShowDto = new TelevisionShowDto()
+            {
+                Id = existingItem.Id,
+                Title = existingItem.Title,
+                Description = existingItem.Description,
+                MediaType = existingItem.MediaType,
+                LibraryId = existingItem.LibraryId,
+                ThumbnailPath = existingItem.ThumbnailPath,
+                CreatedBy = existingItem.TelevisionShowDetails.CreatedBy,
+                Studio = existingItem.TelevisionShowDetails.Studio,
+                Genre = existingItem.TelevisionShowDetails.Genre,
+                Rating = existingItem.TelevisionShowDetails.Rating,
+                Status = existingItem.TelevisionShowDetails.Status,
+                TmdbTvId = existingItem.TelevisionShowDetails.TmdbTvId,
+                ImdbId = existingItem.TelevisionShowDetails.ImdbId,
+                SeasonCount = existingItem.TelevisionShowDetails.SeasonCount,
+            };
+            if(existingItem.TelevisionShowDetails.Seasons != null && existingItem.TelevisionShowDetails.Seasons.Count() > 0)
+            {
+                foreach (var season in existingItem.TelevisionShowDetails.Seasons)
+                {
+                    televisionShowDto?.Seasons?.Add(season);
+                }
+            }
+            return televisionShowDto;
         }
     }
 

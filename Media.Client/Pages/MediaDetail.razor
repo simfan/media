@@ -25,6 +25,7 @@
             break;
         case MediaTypeValue.TV:
             // Display TV-specific details if needed
+            <TVCard Show="televisionShow" />
             break;
         default:
             <MediaCard MediaItemFull="mediaItemFull" />
@@ -39,6 +40,7 @@
 
     private MediaItemDtoFull mediaItemFull = new MediaItemDtoFull();
     private MovieDto? movieItem = new MovieDto();
+    private TelevisionShowDto? televisionShow = new TelevisionShowDto();
 
     private int mediaId;
 
@@ -47,6 +49,7 @@
         if(int.TryParse(Id, out mediaId))
         {
             Toast.Show("Loaded Media.");
+            
             mediaItemFull = await Http.GetFromJsonAsync<MediaItemDtoFull>($"api/MediaItem/{mediaId}");
             switch(mediaItemFull.MediaType)
             {
@@ -59,6 +62,7 @@
                     break;
                 case MediaTypeValue.TV:
                     // Load TV-specific details if needed
+                    televisionShow = mediaItemFull?.ToTelevisionShowDto(mediaItemFull);
                     break;
                 default:
                     // Handle unknown media type if necessary

@@ -4,6 +4,7 @@
     <TargetFramework>net10.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>74778fae-af6a-4915-ac56-566f926d2cab</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
@@ -29,8 +30,6 @@
     <Folder Include="Extensions\" />
     <Folder Include="Middleware\" />
     <Folder Include="Data\" />
-    <Folder Include="Repositories\" />
-    <Folder Include="Services\" />
   </ItemGroup>
 
 </Project>
