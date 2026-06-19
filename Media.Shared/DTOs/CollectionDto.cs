@@ -12,8 +12,25 @@ namespace Medias.Shared.DTOs
         [Required]
         public string Name { get; set; }
         public string? Description { get; set; }
+        public DateTime CreatedDate { get; set; }
+        public DateTime? UpdatedDate { get; set; }
         public CollectionTypeValue CollectionMediaType { get; set; }
-        public string? CoverImageURL { get; set; }
+       // public string? CoverImageURL { get; set; }
         public List<MediaItemDto>? Items { get; set; }
     }
+
+    public class CreateCollectionDto
+    {
+        public string Name { get; set; }
+        public string? Description { get; set; }
+    }
+
+    public class UpdateCollectionDto 
+    {
+        public int CollectionId { get; set; }
+        public string Name { get; set; }
+        public string? Description { get; set; }
+        public DateTime CreatedDate { get; set; }
+    }
+
 }

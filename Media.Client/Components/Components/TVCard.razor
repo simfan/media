@@ -1,24 +1,52 @@
 ﻿@using Microsoft.AspNetCore.Components;
 @using Medias.Shared.DTOs;
-<BSCard>
-    <BSCard CardType="CardType.Header">@Show.Title<BSBadge>@Show.MediaType</BSBadge></BSCard>
     <BSCard CardType="CardType.Body">
-        <p>Description: @Show.Description</p>
+        <BSRow>
+        <BSCol><p>Description: @Show.Description</p>
         <p>Created By: @Show.CreatedBy</p>
         @*<p>Release Date: @Show.ReleaseDate.ToShortDateString()</p>*@
         <p>Genre: @Show.Genre</p>
         <p>Status: @Show.Status</p>
         <p>Rating: <div>@for(int i = 0; i < Show.Rating; i++) { <span>★</span> }</div></p>
-        <p>Seasons: @Show.SeasonCount</p>
+        
+        </BSCol>
+        <BSCol>
+            Image Goes Here
+        </BSCol>
+        </BSRow>
+
         @if(Show.LibraryId != null)
         {
             <p>Library: @Show.LibraryId</p>
         }
+        <BSCard CardType="CardType.Card">
+            <BSCard CardType="CardType.Header">Seasons @Show.SeasonCount</BSCard>
+            <BSCard CardType="CardType.Body">
+        @if(Show.Seasons != null && Show.Seasons.Count > 0)
+        {
+            @foreach(var season in Show.Seasons)
+            {
+                <BSCard CardType="CardType.Card">
+                    <BSCard CardType="CardType.Header">Season @season.SeasonNumber</BSCard>
+                    <BSCard CardType="CardType.Body">
+                     Episode Names
+                    </BSCard>
+                </BSCard>
+            }
+        }
+        else
+        {
+            <div>No Seasons Added</div>
+        }</BSCard>
+        </BSCard>
     </BSCard>
+    @if (Show.Collections != null)
+{
+    <CollectionCard/>
+}
 
-    <MediaPlayer/>
 
-</BSCard>
+
 
 @code {
     [Parameter]

@@ -6,24 +6,11 @@
 @using Blazor.Sonner.Services;
 @inject HttpClient Http;
 @inject ToastService Toast;
+@inject NavigationManager Nav;
 
 <BSForm  TValue="TelevisionShowDto" EditContext="EC" OnValidSubmit="ModifyMediaItem">
     <div>
-        <BSRow>
-            <BSCol>
-                @if(Show != null)
-                {
-                    <h1>Edit Television Show</h1>
-                }
-                else
-                {
-                    <h1>Create Television Show</h1>
-                }
-            </BSCol>
-            <BSCol>
-                <BSButton OnClick="ShowToast">Show Toast</BSButton>
-                </BSCol>
-        </BSRow>
+        
         @*<BSRow>
             <BSCol>
                 <div class="@(BS.Form_Floating) mb-1">
@@ -148,7 +135,7 @@
 
     protected async Task ModifyMediaItem()
     {
-        NewShow.MediaType = MediaTypeValue.Movie;
+        NewShow.MediaType = MediaTypeValue.TV;
         if(MediaItemId != 0)
         {
             Show = Show?.LoadFromCreate(NewShow, Show);
@@ -187,7 +174,9 @@
         {
             Console.WriteLine($"Updated TV Show: {Show.Title}");
             Toast.Success($"Updated TV Show:  {Show.Title}");
-        }
+            await Task.Delay(5000);
+            Nav.NavigateTo($"media/{MediaItemId}");
+                    }
     }
 
     private void ShowToast()

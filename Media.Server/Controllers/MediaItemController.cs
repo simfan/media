@@ -54,6 +54,7 @@ namespace Medias.Server.Controllers
         public async Task<ActionResult<MediaItemDtoFull>> GetMediaItemFull(int id)
         {
             
+            
             var mediaItem = await _context.MediaItems
                 .Include(mi => mi.MediaFiles)
                 .FirstOrDefaultAsync(mi => mi.Id == id);
@@ -253,7 +254,78 @@ namespace Medias.Server.Controllers
                     throw;
                 }
             }
+            var updatedMovieDetail = MovieConversions.UpdateDtoToMovieDetail(updateDto, existingMovieDetail);
+            _context.Entry(updatedMovieDetail).State = EntityState.Modified;
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!MovieExists(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
             return NoContent();
+        }
+
+        [HttpPut("{id}/tv")]
+        public async Task<IActionResult> UpdateShow(int id, UpdateTelevisionShowDto updateDto)
+        {
+            if (id != updateDto.Id)
+            {
+                return BadRequest();
+            }
+            var existingMediaItem = await _context.MediaItems.FindAsync(id);
+
+            if (existingMediaItem == null)
+            {
+                return NotFound();
+            }
+            var existingTelevisionShowDetail = await _context.TelevisionShowDetails.FirstOrDefaultAsync(md => md.MediaItemId == id);
+            
+            updateDto.UpdateDtoToMediaItem(existingMediaItem);
+            
+            _context.Entry(existingMediaItem).State = EntityState.Modified;
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!MediaItemExists(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+            var updatedTelevisionShowDetail = TelevisionConversions.UpdateDtoToTelevisionShowDetail(updateDto, existingTelevisionShowDetail);
+            _context.Entry(updatedTelevisionShowDetail).State = EntityState.Modified;
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!TVShowExists(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+            return NoContent();
+            
         }
 
         [HttpDelete("{id}")]
@@ -272,6 +344,16 @@ namespace Medias.Server.Controllers
         private bool MediaItemExists(int id)
         {
             return _context.MediaItems.Any(e => e.Id == id);
+        }
+
+        private bool MovieExists(int id)
+        {
+            return _context.MovieDetails.Any(e => e.MediaItemId == id);
+        }
+
+        private bool TVShowExists(int id)
+        {
+            return _context.TelevisionShowDetails.Any(e => e.MediaItemId == id);
         }
     }
 }

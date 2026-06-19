@@ -1,6 +1,8 @@
 using Medias.Data.Contexts;
 using Medias.Server.Repositories;
 using Medias.Server.Services;
+using Medias.Server.Services.Interfaces;
+using Medias.Server.Settings;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -22,6 +24,8 @@ builder.Services.AddCors(options =>
               .AllowAnyMethod());
 });
 
+builder.Services.AddHttpClient<ITMDbService, TMDbService>();
+
 //Services
 builder.Services.AddScoped<IMediaItemService, MediaItemService>();
 builder.Services.AddScoped<ILibraryService, LibraryService>();
@@ -29,6 +33,9 @@ builder.Services.AddScoped<ILibraryService, LibraryService>();
 //Repositories
 builder.Services.AddScoped<IMediaItemRepository, MediaItemRepository>();
 builder.Services.AddScoped<ILibraryRepository, LibraryRepository>();
+
+builder.Services.Configure<TMDbSettings>(
+    builder.Configuration.GetSection("TMDb"));
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

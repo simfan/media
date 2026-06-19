@@ -1,0 +1,56 @@
+﻿@page "/collections/create"
+
+@using Microsoft.AspNetCore.Components;
+@using Blazor.Sonner;
+@using Blazor.Sonner.Services;
+@using Medias.Shared.DTOs;
+@using Medias.Shared.Enums;
+@using Medias.Shared.Helpers;
+@inject HttpClient Http;
+@inject ToastService Toast;
+@inject NavigationManager Nav;
+
+<h3>Create Collection</h3>
+<div>Create A New Collection!</div>
+<BSForm TValue="CreateCollectionDto" EditContext="EC" OnValidSubmit="CreateNewCollection">
+    <div class="@(@BS.Form_Floating) mb-1">
+        <BSInput InputType="InputType.Text" @bind-Value="newCollection.Name" />
+        <BSLabel IsFloating="true">Name*</BSLabel>
+    </div>
+     <div class="@(@BS.Form_Floating) mb-1">
+        <BSInput InputType="InputType.Text" @bind-Value="newCollection.Description" />
+        <BSLabel IsFloating="true">Description (optional)</BSLabel>
+    </div>
+    <BSButton Color="BSColor.Primary" IsSubmit>Create</BSButton>
+</BSForm>
+<Blazor.Sonner.Toaster @rendermode="InteractiveServer" RichColors ="@true" />
+@code {
+    private EditContext EC;
+    private CreateCollectionDto newCollection = new();
+    private bool loading;
+
+    protected override void OnParametersSet()
+    {
+        EC = new EditContext(newCollection);
+    }
+
+    protected async Task CreateNewCollection()
+    {
+        var response = await Http.PostAsJsonAsync<CreateCollectionDto>("api/collections", newCollection);
+        if(response.IsSuccessStatusCode)
+        {
+            CollectionDto responseValue = await response.Content.ReadFromJsonAsync<CollectionDto>();
+            if(responseValue != null)
+            {
+                Toast.Success($"Created the {responseValue.Name} Collection!");
+                await Task.Delay(5000);
+                Nav.NavigateTo("collections");
+            }
+        }
+        else
+        {
+            Toast.Error("Could not create the Collection");
+        }
+
+    }
+}

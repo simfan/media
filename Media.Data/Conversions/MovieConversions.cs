@@ -63,5 +63,7 @@ namespace Medias.Data.Conversions
             movieDto.Rating = movieDetail.Rating;
             return movieDto;
         }
+
+
     }
 }

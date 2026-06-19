@@ -16,6 +16,7 @@
     <Folder Include="Models\" />
     <Folder Include="Services\" />
     <Folder Include="State\" />
+    <Folder Include="wwwroot\images\" />
   </ItemGroup>
 
   <ItemGroup>

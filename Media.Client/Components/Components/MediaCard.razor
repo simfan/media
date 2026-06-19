@@ -1,12 +1,10 @@
 ﻿@using Microsoft.AspNetCore.Components;
 @using Medias.Shared.DTOs;
-<BSCard>
-    <BSCard CardType="CardType.Header">@MediaItemFull.Title<BSBadge>@MediaItemFull.MediaType</BSBadge></BSCard>
     <BSCard CardType="CardType.Body">
         <p>Description: @MediaItemFull.Description</p>
         <p>Library: @MediaItemFull.LibraryId</p>
     </BSCard>
-</BSCard>
+
 
 @code {
     [Parameter]

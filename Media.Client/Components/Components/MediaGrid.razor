@@ -1,5 +1,41 @@
-﻿<h3>MediaGrid</h3>
+﻿@using Medias.Shared.DTOs;
+@using Medias.Shared.Enums;
+@using Medias.Shared.Helpers;
 
+@inject NavigationManager Nav;
+        @if(MediaItems == null)
+        {
+            <p>Loading</p>
+        }
+        else{
+    <BSTable>
+        <BSRow>
+        @foreach(var mediaItem in MediaItems)
+{
+    <BSCol ColumnLarge="4">
+        <BSCard CardType="CardType.Card" Class="card-link" @onclick="@(() =>NavigateToItemDetail(mediaItem.Id))">
+            <BSCard CardType="CardType.Header" Class="@mediaItem.MediaType.GetMediaClass()">
+                <div class="d-flex justify-content-between align-items-center">
+                    <span>@mediaItem.Title</span><BSBadge Color="BSColor.Info">@mediaItem.MediaType</BSBadge>
+                </div>
+            </BSCard>
+            <BSCard CardType="CardType.Body">
+                        <div>@mediaItem.Description</div>
+                        <div>@mediaItem.CreatedDate</div>
+                    </BSCard>
+        </BSCard>
+    </BSCol>
+
+}
+    </BSRow>
+    </BSTable>
+        }
 @code {
+    [Parameter]
+    public List<MediaItemDto>? MediaItems { get; set; }
 
+    private void NavigateToItemDetail(int id)
+    {
+        Nav.NavigateTo($"media/{id}");   
+    }
 }

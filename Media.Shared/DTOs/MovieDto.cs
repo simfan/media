@@ -114,6 +114,12 @@ namespace Medias.Shared.DTOs
             existingMovie.MediaType = createMovie.MediaType;
             existingMovie.LibraryId = createMovie.LibraryId;
             existingMovie.ThumbnailPath = createMovie.ThumbnailPath;
+            existingMovie.Runtime = createMovie.Runtime;
+            existingMovie.ReleaseDate = createMovie.ReleaseDate;
+            existingMovie.Director = createMovie.Director;
+            existingMovie.Studio = createMovie.Studio;
+            existingMovie.Genre = createMovie.Genre;
+            existingMovie.Rating = createMovie.Rating;
             return existingMovie;
         }
 
@@ -127,7 +133,6 @@ namespace Medias.Shared.DTOs
             //var movieDetails = mediaItemDto.movieDetails;
             return updateMovieDto;
         }
-
         
     }
 

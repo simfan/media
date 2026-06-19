@@ -20,5 +20,6 @@ namespace Medias.Data.Entities
         public MovieDetail? MovieDetail { get; set; }
         public TelevisionShowDetail? TelevisionShowDetail { get; set; }
 
+        public List<MediaItemCollection> MediaItemCollections { get; set; } = new();
     }
 }

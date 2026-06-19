@@ -1,6 +1,40 @@
 ﻿@page "/collections"
+
+@using Microsoft.AspNetCore.Components;
+@using Blazor.Sonner;
+@using Blazor.Sonner.Services;
+@using Medias.Client.Components.Components;
+@using Medias.Shared.DTOs;
+@using Medias.Shared.Enums;
+@using Medias.Shared.Helpers;
+@inject HttpClient Http;
+@inject ToastService Toast;
+
 <h3>Collections</h3>
 
-@code {
+@if(collections != null && collections.Count > 0)
+{
+    
+    <div>
+        <BSRow>
+    @foreach(var collection in collections)
+    {
+            <BSCol Column="3" Class="mb-3">
+                <CollectionCard Collection="collection" />          
+            </BSCol>
+    }
+        </BSRow>
+    </div>
+}
+else
+{
+    <span>No Collections Found <a href="collections/create">Add A Collection</a></span>
+}
 
+@code {
+    private List<CollectionDto>? collections;
+    protected override async Task OnInitializedAsync()
+    {
+        collections = await Http.GetFromJsonAsync <List<CollectionDto>> ("api/Collections");
+    }
 }

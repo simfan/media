@@ -50,6 +50,8 @@ namespace Medias.Data.Conversions
             return existingEntity;
         }
 
+
+
         public static MediaItemDto ToMediaItemDto(this MediaItem entity)
         {
             return new MediaItemDto

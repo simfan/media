@@ -112,6 +112,11 @@ namespace Medias.Shared.DTOs
         {
             var newShow = new CreateTelevisionShowDto()
             {
+                Title = Title,
+                Description = Description,
+                MediaType = MediaType,
+                LibraryId = LibraryId,
+                ThumbnailPath = ThumbnailPath,
                 CreatedBy = CreatedBy,
                 Studio = Studio,
                 Genre = Genre,
@@ -132,6 +137,14 @@ namespace Medias.Shared.DTOs
             existingTelevisionShow.MediaType = createTelevisionShow.MediaType;
             existingTelevisionShow.LibraryId = createTelevisionShow.LibraryId;
             existingTelevisionShow.ThumbnailPath = createTelevisionShow.ThumbnailPath;
+            existingTelevisionShow.CreatedBy = createTelevisionShow.CreatedBy;
+            existingTelevisionShow.Studio = createTelevisionShow.Studio;
+            existingTelevisionShow.Genre = createTelevisionShow.Genre;
+            existingTelevisionShow.Rating = createTelevisionShow.Rating;
+            existingTelevisionShow.Status = createTelevisionShow.Status;
+            existingTelevisionShow.TmdbTvId = createTelevisionShow.TmdbTvId;
+            existingTelevisionShow.ImdbId = createTelevisionShow.ImdbId;
+            existingTelevisionShow.SeasonCount = createTelevisionShow.SeasonCount;
             return existingTelevisionShow;
         }
 

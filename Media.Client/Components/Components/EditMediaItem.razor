@@ -11,33 +11,6 @@
     <div>
         <BSRow>
             <BSCol>
-                @if(MediaItem != null)
-                {
-                    <h1>Edit Media Item</h1>
-                }
-                else
-                {
-                    <h1>Create Media Item</h1>
-                }
-            </BSCol>
-        </BSRow>
-        <BSRow>
-            <BSCol>
-                <div class="@(BS.Form_Floating) mb-1">
-                    <BSInput InputType="InputType.Select" @bind-Value="NewMediaItem.MediaType">
-                        @foreach (var mediaType in Enum.GetValues<MediaTypeValue>())
-                        {
-                            <option value="@mediaType">
-                                @mediaType.GetDisplayName()
-                            </option>
-                        }
-                    </BSInput>
-                    <BSLabel IsFloating="true">Media Type</BSLabel>
-                </div>
-            </BSCol>
-        </BSRow>
-        <BSRow>
-            <BSCol>
                 <div class="@(@BS.Form_Floating) mb-1">
                 <BSInput InputType="InputType.Text" @bind-Value="NewMediaItem.Title"/>
                 <BSLabel IsFloating="true">Title</BSLabel>

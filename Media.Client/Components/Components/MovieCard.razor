@@ -1,13 +1,19 @@
 ﻿@using Microsoft.AspNetCore.Components;
 @using Medias.Shared.DTOs;
-<BSCard>
-    <BSCard CardType="CardType.Header">@Movie.Title<BSBadge>@Movie.MediaType</BSBadge></BSCard>
+
     <BSCard CardType="CardType.Body">
-        <p>Description: @Movie.Description</p>
-        <p>Director: @Movie.Director</p>
-        <p>Release Date: @Movie.ReleaseDate.ToShortDateString()</p>
-        <p>Genre: @Movie.Genre</p>
-        <p>Rating: <div>@for(int i = 0; i < Movie.Rating; i++) { <span>★</span> }</div></p>
+        <BSRow>
+            <BSCol>
+                <p>Description: @Movie.Description</p>
+                <p>Director: @Movie.Director</p>
+                <p>Release Date: @Movie.ReleaseDate.ToShortDateString()</p>
+                <p>Genre: @Movie.Genre</p>
+                <p>Rating: <div>@for(int i = 0; i < Movie.Rating; i++) { <span>★</span> }</div></p>
+            </BSCol>
+            <BSCol>
+        <BSImage Source="images/doomsday.jpg" />
+            </BSCol>
+        </BSRow>
         @if(Movie.LibraryId != null)
         {
             <p>Library: @Movie.LibraryId</p>
@@ -16,7 +22,7 @@
 
     <MediaPlayer/>
 
-</BSCard>
+
 
 @code {
     [Parameter]

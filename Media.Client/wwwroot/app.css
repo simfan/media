@@ -63,3 +63,56 @@ h1:focus {
     background: #210f96;
     color: #39cfed;
 }
+
+.card-link{
+    cursor:pointer;
+}
+
+.collection-movie, .media-movie {
+    /*background: linear-gradient(to bottom right,#DC3545, white);*/
+    /*color: #FCBBBB;
+        */
+    background: #DC3545;
+    color: white;
+}
+.collection-tv, .media-tv {
+    background: #0D6EFD;
+    color: #64d9e8;
+}
+.collection-music, .media-music {
+    background: #198754;
+    color: #72d4a6;
+}
+.collection-book, .media-book {
+    background: #FD7E14;
+    color: #fabf8e;
+    cursor: pointer;
+}
+.collection-photo .media-photo {
+    background: #6F42C1;
+    color: #cab3f5;
+}
+.collection-document, .media-document {
+    background: #6C757D;
+    color: #c1ddf5;
+    
+}
+.collection-podcast, .media-podcast {
+    background: #20C997;
+    color: #bef7e6;
+}
+.collection-other {
+    background: black;
+    color: white;
+}
+.collection-mixed {
+    color: black;
+}
+
+.Add {
+    background: green;
+}
+
+.Remove {
+    background: red;
+}

@@ -1,11 +1,24 @@
 ﻿@page "/"
 
+@using Microsoft.AspNetCore.Components;
+@using Blazor.Sonner;
+@using Blazor.Sonner.Services;
+@using Medias.Client.Components.Components;
+@using Medias.Shared.DTOs;
+@using Medias.Shared.Enums;
+@using Medias.Shared.Helpers;
+@inject HttpClient Http;
+@inject ToastService Toast;
 
 <PageTitle>Home</PageTitle>
-
+@if(loading == true)
+{
+    <div>Loading Items</div>
+}
+else{
 <h1>Media Manager</h1>
 <BSRow>
-Your source for all Movies, TV, Podcasts and Books
+<BSCol>Your source for all Movies, TV, Music, Podcasts and Books</BSCol>
 </BSRow>
 <BSTable>
     <BSTR>
@@ -38,12 +51,12 @@ Your source for all Movies, TV, Podcasts and Books
                 <BSCol>       
                 <BSCard CardType="CardType.Card" style="border: 1px solid;">
                 <BSCard CardType="CardType.Header">Recently Added</BSCard>
-                <BSCard CardType="CardType.Body" >Media Item 1</BSCard>
+                <BSCard CardType="CardType.Body" >@latestItemAdded.Title</BSCard>
             </BSCard>
                 </BSCol><BSCol>
             <BSCard CardType="CardType.Card" style="border: 1px solid;">
                 <BSCard CardType="CardType.Header" style="border: 1px solid;">Recently Updated</BSCard>
-                <BSCard CardType="CardType.Body" style="border: 1px solid;">Media Item A</BSCard>
+                <BSCard CardType="CardType.Body" style="border: 1px solid;">@latestItemUpdated.Title</BSCard>
             </BSCard>
                 </BSCol>
             </BSRow>
@@ -56,8 +69,8 @@ Your source for all Movies, TV, Podcasts and Books
             <BSCard CardType="CardType.Card">
                 <BSCard CardType="CardType.Body" >
                     <BSRow>Books: x</BSRow>
-                    <BSRow>Movies: x</BSRow>
-                    <BSRow>TV: x</BSRow>
+                    <BSRow>Movies: @movieCount</BSRow>
+                    <BSRow>TV: @showCount</BSRow>
                 </BSCard>
             </BSCard>
         </BSTD>
@@ -83,7 +96,30 @@ Your source for all Movies, TV, Podcasts and Books
         </BSTD>
     </BSTR>
 </BSTable>
+}
 @code{
+    private List<MediaItemDto> mediaItems;
+    private MediaItemDto latestItemAdded;
+    private MediaItemDto latestItemUpdated;
+    private int bookCount;
+    private int movieCount;
+    private int showCount;
+    
+    private bool loading = true;
+
+    protected override async Task OnInitializedAsync()
+    {
+        loading = true;
+        StateHasChanged();
+        mediaItems = await Http.GetFromJsonAsync<List<MediaItemDto>>("api/MediaItem");
+        latestItemAdded = mediaItems.OrderByDescending(mi => mi.CreatedDate).FirstOrDefault();
+        latestItemUpdated = mediaItems.OrderByDescending(mi => mi.UpdatedDate).FirstOrDefault();
+        movieCount = mediaItems.Count(mi => mi.MediaType == MediaTypeValue.Movie);
+        showCount = mediaItems.Count(mi => mi.MediaType == MediaTypeValue.TV);
+        loading = false;
+        StateHasChanged();
+    }
+
     private void ToggleMenu()
     {
         Console.WriteLine("Toggle menu clicked");

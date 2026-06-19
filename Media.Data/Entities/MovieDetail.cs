@@ -14,6 +14,8 @@ namespace Medias.Data.Entities
         public string Studio { get; set; }
         public string Genre { get; set; }
         public decimal Rating { get; set; }
+        public int? TmdbMovieId { get;set;  }
+        public string? ImdbId { get; set; }
         public MediaItem MediaItem { get; set; }
     }
 }

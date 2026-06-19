@@ -9,9 +9,28 @@
 @using Medias.Shared.Helpers;
 @inject HttpClient Http;
 @inject ToastService Toast;
+@inject NavigationManager nav;
 
 
 <div>
+    
+    <BSCard>
+        @*<BSCard CardType="CardType.Header">
+            <span>@mediaItemFull.Title<BSBadge>@mediaItemFull.MediaType</BSBadge></span>
+            <span class="text-end">
+                <BSButton Color="BSColor.Primary" Class="text-end">Edit</BSButton>
+            </span>
+        </BSCard>*@
+        <BSCard CardType="CardType.Header">
+    <div class="d-flex justify-content-between align-items-center">
+        <span>
+            @mediaItemFull.Title
+            <BSBadge>@mediaItemFull.MediaType</BSBadge>
+        </span>
+
+        <BSButton Color="BSColor.Primary" OnClick="EditMediaItem">Edit</BSButton>
+    </div>
+</BSCard>
     @switch(mediaItemFull.MediaType)
     {
         case MediaTypeValue.Book:
@@ -31,7 +50,7 @@
             <MediaCard MediaItemFull="mediaItemFull" />
             break;
     }
-    
+    </BSCard>
 </div>
 
 @code {
@@ -83,4 +102,8 @@
         
     }
 
+    private void EditMediaItem()
+    {
+        nav.NavigateTo($"media/{Id}/edit");
+    }
 }

@@ -1,0 +1,80 @@
+﻿@using Medias.Shared.DTOs;
+@using Medias.Shared.Enums
+@using Medias.Shared.Helpers;
+@inject NavigationManager Nav;
+<h3>CollectionCard</h3>
+<BSCard CardType="CardType.Card" Class="@collectionClass" style="@($"background:{collectionColor};")" @onclick="NavigateToCollectionDetail">
+    @Collection.Name
+</BSCard>
+
+@code {
+    [Parameter]
+    public CollectionDto Collection{ get; set; }
+
+    private List<string>? collectionColors;
+    private string collectionClass = "collection-other";
+    private string collectionColor;
+    protected override void OnParametersSet()
+    {
+        /*Test perposes only - remove from code when added Media Items works*/
+        /**********************************************************/
+        Collection.CollectionMediaType = CollectionTypeValue.Mixed;
+        List<MediaItemDto> mediaItems = new();
+        MediaItemDto mediaItem1 = new()
+            {
+                Id = 1,
+                Title = "Iron Man",
+                Description = "I...am...Iron Man",
+                MediaType = MediaTypeValue.Movie,
+                ThumbnailPath = "Test",
+                CreatedDate = new DateTime(2008, 5, 28),
+                UpdatedDate = new DateTime(2008, 5, 28)
+            };
+        MediaItemDto mediaItem2 = new()
+
+            {
+                Id = 2,
+                Title = "Loki",
+                Description = "Time Travelling",
+                MediaType = MediaTypeValue.TV,
+                ThumbnailPath = "Test",
+                CreatedDate = new DateTime(2022, 6, 15),
+                UpdatedDate = new DateTime(2023, 9, 4)
+            };
+
+        mediaItems.Add(mediaItem1);
+        mediaItems.Add(mediaItem2);
+        Collection.Items = mediaItems;
+        /**********************************************************/
+        if(Collection.CollectionMediaType == CollectionTypeValue.Mixed)
+        {
+            if(Collection.Items.Any())
+            {
+                var mediaTypes = Collection.Items
+                .Select(mi => mi.MediaType)
+                .Distinct()
+                .ToList();
+
+                collectionColor = MediaHelpers.GetCollectionBackground(mediaTypes);
+            }
+            else
+            {
+                collectionColor = MediaHelpers.GetCollectionColor(CollectionTypeValue.Other);
+                collectionClass = Collection.CollectionMediaType.GetCollectionClass();
+            }
+        }
+        else
+        {
+            collectionColor = MediaHelpers.GetMediaColor((MediaTypeValue) Collection.CollectionMediaType);
+            //collectionColors.Add(collectionColor);
+        }
+
+
+    }
+
+    private void NavigateToCollectionDetail()
+    {
+        Nav.NavigateTo($"collections/{Collection.CollectionId}");
+    }
+}
+

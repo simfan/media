@@ -1,6 +1,7 @@
 ﻿@page "/media"
 @using Medias.Shared
 @using Medias.Shared.DTOs
+@using Medias.Shared.Enums
 @inject HttpClient Http
 <h3>Media</h3>
 
@@ -11,42 +12,218 @@
     }
     else
     {
-        @if (mediaItems.Count() > 0)
+        <BSNav IsTabs ="true">
+            <BSNavItem>
+                <TabLabel>Online</TabLabel>
+                <TabContent>
+                    <BSCard CardType="CardType.Card">
+                        <BSCard CardType="CardType.Header">Search Online</BSCard>
+                        <BSCard CardType="CardType.Body">
+                            <BSRow>
+                                <BSCol ColumnLarge="9">
+                                    <div>
+                                        <div class="@(BS.Form_Floating) mb-1">
+                                            <BSInput InputType="InputType.Text" @bind-Value="onlineSearchValue" />
+                                            <BSLabel IsFloating="true">Search:</BSLabel>
+                                        </div>
+                                    </div>
+                                </BSCol>
+                                <BSCol ColumnLarge="3">
+                                <BSDropdown>
+                                    <Toggler>
+                                        <BSButton Color="BSColor.Primary">Search</BSButton>
+                                        <BSToggle IsButton ="true" Color="BSColor.Primary" IsSplitButton="true"></BSToggle>
+                                    </Toggler>
+                                    <Content>
+                                        <BSDropdownItem OnClick="TMDbMovieSearch">Movie</BSDropdownItem>
+                                        <BSDropdownItem OnClick="TMDbTVSearch">TV</BSDropdownItem>
+                                    </Content>
+                                </BSDropdown>
+                                </BSCol>
+                            </BSRow>
+                        </BSCard>
+                    </BSCard>
+                    @if(movieSearchResults != null && movieSearchResults.Count > 0)
+                    {
+                        foreach(var movieSearchResult in movieSearchResults)
+                        {
+                            <BSCard CardType="CardType.Card">
+                                <BSCard CardType="CardType.Header">
+                                    <div class="text-end"><BSButton>Import</BSButton></div>
+                                </BSCard>
+                                <BSCard CardType="CardType.Body">
+                                    <BSRow>
+                                        <BSCol>
+                                            <h4>@movieSearchResult.Title</h4>
+                                            <span>@movieSearchResult.Release_Date</span>
+                                            <p>@movieSearchResult.Overview</p>
+                                        </BSCol>
+                                        <BSCol>
+                                            <BSImage Source="@($"https://image.tmdb.org/t/p/w500{movieSearchResult.Poster_Path}")" />
+                                        </BSCol>
+                                    </BSRow>
+                                </BSCard>
+                            </BSCard>
+                        }
+                    }
+                    @if(tvSearchResults != null && tvSearchResults.Count >0)
+                    {
+                        foreach (var tvSearchResult in tvSearchResults)
+                        {
+                        <BSCard CardType="CardType.Card">
+                            <BSCard CardType="CardType.Header">
+                                <div class="text-end"><BSButton>Import</BSButton></div>
+                            </BSCard>
+                            <BSCard CardType="CardType.Body">
+                                <BSRow>
+                                    <BSCol>
+                                        <h4>@tvSearchResult.Name</h4>
+                                        <span>@tvSearchResult.First_Air_Date - @tvSearchResult.Last_Air_Date</span>
+                                        <p>@tvSearchResult.Overview</p>
+                                    </BSCol>
+                                    <BSCol>
+                                        <BSImage Source="@($"https://image.tmdb.org/t/p/w500{tvSearchResult.Poster_Path}")" />
+                                    </BSCol>
+                                </BSRow>
+                            </BSCard>
+                        </BSCard>
+                        }
+                    }
+                </TabContent>
+            </BSNavItem>
+            @if(mediaItems.Count () >0)
+            {
+                <BSNavItem>
+                    <TabLabel>Local</TabLabel>
+                    <TabContent>
+                        <BSCard CardType="CardType.Card">
+                            <BSCard CardType="CardType.Header">
+                                <BSRow>
+                                    <BSCol ColumnLarge="1"><BSBadge>Filter</BSBadge></BSCol>
+                                    <BSCol ColumnLarge="9">
+                                        <BSInputRadio CheckedValue="@MediaTypeValue.Movie" @bind-Value="mediaFilter" IsToggle="true" @onchange="FilterMediaItems">Movie</BSInputRadio>
+                                        <BSInputRadio CheckedValue="@MediaTypeValue.TV" @bind-Value="mediaFilter" IsToggle="true" @onchange="FilterMediaItems">TV</BSInputRadio>
+                                        <BSInputRadio CheckedValue="@MediaTypeValue.Other" @bind-Value="mediaFilter" IsToggle="true" @onchange="FilterMediaItems">Other</BSInputRadio>
+                                    </BSCol>
+                                    <BSCol ColumnLarge="2" Class="text-end"><BSButton Color="BSColor.Danger" OnClick="ClearFilter">Clear Filter</BSButton></BSCol>
+                                </BSRow>
+                            </BSCard>
+                            <BSCard CardType="CardType.Body">
+                                <BSTable>
+                                    <BSTHead>
+                                        <BSTD>Media Type</BSTD>
+                                        <BSTD>Title</BSTD>
+                                        <BSTD>Description</BSTD>
+                                        <BSTD>Location</BSTD>
+
+                                    </BSTHead>
+                                    <BSTBody>
+                                        @foreach (var item in filteredMediaItems)
+                                        {
+                                            <BSTR>
+                                                <BSTD>@item.MediaType</BSTD>
+                                                <BSTD>@item.Title</BSTD>
+                                                <BSTD>@item.Description</BSTD>
+                                                <BSTD>@item.ThumbnailPath</BSTD>
+                                            </BSTR>
+                                        }
+                                    </BSTBody>
+                                </BSTable>
+                            </BSCard>
+                        </BSCard>
+                    </TabContent>
+                </BSNavItem>
+            }
+        </BSNav>
+        
+        @*if (mediaItems.Count() > 0)
         {
+            <BSCard CardType="CardType.Card">
+                <BSCard CardType="CardType.Header">
+                    <BSRow>
+                        <BSCol ColumnLarge="1"><BSBadge>Filter</BSBadge></BSCol>
+                    <BSCol ColumnLarge="9">
+                        <BSInputRadio CheckedValue="@MediaTypeValue.Movie" @bind-Value="mediaFilter" IsToggle="true" @onchange="FilterMediaItems">Movie</BSInputRadio>
+                        <BSInputRadio CheckedValue="@MediaTypeValue.TV" @bind-Value="mediaFilter" IsToggle="true" @onchange="FilterMediaItems">TV</BSInputRadio>
+                        <BSInputRadio CheckedValue="@MediaTypeValue.Other" @bind-Value="mediaFilter" IsToggle="true" @onchange="FilterMediaItems">Other</BSInputRadio>
+                    </BSCol>
+                    <BSCol ColumnLarge="2" Class="text-end"><BSButton Color="BSColor.Danger" OnClick="ClearFilter">Clear Filter</BSButton></BSCol>
+                    </BSRow>
+                </BSCard>
+                <BSCard CardType="CardType.Body">
             <BSTable>
-                <BSTR>
+                <BSTHead>
                     <BSTD>Media Type</BSTD>
                     <BSTD>Title</BSTD>
                     <BSTD>Description</BSTD>
                     <BSTD>Location</BSTD>
-                    <BSTD>Collection</BSTD>
-                </BSTR>
-                @foreach (var item in mediaItems)
+                    
+                </BSTHead>
+                <BSTBody>
+                @foreach (var item in filteredMediaItems)
                 {
                     <BSTR>
                         <BSTD>@item.MediaType</BSTD>
                         <BSTD>@item.Title</BSTD>
                         <BSTD>@item.Description</BSTD>
                         <BSTD>@item.ThumbnailPath</BSTD>
-                        <BSTD>@item.LibraryId</BSTD>
                     </BSTR>
                 }
+                </BSTBody>
             </BSTable>
+                </BSCard>
+            </BSCard>
         }
         else
         {
             <p>No Media Items found. Please add some <a href="/media/create">here</a></p>
-        }
+        }*@
     }
 </div>
 @code {
     private MediaItemDto[]? mediaItems;
-    private MediaItemDto[]? mediaItems2;
+    private MediaItemDto[]? filteredMediaItems;
+    private MediaTypeValue? mediaFilter;
+
+    private string? onlineSearchValue;
+    private List<TMDbMovieSearchRecord>? movieSearchResults = new();
+    private List<TMDbTVSearchRecord>? tvSearchResults = new();
     protected override async Task OnInitializedAsync()
     {
         // Simulate asynchronous loading to demonstrate streaming rendering
         await Task.Delay(500);
-        
+
         mediaItems = await Http.GetFromJsonAsync<MediaItemDto[]>("api/MediaItem");
+        filteredMediaItems = mediaItems;
+    }
+
+    private async Task TMDbMovieSearch()
+    {
+        ClearOnlineSearchFields();
+        movieSearchResults = await Http.GetFromJsonAsync<List<TMDbMovieSearchRecord>>($"api/tmdb/movie/search?title={onlineSearchValue}");
+
+    }
+
+    private async Task TMDbTVSearch()
+    {
+        ClearOnlineSearchFields();
+        tvSearchResults = await Http.GetFromJsonAsync<List<TMDbTVSearchRecord>>($"api/tmdb/tv/search?name={onlineSearchValue}");
+    }
+
+    private void ClearOnlineSearchFields()
+    {
+        movieSearchResults.Clear();
+        tvSearchResults.Clear();
+    }
+
+    private void FilterMediaItems()
+    {
+        filteredMediaItems = mediaItems.Where(mi => mi.MediaType == mediaFilter).ToArray();
+    }
+
+    private void ClearFilter()
+    {
+        mediaFilter = null;
+        filteredMediaItems = mediaItems;
     }
 }

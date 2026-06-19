@@ -17,6 +17,36 @@ namespace Medias.Data.Migrations
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "10.0.8");
 
+            modelBuilder.Entity("Medias.Data.Entities.Collection", b =>
+                {
+                    b.Property<int>("CollectionId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(2000)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime?>("UpdatedDate")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("CollectionId");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
+
+                    b.ToTable("Collections", (string)null);
+                });
+
             modelBuilder.Entity("Medias.Data.Entities.Library", b =>
                 {
                     b.Property<int>("Id")
@@ -149,6 +179,21 @@ namespace Medias.Data.Migrations
                     b.ToTable("MediaItems", (string)null);
                 });
 
+            modelBuilder.Entity("Medias.Data.Entities.MediaItemCollection", b =>
+                {
+                    b.Property<int>("MediaItemId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("CollectionId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("MediaItemId", "CollectionId");
+
+                    b.HasIndex("CollectionId");
+
+                    b.ToTable("MediaItemCollections", (string)null);
+                });
+
             modelBuilder.Entity("Medias.Data.Entities.MovieDetail", b =>
                 {
                     b.Property<int>("MediaItemId")
@@ -164,6 +209,9 @@ namespace Medias.Data.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("ImdbId")
+                        .HasColumnType("TEXT");
+
                     b.Property<decimal>("Rating")
                         .HasColumnType("TEXT");
 
@@ -177,6 +225,9 @@ namespace Medias.Data.Migrations
                         .IsRequired()
                         .HasMaxLength(200)
                         .HasColumnType("TEXT");
+
+                    b.Property<int?>("TmdbMovieId")
+                        .HasColumnType("INTEGER");
 
                     b.HasKey("MediaItemId");
 
@@ -346,6 +397,25 @@ namespace Medias.Data.Migrations
                     b.Navigation("Library");
                 });
 
+            modelBuilder.Entity("Medias.Data.Entities.MediaItemCollection", b =>
+                {
+                    b.HasOne("Medias.Data.Entities.Collection", "Collection")
+                        .WithMany("MediaItemCollections")
+                        .HasForeignKey("CollectionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Medias.Data.Entities.MediaItem", "MediaItem")
+                        .WithMany("MediaItemCollections")
+                        .HasForeignKey("MediaItemId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Collection");
+
+                    b.Navigation("MediaItem");
+                });
+
             modelBuilder.Entity("Medias.Data.Entities.MovieDetail", b =>
                 {
                     b.HasOne("Medias.Data.Entities.MediaItem", "MediaItem")
@@ -390,6 +460,11 @@ namespace Medias.Data.Migrations
                     b.Navigation("MediaItem");
                 });
 
+            modelBuilder.Entity("Medias.Data.Entities.Collection", b =>
+                {
+                    b.Navigation("MediaItemCollections");
+                });
+
             modelBuilder.Entity("Medias.Data.Entities.Library", b =>
                 {
                     b.Navigation("MediaItems");
@@ -398,6 +473,8 @@ namespace Medias.Data.Migrations
             modelBuilder.Entity("Medias.Data.Entities.MediaItem", b =>
                 {
                     b.Navigation("MediaFiles");
+
+                    b.Navigation("MediaItemCollections");
 
                     b.Navigation("MovieDetail");
 

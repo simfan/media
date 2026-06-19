@@ -106,5 +106,18 @@ namespace Medias.Data.Conversions
             televisionShowDto.SeasonCount = televisionShowDetail.SeasonCount;
             return televisionShowDto;
         }
+
+        public static TelevisionShowDetail UpdateDtoToTelevisionShowDetail(this UpdateTelevisionShowDto dto, TelevisionShowDetail existingEntity)
+        {
+            existingEntity.CreatedBy = dto.CreatedBy;
+            existingEntity.Studio = dto.Studio;
+            existingEntity.Genre = dto.Genre;
+            existingEntity.Rating = dto.Rating;
+            existingEntity.Status = dto.Status;
+            existingEntity.TmdbTvId = dto.TmdbTvId;
+            existingEntity.ImdbId = dto.ImdbId;
+            existingEntity.SeasonCount = dto.SeasonCount;
+            return existingEntity;
+        }
     }
 }
