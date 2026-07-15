@@ -3,6 +3,7 @@
 @using Medias.Shared.DTOs
 @using Medias.Shared.Enums
 @inject HttpClient Http
+@inject NavigationManager Nav
 <h3>Media</h3>
 
 <div>
@@ -37,6 +38,7 @@
                                     <Content>
                                         <BSDropdownItem OnClick="TMDbMovieSearch">Movie</BSDropdownItem>
                                         <BSDropdownItem OnClick="TMDbTVSearch">TV</BSDropdownItem>
+                                        <BSDropdownItem>Music (Song)</BSDropdownItem>
                                     </Content>
                                 </BSDropdown>
                                 </BSCol>
@@ -49,7 +51,7 @@
                         {
                             <BSCard CardType="CardType.Card">
                                 <BSCard CardType="CardType.Header">
-                                    <div class="text-end"><BSButton>Import</BSButton></div>
+                                    <div class="text-end"><BSButton OnClick="(() => NavToImportMovie(movieSearchResult.ID))">Import</BSButton></div>
                                 </BSCard>
                                 <BSCard CardType="CardType.Body">
                                     <BSRow>
@@ -100,12 +102,16 @@
                             <BSCard CardType="CardType.Header">
                                 <BSRow>
                                     <BSCol ColumnLarge="1"><BSBadge>Filter</BSBadge></BSCol>
-                                    <BSCol ColumnLarge="9">
+                                    <BSCol ColumnLarge="8">
                                         <BSInputRadio CheckedValue="@MediaTypeValue.Movie" @bind-Value="mediaFilter" IsToggle="true" @onchange="FilterMediaItems">Movie</BSInputRadio>
                                         <BSInputRadio CheckedValue="@MediaTypeValue.TV" @bind-Value="mediaFilter" IsToggle="true" @onchange="FilterMediaItems">TV</BSInputRadio>
+                                        <BSInputRadio CheckedValue="@MediaTypeValue.Music" @bind-Value="mediaFilter" IsToggle="true" @onchange="FilterMediaItems">Music</BSInputRadio>
                                         <BSInputRadio CheckedValue="@MediaTypeValue.Other" @bind-Value="mediaFilter" IsToggle="true" @onchange="FilterMediaItems">Other</BSInputRadio>
                                     </BSCol>
-                                    <BSCol ColumnLarge="2" Class="text-end"><BSButton Color="BSColor.Danger" OnClick="ClearFilter">Clear Filter</BSButton></BSCol>
+                                    <BSCol ColumnLarge="3" Class="text-end">
+                                        <BSButton Color="BSColor.Danger" OnClick="ClearFilter">Clear Filter</BSButton>
+                                        <BSButton Color="BSColor.Success" OnClick="NavToCreate">Create</BSButton>
+                                    </BSCol>
                                 </BSRow>
                             </BSCard>
                             <BSCard CardType="CardType.Body">
@@ -188,6 +194,7 @@
     private string? onlineSearchValue;
     private List<TMDbMovieSearchRecord>? movieSearchResults = new();
     private List<TMDbTVSearchRecord>? tvSearchResults = new();
+    private List<SearachResultDto>? musicSearchResults = new();
     protected override async Task OnInitializedAsync()
     {
         // Simulate asynchronous loading to demonstrate streaming rendering
@@ -210,10 +217,17 @@
         tvSearchResults = await Http.GetFromJsonAsync<List<TMDbTVSearchRecord>>($"api/tmdb/tv/search?name={onlineSearchValue}");
     }
 
+    private async Task MusicBrainzRecordingSearch()
+    {
+        ClearOnlineSearchFields();
+        musicSearchResults = await Http.GetFromJsonAsync<List<SearachResultDto>>($"api/musicbrainz/recording/search?title={onlineSearchValue}");
+    }
+
     private void ClearOnlineSearchFields()
     {
         movieSearchResults.Clear();
         tvSearchResults.Clear();
+        musicSearchResults.Clear();
     }
 
     private void FilterMediaItems()
@@ -225,5 +239,31 @@
     {
         mediaFilter = null;
         filteredMediaItems = mediaItems;
+    }
+
+    private void NavToCreate()
+    {
+        string? mediaFilterText;
+        switch(mediaFilter)
+        {
+            case MediaTypeValue.Movie:
+                mediaFilterText = "movie";
+                break;
+            case MediaTypeValue.TV:
+                mediaFilterText = "tv";
+                break;
+            case MediaTypeValue.Music:
+                mediaFilterText = "music";
+                break;
+            default:
+                mediaFilterText = "";
+                break;
+        }
+        Nav.NavigateTo($"/media/create/{mediaFilterText}");
+    }
+
+    private void NavToImportMovie(int tmdbId)
+    {
+        Nav.NavigateTo($"/import/movie/{tmdbId}");
     }
 }

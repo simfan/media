@@ -1,4 +1,5 @@
 ﻿using Medias.Shared.Enums;
+using Medias.Shared.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -19,6 +20,7 @@ namespace Medias.Shared.DTOs
         public LibraryDto Library { get; set; }
         public MovieDetailsDto? MovieDetails { get; set; }
         public TelevisionShowDto? TelevisionShowDetails { get; set; }
+        public MusicDto? MusicDetails { get; set; }
         public List<CollectionDto> Collections { get; set; }
         public MediaItemDto ToMediaItemDto ()
         {
@@ -82,6 +84,31 @@ namespace Medias.Shared.DTOs
                 }
             }
             return televisionShowDto;
+        }
+
+        public MusicDto ToMusicDto()
+        {
+            var musicDto = new MusicDto()
+            {
+                Id = Id,
+                Title = Title,
+                Description = Description,
+                MediaType = MediaType,
+                LibraryId = LibraryId,
+                ThumbnailPath = ThumbnailPath,
+                Artist = MusicDetails?.Artist,
+                Writer = MusicDetails?.Writer,
+                Studio = MusicDetails?.Studio,
+                Genre = MusicDetails?.Genre,
+                RuntimeMinutes = MusicDetails.RuntimeMinutes,
+                RuntimeSeconds = MusicDetails.RuntimeSeconds,
+                FirstReleased = MusicDetails.FirstReleased,
+                Rating = MusicDetails.Rating,
+                CoverArtPath = MusicDetails.CoverArtPath,
+                MusicBrainzRecordingId = MusicDetails.MusicBrainzRecordingId
+            };
+            return musicDto;
+
         }
     }
 

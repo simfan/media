@@ -16,7 +16,7 @@ namespace Medias.Shared.Enums
         Other = 99,
     };
 
-    public enum CollectionTypeValue
+    public enum CollectionMediaTypeValue
     {
      
         Movie = 1,
@@ -28,6 +28,14 @@ namespace Medias.Shared.Enums
         Podcast = 7,
         Other = 99,
         Mixed = 100
+    };
+
+    public enum CollectionTypeValue
+    {
+        Default = 1,
+        TvShow = 2,
+        TvEpisode = 3,
+        Album = 4
     };
 
 }

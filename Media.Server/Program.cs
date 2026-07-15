@@ -25,6 +25,7 @@ builder.Services.AddCors(options =>
 });
 
 builder.Services.AddHttpClient<ITMDbService, TMDbService>();
+builder.Services.AddHttpClient<IMusicBrainzService, MusicBrainzService>();
 
 //Services
 builder.Services.AddScoped<IMediaItemService, MediaItemService>();

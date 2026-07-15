@@ -91,6 +91,11 @@ namespace Medias.Data.Conversions
                 mediaItemFull.TelevisionShowDetails = entity.TelevisionShowDetail.ToTelevisionShowDto();
             }
 
+            /*if(entity.MusicDetail != null)
+            {
+                mediaItemFull.MusicDetails = entity.MusicDetail.ToMusicDto();
+            }*/
+
             return mediaItemFull;
         }
 
@@ -168,6 +173,23 @@ namespace Medias.Data.Conversions
                 AirDate = entity.AirDate,
                 Runtime = entity.Runtime,
                 Rating = entity.Rating
+            };
+        }
+
+       public static MusicDto ToMusicDto(this MusicDetail entity)
+        {
+            return new MusicDto()
+            {
+                Artist = entity.Artist,
+                Writer = entity.Writer,
+                Studio = entity.Studio,
+                Genre = entity.Genre,
+                FirstReleased = entity.FirstReleased,
+                Rating = entity.Rating,
+                CoverArtPath = entity.CoverArtPath,
+                MusicBrainzRecordingId = entity.MusicBrainzRecordingId,
+                RuntimeMinutes = entity.Runtime / 60,
+                RuntimeSeconds = entity.Runtime % 60
             };
         }
     }

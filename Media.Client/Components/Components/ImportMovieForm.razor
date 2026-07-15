@@ -1,0 +1,82 @@
+﻿@using Medias.Shared.DTOs;
+@using Medias.Shared.Helpers;
+@using Blazor.Sonner;
+@using Blazor.Sonner.Services;
+@inject HttpClient Http;
+@inject ToastService Toast;
+
+<h3>Import Movie Details</h3>
+<span>This movie already existis in the database. Please review the differences and update any information needed</span>
+<div>
+    <BSCard CardType="CardType.Card">
+        <BSCard CardType="CardType.Header">
+            @ImportInfo.ExisitingMovie.Title
+        </BSCard>
+        <BSCard CardType="CardType.Body">
+            <BSTable>
+                <BSTHead>
+                    <BSRow>
+                        <BSCol ColumnLarge="2">Field Name</BSCol>
+                        <BSCol ColumnLarge="4">Exisiting Data</BSCol>
+                        <BSCol ColumnLarge="4">TMDb Data</BSCol>
+                        <BSCol ColumnLarge="2">Use TMDb Data</BSCol>
+                    </BSRow>
+                </BSTHead>
+            <BSRow>
+                <BSCol ColumnLarge="2">Description</BSCol>
+                <BSCol ColumnLarge="4">
+                    @ImportInfo?.ExisitingMovie?.Description
+                </BSCol>
+                <BSCol ColumnLarge="4">
+                    @ImportInfo.TMDbMovie.Description
+                </BSCol>
+                <BSCol>
+                    <div class="@(BS.Form_Check)">
+                    <BSInputCheckbox CheckedValue = "true" @bind-Value="useDescription"/>
+                    <BSLabel IsCheckLabel="true">Use TMDb Descripion</BSLabel>
+                        </div>
+                </BSCol>
+                </BSRow>
+                </BSTable>
+        </BSCard>
+        <BSCard CardType="CardType.Footer"><BSButton OnClick="UpdateMovie">Update Movie</BSButton></BSCard>
+    </BSCard>
+</div>
+<Blazor.Sonner.Toaster @rendermode="InteractiveServer" RichColors="@true" />
+
+@code {
+    [Parameter]
+    public ImportMovieResultsDto ImportInfo{ get; set; }
+    private UpdateMovieDto CurrentMovie{ get; set; }
+
+    private UpdateMovieDto TMDbMovie{ get; set; }
+
+    private bool useDescription = false;
+    private bool useThumbnail = false;
+    private UpdateMovieDto apiMovie{ get; set; }
+
+    /*protected override async OnParametersSetAsync()
+    {
+
+    }*/
+    private async Task UpdateMovie()
+    {
+        apiMovie = ImportInfo.ExisitingMovie ;
+        if(useDescription == true)
+        {
+            apiMovie.Description = ImportInfo.TMDbMovie.Description;
+        }
+
+        if(useThumbnail == true)
+        {
+            CurrentMovie.ThumbnailPath = TMDbMovie.ThumbnailPath;
+        }
+        var response = await Http.PutAsJsonAsync($"api/MediaItem/{apiMovie.Id}/movie", apiMovie);
+        if(response.IsSuccessStatusCode)
+        {
+            Toast.Success($"Updated Movie with selected TMDb Details");
+
+        }
+
+    }
+}

@@ -31,6 +31,27 @@ namespace Medias.Shared.DTOs
             };
         }
 
+        public CreateTelevisionShowDto ToCreateTelevisionShow()
+        {
+            var newTVShow = new CreateTelevisionShowDto()
+            {
+                Title = Title,
+                Description = Description,
+                MediaType = MediaType,
+                LibraryId = LibraryId,
+                ThumbnailPath = ThumbnailPath,
+                CreatedBy = CreatedBy,
+                Studio = Studio,
+                Genre = Genre,
+                Rating = Rating,
+                Status = Status,
+                TmdbTvId = TmdbTvId,
+                ImdbId = ImdbId,
+                SeasonCount = SeasonCount
+            };
+            return newTVShow;
+        }
+
         public UpdateTelevisionShowDto ToUpdateTelevisionShow()
         {
             var updatedTelevisionShow = new UpdateTelevisionShowDto()
@@ -54,37 +75,6 @@ namespace Medias.Shared.DTOs
         }
     }
 
-    public class TelevisionSeasonDto
-    {
-        public int SeasonId { get; set; }
-        public int TelevisionShowId { get; set; }
-        public int SeasonNumber {  get; set; }
-        public string? Name { get; set; }
-        public string? Description { get; set; }
-        public int EpisodeCount { get; set; }
-        public List<TelevisionEpisodeDto>? Episodes { get; set; }
-
-        public DateTime CreatedAt { get; set; }
-        public DateTime UpdatedAt { get; set; }
-    }
-
-    public class TelevisionEpisodeDto
-    {
-        public int EpisodeId { get; set; }
-        public int EpisodeNumber { get; set; }
-        public int TelevisionShowId { get; set; }
-        public int SeasonId { get; set; }
-        public int SeasonNumber { get; set; }
-        public string Title { get; set; }
-        public string? Description { get; set; }
-        public string Director { get; set; }
-        public DateTime? AirDate { get; set; }
-        public int Runtime { get; set; }
-        public decimal? Rating { get; set; }
-        public DateTime CreatedAt { get; set; }
-        public DateTime UpdatedAt { get; set; }
-    }
-    
     public class CreateTelevisionShowDto :CreateMediaItemDto
     {
         public string CreatedBy { get; set; }
@@ -150,54 +140,6 @@ namespace Medias.Shared.DTOs
 
     }
 
-    public class CreateTelevisionSeasonDto
-    {
-        public int TelevisionShowId { get; set; }
-        public int SeasonNumber { get; set; }
-        public string? Name { get; set; }
-        public string? Description { get; set; }
-        public int EpisodeCount { get; set; }
-    }
-
-    public class CreateTelevisionEpisodeDto
-    {
-        public int EpisodeNumber { get; set; }
-        public int TelevisionShowId { get; set; }
-        public int SeasonId { get; set; }
-        public int SeasonNumber { get; set; }
-        public string Title { get; set; }
-        public string? Description { get; set; }
-        public string Director { get; set; }
-        public DateTime? AirDate { get; set; }
-        public int Runtime { get; set; }
-        public decimal? Rating { get; set; }
-    }
-
-    public class UpdateTelevisionSeasonDto
-    {
-        public int SeasonId { get; set; }
-        public int TelevisionShowId { get; set; }
-        public int SeasonNumber { get; set; }
-        public string? Name { get; set; }
-        public string? Description { get; set; }
-        public int EpisodeCount { get; set; }
-    }
-
-    public class UpdateTelevisionEpisodeDto
-    {
-        public int EpisodeId { get; set; }
-        public int EpisodeNumber { get; set; }
-        public int TelevisionShowId { get; set; }
-        public int SeasonId { get; set; }
-        public int SeasonNumber { get; set; }
-        public string Title { get; set; }
-        public string? Description { get; set; }
-        public string Director { get; set; }
-        public DateTime? AirDate { get; set; }
-        public int Runtime { get; set; }
-        public decimal? Rating { get; set; }
-
-    }
 
 
 }

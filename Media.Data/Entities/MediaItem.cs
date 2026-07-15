@@ -19,7 +19,7 @@ namespace Medias.Data.Entities
         public Library? Library { get; set; }
         public MovieDetail? MovieDetail { get; set; }
         public TelevisionShowDetail? TelevisionShowDetail { get; set; }
-
+        public MusicDetail? MusicDetail { get; set; }
         public List<MediaItemCollection> MediaItemCollections { get; set; } = new();
     }
 }

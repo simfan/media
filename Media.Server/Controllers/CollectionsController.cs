@@ -2,6 +2,7 @@
 using Medias.Data.Conversions;
 using Medias.Data.Entities;
 using Medias.Shared.DTOs;
+using Medias.Shared.Enums;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -23,6 +24,20 @@ namespace Medias.Server.Controllers
             var collections = await _context.Collections.ToListAsync();
             return collections.Select(c => c.ToCollectionDto()).ToList();
         }
+
+        [HttpGet("albums")]
+        public async Task<ActionResult<IEnumerable<AlbumDto>>> GetAlbums()
+        {
+            var collections = await _context.Collections.Include(c => c.Album).ToListAsync();
+            List<AlbumDto> albumDtos = new();
+            foreach (var collection in collections)
+            {
+                var albumDto = collection.ToAlbumDto();
+                albumDtos.Add(albumDto);
+            }
+            return albumDtos;
+        }
+
         [HttpGet("{id}")]
         public async Task<ActionResult<CollectionDto>> GetCollection(int id)
         {
@@ -36,14 +51,46 @@ namespace Medias.Server.Controllers
             }
             return collection.ToCollectionDto();
         }
+
+        [HttpGet("albums/{id}")]
+        public async Task<ActionResult<AlbumDto>> GetAlbum(int id)
+        {
+            var album = await _context.Collections
+                .Include(c => c.Album)
+                    .ThenInclude(a => a.Tracks)
+                        .ThenInclude(t => t.MusicDetail)
+                            .ThenInclude(md => md.MediaItem)
+                .FirstOrDefaultAsync(c => c.CollectionId ==id);
+
+            if(album == null)
+            {
+                return NotFound();
+            }
+
+            return album.ToAlbumDto();
+            
+        }
         [HttpPost]
         public async Task<ActionResult<CollectionDto>> CreateCollection(CreateCollectionDto createDto)
         {
             var collection = createDto.CreateDtoToCollection();
+            //collection.CollectionType = CollectionTypeValue.Default;
             _context.Collections.Add(collection);
             await _context.SaveChangesAsync();
             return CreatedAtAction(nameof(GetCollection), new { id = collection.CollectionId }, collection.ToCollectionDto());
         }
+        /*[HttpPost("album")]
+        public async Task<ActionResult<AlbumDto>> CreateAlbum(CreateAlbumDto createAlbumDto)
+        {
+            var collection = createAlbumDto.CreateDtoToCollection();
+            collection.CollectionType = CollectionTypeValue.Album;
+            _context.Collections.Add(collection);
+            await _context.SaveChangesAsync();
+            var album = createAlbumDto.CreateDtoToAlbum(collection.CollectionId);
+            _context.Albums.Add(album);
+            await _context.SaveChangesAsync();
+            return CreatedAtAction(nameof(GetAlbum), new { id = collection.CollectionId }, AlbumConversions.ToAlbumDto(album));
+        }*/
 
         [HttpPost("mediaCollection")]
         public async void AddMediaItemCollection(MediaItemCollectionDto mediaItemCollectionDto)
@@ -75,6 +122,20 @@ namespace Medias.Server.Controllers
             _context.MediaItemCollections.AddRange(mediaItemCollections);
             await _context.SaveChangesAsync();
 
+        }
+
+        [HttpPost("albumTrack")]
+        public async void AddAlbumTrack(TrackDto trackDto)
+        {
+            var albumTrack = new AlbumTrack()
+            {
+                CollectionId = trackDto.AlbumId,
+                MediaItemId = trackDto.MusicId,
+                TrackNumber = trackDto.TrackNumber,
+                DiscNumber = trackDto.DiscNumber
+            };
+            _context.AlbumTracks.Add(albumTrack);
+            await _context.SaveChangesAsync();
         }
 
         [HttpPut("{id}")]

@@ -23,18 +23,18 @@ namespace Medias.Shared.Helpers
             };
         }
 
-        public static string GetCollectionColor(CollectionTypeValue collectionType)
+        public static string GetCollectionColor(CollectionMediaTypeValue collectionType)
         {
             return collectionType switch
             {
-                CollectionTypeValue.Movie => "#DC3545", //Red
-                CollectionTypeValue.TV => "#0D6EFD",    //Blue
-                CollectionTypeValue.Music => "#198754",  //Green
-                CollectionTypeValue.Book => "#FD7E14",   //Orange
-                CollectionTypeValue.Photo => "#6F42C1",  //Purple
-                CollectionTypeValue.Document => "#6C757D", //Gray
-                CollectionTypeValue.Podcast => "#20C997", //Teal
-                CollectionTypeValue.Other => "#FFFFFF",   //Black
+                CollectionMediaTypeValue.Movie => "#DC3545", //Red
+                CollectionMediaTypeValue.TV => "#0D6EFD",    //Blue
+                CollectionMediaTypeValue.Music => "#198754",  //Green
+                CollectionMediaTypeValue.Book => "#FD7E14",   //Orange
+                CollectionMediaTypeValue.Photo => "#6F42C1",  //Purple
+                CollectionMediaTypeValue.Document => "#6C757D", //Gray
+                CollectionMediaTypeValue.Podcast => "#20C997", //Teal
+                CollectionMediaTypeValue.Other => "#FFFFFF",   //Black
                 _ => "#212529"
             };
         }
@@ -54,18 +54,18 @@ namespace Medias.Shared.Helpers
             };
         }
 
-        public static string GetCollectionClass(this CollectionTypeValue collectionType)
+        public static string GetCollectionClass(this CollectionMediaTypeValue collectionType)
         {
             return collectionType switch
             {
-                CollectionTypeValue.Movie => "collection-movie", //Red
-                CollectionTypeValue.TV => "collection-tv",    //Blue
-                CollectionTypeValue.Music => "collection-music",  //Green
-                CollectionTypeValue.Book => "collection-book",   //Orange
-                CollectionTypeValue.Photo => "collection-photo",  //Purple
-                CollectionTypeValue.Document => "collection-document", //Gray
-                CollectionTypeValue.Podcast => "collection-podcast", //Teal
-                CollectionTypeValue.Mixed => "collection-mixed",   //Black
+                CollectionMediaTypeValue.Movie => "collection-movie", //Red
+                CollectionMediaTypeValue.TV => "collection-tv",    //Blue
+                CollectionMediaTypeValue.Music => "collection-music",  //Green
+                CollectionMediaTypeValue.Book => "collection-book",   //Orange
+                CollectionMediaTypeValue.Photo => "collection-photo",  //Purple
+                CollectionMediaTypeValue.Document => "collection-document", //Gray
+                CollectionMediaTypeValue.Podcast => "collection-podcast", //Teal
+                CollectionMediaTypeValue.Mixed => "collection-mixed",   //Black
                 _ => "collection-other"
             };
         }

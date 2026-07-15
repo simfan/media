@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Medias.Shared.Enums;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -11,6 +12,8 @@ namespace Medias.Data.Entities
         public string Description { get; set; }
         public DateTime CreatedDate { get; set; }
         public DateTime? UpdatedDate { get; set; }
+        //public  CollectionTypeValue? CollectionType { get; set; }
         public List<MediaItemCollection> MediaItemCollections { get; set; }
+        public Album? Album { get; set; }
     }
 }

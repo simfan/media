@@ -8,10 +8,10 @@ namespace Medias.Server.Conversions
 {
     public static class TMDbConversions
     {
-        public static MovieDto ToMovieDto(this Medias.Server.DTOs.TMDbMovieResult entity)
+        public static UpdateMovieDto ToMovieDto(this Medias.Server.DTOs.TMDbMovieResult entity)
         {
             //DateTime releaseDate = DateTime.ParseExact(entity.Release_Date,)
-            return new MovieDto
+            return new UpdateMovieDto
             {
                 Id = 0,
                 Title = entity.Title,

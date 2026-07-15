@@ -42,8 +42,10 @@
                     case MediaTypeValue.TV:
                         <EditTV MediaItemId="MediaId" Show="updateTvShow" />
                         break;
-                            
-                    default:
+                    case MediaTypeValue.Music:
+                    <EditMusic MediaItemId="MediaId" Music="updateMusic" />
+                break;
+            default:
                         <EditMediaItem MediaItemId="MediaId" MediaItem="updateMediaItem"/>
                         break;
                 }
@@ -62,6 +64,7 @@
     private UpdateMediaItemDto updateMediaItem = new UpdateMediaItemDto();
     private UpdateMovieDto updateMovie = new UpdateMovieDto();
     private UpdateTelevisionShowDto updateTvShow = new UpdateTelevisionShowDto();
+    private UpdateMusicDto updateMusic = new UpdateMusicDto();
     private MediaTypeValue selectedMediaType;
     protected override async Task OnInitializedAsync()
     {
@@ -107,17 +110,17 @@
             {
                 switch (selectedMediaType)
                 {
-                        /*case MediaTypeValue.Book:
+                    /*case MediaTypeValue.Book:
                     currentItem = mediaItem?.ToBookDto() ?? new BookDto();
                 break;*/
-        case MediaTypeValue.Movie:
+            case MediaTypeValue.Movie:
                     currentItem = movieItem;
                     break;
                     /*case MediaTypeValue.TV:
                     currentItem = mediaItem?.ToTVDto() ?? new TVDto();
                     break;*/
-                                default:
-            currentItem = new MediaItemDto();
+                                                            default:
+                currentItem = new MediaItemDto();
                     break;
                 }
 
@@ -126,17 +129,19 @@
                         /*case MediaTypeValue.Book:
                     //updateMediaItem = mediaItem?.ToUpdateBook();
                     break;*/
-        case MediaTypeValue.Movie:
+            case MediaTypeValue.Movie:
                     //updateMediaItem = mediaItem?.ToUpdateMovie();
                     movieItem = Helpers.MediaItemConverter<MovieDto>(currentItem);
                     updateMovie= movieItem.ToUpdateMovie();
                     break;
-                    /*case MediaTypeValue.TV:
-                    updateMediaItem = mediaItem?.ToUpdateTV();
-                    break;*/
-                                                                                    default:
-                updateMediaItem = mediaItem?.ToUpdateMediaItem();
+                case MediaTypeValue.TV:
+                    /*updateMediaItem = mediaItem?.ToUpdateTV();*/
+                    tvShow = Helpers.MediaItemConverter<TelevisionShowDto>(currentItem);
+                    updateTvShow = tvShow.ToUpdateTelevisionShow();
                     break;
+                default:
+                        updateMediaItem = mediaItem?.ToUpdateMediaItem();
+                        break;
                 }
             }
             else

@@ -51,10 +51,11 @@ namespace Medias.Data.Conversions
         public static MovieDto ToMovieDto(MediaItem mediaItem)
         {
             MovieDto movieDto = new MovieDto();
+            
             var movieDetail = mediaItem.MovieDetail;
             var mediaItemDto = mediaItem.ToMediaItemDto();
             //movieDto = (MovieDto)mediaItem.ToMediaItemDto();
-            movieDto.LoadFromMediaItemDto(mediaItemDto);
+            movieDto = movieDto.LoadFromMediaItemDto(mediaItemDto);
             movieDto.Runtime = movieDetail.Runtime;
             movieDto.ReleaseDate = movieDetail.ReleaseDate;
             movieDto.Director = movieDetail.Director;

@@ -11,12 +11,12 @@ namespace Medias.Server.Controllers
     public class TMDbController : ControllerBase
     {
         private readonly ITMDbService _tmdbService;
-        //private readonly MediaItemService _mediaItemService;
+        private readonly IMediaItemService _mediaItemService;
 
-        public TMDbController(ITMDbService tmdbService)//, MediaItemService mediaItemService)
+        public TMDbController(ITMDbService tmdbService, IMediaItemService mediaItemService)
         {
             _tmdbService = tmdbService;
-            //_mediaItemService = mediaItemService;
+            _mediaItemService = mediaItemService;
         }
         [HttpGet("movie/search")]
         public async Task<ActionResult<IEnumerable<TMDbMovieSearchRecord>>> SearchMovie(string title)
@@ -37,18 +37,31 @@ namespace Medias.Server.Controllers
             return Ok(searchResults);
         }
 
-        /*[HttpGet("movie/search/{id}")]
-        public async Task<ActionResult<MovieDto>> SearchMovieByTMDbId(int id) 
+        [HttpGet("movie/{id}")]
+        public async Task<ActionResult<UpdateMovieDto>> GetMovieByTMDbId(int id) 
         {
-            /*MovieDto movieDto = await _mediaItemService.GetMovieByTmdbId(id);
-            if(movieDto == null)
+            UpdateMovieDto movieDto =  (await _mediaItemService.GetMovieByTmdbId(id)).ToUpdateMovie();
+            if (movieDto == null)
             {
-                var onlineMovie = await _tmdbService.GetMovieById(id);
-                movieDto = TMDbConversions.ToMovieDto(onlineMovie);
+                movieDto = await _tmdbService.GetMovieById(id);
             }
             return movieDto;
-            
-        }*/
+             
+        }
+        [HttpGet("movie/{id}/online")]
+        public async Task<ActionResult<UpdateMovieDto>> GetMovieByTMDbIdOnline(int id)
+        {
+            var movieDto = await _tmdbService.GetMovieById(id);
+            return movieDto;
+         
+        }
+
+        [HttpGet("movie/{id}/import")]
+        public async Task<ActionResult<ImportMovieResultsDto>> ImportMovieData(int id)
+        {
+            var importMovieDto = await _tmdbService.ImportMovieData(id);
+            return importMovieDto;
+        }
 
         [HttpGet("tv/search")]
         public async Task<ActionResult<IEnumerable<TMDbTVSearchRecord>>> SearchTV(string name)

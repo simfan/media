@@ -14,7 +14,7 @@ namespace Medias.Shared.DTOs
         public string? Description { get; set; }
         public DateTime CreatedDate { get; set; }
         public DateTime? UpdatedDate { get; set; }
-        public CollectionTypeValue CollectionMediaType { get; set; }
+        public CollectionMediaTypeValue CollectionMediaType { get; set; }
        // public string? CoverImageURL { get; set; }
         public List<MediaItemDto>? Items { get; set; }
     }
@@ -23,6 +23,7 @@ namespace Medias.Shared.DTOs
     {
         public string Name { get; set; }
         public string? Description { get; set; }
+        //public CollectionTypeValue? CollectionType { get; set; } = CollectionTypeValue.Default;
     }
 
     public class UpdateCollectionDto 

@@ -1,13 +1,15 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Medias.Data;
-using Medias.Data.Entities;
+﻿using Medias.Data;
 using Medias.Data.Configurations;
 using Medias.Data.Contexts;
 using Medias.Data.Conversions;
+using Medias.Data.Entities;
+using Medias.Server.Services;
 using Medias.Shared.DTOs;
 using Medias.Shared.Enums;
-using Medias.Server.Services;
+using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using System.Security.Cryptography.X509Certificates;
 
 namespace Medias.Server.Controllers
 {
@@ -75,7 +77,12 @@ namespace Medias.Server.Controllers
                         .Include(tv => tv.Seasons)
                         .ThenInclude(s => s.Episodes)
                         .FirstOrDefaultAsync(tv => tv.MediaItemId == id);
-                        mediaItem.TelevisionShowDetail = tvDetails;    
+                        mediaItem.TelevisionShowDetail = tvDetails;
+                    break;
+                case MediaTypeValue.Music:
+                    var musicDetails = await _context.MusicDetails
+                        .FirstOrDefaultAsync(md => md.MediaItemId == id);
+                    mediaItem.MusicDetail = musicDetails;
                     break;
             }
             return mediaItem.ToMediaItemDtoFull();
@@ -136,6 +143,21 @@ namespace Medias.Server.Controllers
             return TelevisionConversions.ToTelevisionShowDto(tv);
         }
 
+        [HttpGet("/music/{id}")]
+        public async Task<ActionResult<MusicDto>> GetMusic(int id)
+        {
+            var music = await _context.MediaItems
+                .Include(mi => mi.MediaFiles)
+                .Include(mi => mi.MusicDetail)
+                .FirstOrDefaultAsync(mi => mi.Id == id && mi.MediaType == MediaTypeValue.Music);
+
+            if(music == null)
+            {
+                return NotFound();
+            }
+            return MusicConversions.ToMusicDto(music);
+        }
+
         [HttpPost()]
         public async Task<ActionResult<MediaItemDto>> CreateMediaItem(CreateMediaItemDto createDto)
         {
@@ -188,6 +210,30 @@ namespace Medias.Server.Controllers
 
             return CreatedAtAction(nameof(GetTV), new { id = mediaItem.Id }, TelevisionConversions.ToTelevisionShowDto(mediaItem));
         }
+
+        [HttpPost("music")]
+        public async Task<ActionResult<MusicDto>> CreateMusic(CreateMusicDto createDto)
+        {
+            var mediaItem = createDto.CreateDtoToMediaItem();
+            _context.MediaItems.Add(mediaItem);
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.InnerException.ToString());
+                throw;
+            }
+            var musicDetails = createDto.CreateDtoToMusicDetail(mediaItem.Id);
+            _context.MusicDetails.Add(musicDetails);
+            await _context.SaveChangesAsync();
+            mediaItem.MusicDetail = musicDetails;
+
+            return CreatedAtAction(nameof(GetMusic), new { id = mediaItem.Id }, MusicConversions.ToMusicDto(mediaItem));
+
+        }
+        
 
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateMediaItem(int id, UpdateMediaItemDto updateDto)
@@ -324,14 +370,68 @@ namespace Medias.Server.Controllers
                     throw;
                 }
             }
+             
             return NoContent();
             
         }
 
-        [HttpDelete("{id}")]
+        [HttpPut("{id}/music")]
+        public async Task<IActionResult> UpdateMusic(int id, UpdateMusicDto updateDto)
+        {
+            if (id != updateDto.Id)
+            {
+                return BadRequest();
+            }
+            var existingMediaItem = await _context.MediaItems.FindAsync(id);
+
+            if (existingMediaItem == null)
+            {
+                return NotFound();
+            }
+            var existingMusicDetails = await _context.MusicDetails.FirstOrDefaultAsync(md => md.MediaItemId == id);
+
+            updateDto.UpdateDtoToMediaItem(existingMediaItem);
+
+            _context.Entry(existingMediaItem).State = EntityState.Modified;
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!MediaItemExists(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+            var updatedMusicDetail = MusicConversions.UpdateDtoToMusicDetail(updateDto, existingMusicDetails);
+            _context.Entry(updatedMusicDetail).State = EntityState.Modified;
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!TVShowExists(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+            return NoContent();
+        }
+        [HttpDelete("{id}")] 
         public async Task<IActionResult> DeleteMediaItem(int id)
         {
             var mediaItem = await _context.MediaItems.FindAsync(id);
+            //
             if (mediaItem == null)
             {
                 return NotFound();

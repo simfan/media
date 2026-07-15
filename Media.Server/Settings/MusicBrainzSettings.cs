@@ -1,6 +1,6 @@
-﻿namespace Medias.Server.Settings
+﻿/*namespace Medias.Server.Settings
 {
     public class MusicBrainzSettings
     {
     }
-}
+}*/

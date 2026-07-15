@@ -1,5 +1,5 @@
 ﻿@page "/media/create";
-
+@page "/media/create/{MediaType}"
 @using Microsoft.AspNetCore.Components;
 @using Blazor.Sonner;
 @using Blazor.Sonner.Services;
@@ -33,7 +33,9 @@
                             case MediaTypeValue.TV:
                                 <EditTV MediaItemId=0/>
                                 break;
-                            
+                            case MediaTypeValue.Music:
+                                <EditMusic MediaItemId="0" />
+                                break;
                             default:
                                 <EditMediaItem MediaItemId="0"/>
                                 break;
@@ -43,7 +45,28 @@
 
 <div></div>
 @code {
-    private MediaTypeValue selectedMediaType = MediaTypeValue.Other;
+    [Parameter]
+    public string? MediaType{ get; set; }
+    private MediaTypeValue selectedMediaType;// = MediaTypeValue.Other;
+
+    protected override void OnParametersSet()
+    {
+        switch(MediaType)
+        {
+            case "movie":
+                selectedMediaType= MediaTypeValue.Movie;
+                break;
+            case "tv":
+                selectedMediaType = MediaTypeValue.TV;
+                break;
+            case "music":
+                selectedMediaType = MediaTypeValue.Music;
+                break;
+            default:
+                selectedMediaType = MediaTypeValue.Other;
+                break;
+        }
+    }
 
     private void MediaTypeChanged(ChangeEventArgs e)
     {

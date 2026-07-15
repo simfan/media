@@ -63,11 +63,11 @@ namespace Medias.Data.Conversions
                     .ToList();
                 if(mediaTypes.Count == 1)
                 {
-                    dto.CollectionMediaType = (CollectionTypeValue)mediaTypes[0];
+                    dto.CollectionMediaType = (CollectionMediaTypeValue)mediaTypes[0];
                 }
                 else
                 {
-                    dto.CollectionMediaType = CollectionTypeValue.Mixed;
+                    dto.CollectionMediaType = CollectionMediaTypeValue.Mixed;
                 }
                 foreach(var mediaItemCollection in entity.MediaItemCollections)
                 {

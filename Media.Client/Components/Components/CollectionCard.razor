@@ -18,7 +18,7 @@
     {
         /*Test perposes only - remove from code when added Media Items works*/
         /**********************************************************/
-        Collection.CollectionMediaType = CollectionTypeValue.Mixed;
+        Collection.CollectionMediaType = CollectionMediaTypeValue.Mixed;
         List<MediaItemDto> mediaItems = new();
         MediaItemDto mediaItem1 = new()
             {
@@ -46,7 +46,7 @@
         mediaItems.Add(mediaItem2);
         Collection.Items = mediaItems;
         /**********************************************************/
-        if(Collection.CollectionMediaType == CollectionTypeValue.Mixed)
+        if(Collection.CollectionMediaType == CollectionMediaTypeValue.Mixed)
         {
             if(Collection.Items.Any())
             {
@@ -59,7 +59,7 @@
             }
             else
             {
-                collectionColor = MediaHelpers.GetCollectionColor(CollectionTypeValue.Other);
+                collectionColor = MediaHelpers.GetCollectionColor(CollectionMediaTypeValue.Other);
                 collectionClass = Collection.CollectionMediaType.GetCollectionClass();
             }
         }

@@ -46,7 +46,10 @@
             // Display TV-specific details if needed
             <TVCard Show="televisionShow" />
             break;
-        default:
+        case MediaTypeValue.Music:
+            <MusicCard Music="musicRecording" />
+                break;
+            default:
             <MediaCard MediaItemFull="mediaItemFull" />
             break;
     }
@@ -60,6 +63,7 @@
     private MediaItemDtoFull mediaItemFull = new MediaItemDtoFull();
     private MovieDto? movieItem = new MovieDto();
     private TelevisionShowDto? televisionShow = new TelevisionShowDto();
+    private MusicDto? musicRecording = new MusicDto();
 
     private int mediaId;
 
@@ -68,7 +72,7 @@
         if(int.TryParse(Id, out mediaId))
         {
             Toast.Show("Loaded Media.");
-            
+
             mediaItemFull = await Http.GetFromJsonAsync<MediaItemDtoFull>($"api/MediaItem/{mediaId}");
             switch(mediaItemFull.MediaType)
             {
@@ -82,6 +86,9 @@
                 case MediaTypeValue.TV:
                     // Load TV-specific details if needed
                     televisionShow = mediaItemFull?.ToTelevisionShowDto(mediaItemFull);
+                    break;
+                case MediaTypeValue.Music:
+                    musicRecording = mediaItemFull?.ToMusicDto();
                     break;
                 default:
                     // Handle unknown media type if necessary

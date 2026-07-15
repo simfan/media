@@ -30,7 +30,9 @@ namespace Medias.Shared.DTOs
                 Director = Director,
                 Studio = Studio,
                 Genre = Genre,
-                Rating = Rating
+                Rating = Rating,
+                TmdbMovieId = TmdbMovieId,
+                ImdbId = ImdbId,
             };
             return newMovie;
         }
@@ -51,7 +53,7 @@ namespace Medias.Shared.DTOs
                 Director = Director,
                 Studio = Studio,
                 Genre = Genre,
-                Rating = Rating
+                Rating = Rating,
             };
             return updatedMovie;
         }
@@ -78,6 +80,9 @@ namespace Medias.Shared.DTOs
         public string Studio { get; set; }
         public string Genre { get; set; }
         public decimal Rating { get; set; }
+        public int? TmdbMovieId { get; set; }
+        public string? ImdbId { get; set; }
+
     }
     public class UpdateMovieDto:UpdateMediaItemDto
     {
@@ -88,6 +93,8 @@ namespace Medias.Shared.DTOs
         public string Studio { get; set; }
         public string Genre { get; set; }
         public decimal Rating { get; set; }
+        public int? TmdbMovieId { get; set; }
+        public string? ImdbId { get; set; }
         public CreateMovieDto ToCreateMovie()
         {
             var newMovie = new CreateMovieDto()
@@ -102,7 +109,9 @@ namespace Medias.Shared.DTOs
                 Director = Director,
                 Studio = Studio,
                 Genre = Genre,
-                Rating = Rating
+                Rating = Rating,
+                TmdbMovieId = TmdbMovieId,
+                ImdbId = ImdbId
             };
             return newMovie;
         }
@@ -120,6 +129,8 @@ namespace Medias.Shared.DTOs
             existingMovie.Studio = createMovie.Studio;
             existingMovie.Genre = createMovie.Genre;
             existingMovie.Rating = createMovie.Rating;
+            existingMovie.TmdbMovieId = createMovie.TmdbMovieId;
+            existingMovie.ImdbId = createMovie.ImdbId;
             return existingMovie;
         }
 
@@ -136,5 +147,10 @@ namespace Medias.Shared.DTOs
         
     }
 
-
+    public class ImportMovieResultsDto
+    {
+        public UpdateMovieDto TMDbMovie { get; set; }
+        public UpdateMovieDto? ExisitingMovie { get; set; }
+        public bool ExistsInLibrary { get; set; }
+    }
 }
