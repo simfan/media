@@ -1,0 +1,41 @@
+﻿@using Medias.Shared.DTOs
+@using Medias.Shared.Enums
+@inject NavigationManager Nav
+
+@foreach(var result in  Results)
+{
+<BSCard CardType="CardType.Card">
+    <BSCard CardType="CardType.Header">
+        <div class="text-end"><BSButton OnClick="(() => NavToImport(result.MediaType.ToString(), result.ImportId))">Import</BSButton></div>
+    </BSCard>
+    <BSCard CardType="CardType.Body">
+        <BSRow>
+            <BSCol>
+                <h4>@result.Title</h4>
+                <span>@result.ReleaseDate</span>
+                    @if (result.Description != null)
+                    {
+                        <p>@result.Description</p>
+                    }
+            </BSCol>
+            @if (result.PosterPath != null)
+            {
+                <BSCol>
+                    <BSImage Source="result.PosterPath" />"
+                </BSCol>                        
+            }
+            </BSRow>
+    </BSCard>
+</BSCard>
+}
+
+
+@code {
+    [Parameter]
+    public List<SearachResultDto> Results { get; set; }
+
+    private void NavToImport(string mediaType, string importId)
+    {
+        Nav.NavigateTo($"/import/{mediaType}/{importId}");
+    }
+}

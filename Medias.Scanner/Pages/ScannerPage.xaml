@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<ContentPage
+    x:Class="Medias.Scanner.Pages.ScannerPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:zxing="clr-namespace:ZXing.Net.Maui.Controls;assembly=ZXing.Net.Maui.Controls"
+    Title="Scan Media"
+    BackgroundColor="Black">
+
+    <Grid>
+
+        <!-- Camera -->
+        <zxing:CameraBarcodeReaderView
+            x:Name="BarcodeReader"
+            BarcodesDetected="BarcodeReader_BarcodesDetected"
+            IsDetecting="True"
+            HorizontalOptions="Fill"
+            VerticalOptions="Fill" />
+
+        <!-- Scanner target -->
+        <Border
+            WidthRequest="300"
+            HeightRequest="180"
+            HorizontalOptions="Center"
+            VerticalOptions="Center"
+            Stroke="White"
+            StrokeThickness="2"
+            Background="Transparent" />
+
+        <!-- Bottom status -->
+        <Border
+            Margin="20"
+            Padding="16"
+            VerticalOptions="End"
+            Background="#CC000000"
+            StrokeThickness="0">
+
+            <VerticalStackLayout Spacing="10">
+                <Label
+                    x:Name="StatusLabel"
+                    Text="Point the camera at a barcode"
+                    TextColor="White"
+                    FontSize="16"
+                    HorizontalTextAlignment="Center" />
+
+                <HorizontalStackLayout Spacing="10" HorizontalOptions="Center">
+                    <Entry
+                        x:Name="ManualBarcodeEntry"
+                        Placeholder="Enter barcode manually"
+                        PlaceholderColor="Gray"
+                        TextColor="White"
+                        WidthRequest="200" />
+                    <Button
+                        Text="Submit"
+                        Clicked="SubmitManualBarcode_Clicked"
+                        VerticalOptions="Center" />
+                </HorizontalStackLayout>
+            </VerticalStackLayout>
+
+        </Border>
+
+    </Grid>
+
+</ContentPage>

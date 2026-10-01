@@ -1,0 +1,128 @@
+@page "/"
+
+@using Microsoft.AspNetCore.Components;
+@using Blazor.Sonner;
+@using Blazor.Sonner.Services;
+@using Medias.Client.Components.Components;
+@using Medias.Shared.DTOs;
+@using Medias.Shared.Enums;
+@using Medias.Shared.Helpers;
+@inject HttpClient Http;
+@inject ToastService Toast;
+
+<PageTitle>Home</PageTitle>
+@if(loading == true)
+{
+    <div>Loading Items</div>
+}
+else{
+<h1>Media Manager</h1>
+<BSRow>
+<BSCol>Your source for all Movies, TV, Music, Podcasts and Books</BSCol>
+</BSRow>
+<BSTable>
+    <BSTR>
+        <BSTD>
+            
+            @*<BSCard CardType="CardType.Card" style="border: 1px solid;">
+                <BSCard CardType="CardType.Header" style="border: 1px solid; background: #824011; color:white">Recently Added 2</BSCard>
+                <BSCard CardType="CardType.Body" style="border: 1px solid;">M/BSCard>*@
+
+            <BSCard CardType="CardType.Card" style ="margin: 10px;">
+                <BSCard CardType="CardType.Header">
+                     <div class="d-flex justify-content-between align-items-center">
+                    
+                        <span class="text-start">Recents</span>
+                                           
+                        <BSDropdown  Class="text-end">
+                            <Toggler><BSToggle IsButton ="true" Color="BSColor.Info">Filter</BSToggle></Toggler>
+                            <Content >
+                                <BSDropdownItem Class="text-start" style="background: #210f96; color:#39cfed" >All</BSDropdownItem>
+                                <BSDropdownItem Class="text-start" style="background: #210f96; color:#39cfed" >Books</BSDropdownItem>
+                                <BSDropdownItem Class="text-start" style="background: #210f96; color:#39cfed" >Movies</BSDropdownItem>
+                                <BSDropdownItem Class="text-start" style="background: #210f96; color:#39cfed">TV</BSDropdownItem>
+                            </Content>
+                        </BSDropdown>
+                    
+                    </div>
+                </BSCard>
+                <BSCard CardType="CardType.Body" style="border: 1px solid;">
+                <BSRow>
+                <BSCol>       
+                <BSCard CardType="CardType.Card" style="border: 1px solid;">
+                <BSCard CardType="CardType.Header">Recently Added</BSCard>
+                <BSCard CardType="CardType.Body" >@(latestItemAdded?.Title ?? "No media added yet")</BSCard>
+            </BSCard>
+                </BSCol><BSCol>
+            <BSCard CardType="CardType.Card" style="border: 1px solid;">
+                <BSCard CardType="CardType.Header" style="border: 1px solid;">Recently Updated</BSCard>
+                <BSCard CardType="CardType.Body" style="border: 1px solid;">@(latestItemUpdated?.Title ?? "No media updated yet")</BSCard>
+            </BSCard>
+                </BSCol>
+            </BSRow>
+            </BSCard>
+            </BSCard>
+            
+            
+        </BSTD>
+        <BSTD>
+            <BSCard CardType="CardType.Card">
+                <BSCard CardType="CardType.Body" >
+                    <BSRow>Books: x</BSRow>
+                    <BSRow>Movies: @movieCount</BSRow>
+                    <BSRow>TV: @showCount</BSRow>
+                </BSCard>
+            </BSCard>
+        </BSTD>
+        <BSTD>
+            <BSCard Title="Collections" Icon="bi bi-plus-square-fill" Link="/collections" />
+        </BSTD>
+        <BSTD>
+            <BSCard Title="Settings" Icon="bi bi-gear-fill" Link="/settings" />
+        </BSTD>
+    </BSTR>
+    <BSTR>
+        <BSTD>
+            <BSCard CardType="CardType.Card" >
+                <BSCard CardType="CardType.Header" >Largest Files</BSCard>
+                <BSCard CardType="CardType.Body" >Media Item 1</BSCard>
+            </BSCard>
+        </BSTD>
+        <BSTD>
+            <BSCard CardType="CardType.Card" >
+                <BSCard CardType="CardType.Header" >Smallest Files</BSCard>
+                <BSCard CardType="CardType.Body" style="border: 1px solid;">Media Item 1</BSCard>
+            </BSCard>
+        </BSTD>
+    </BSTR>
+</BSTable>
+}
+@code{
+    private List<MediaItemDto> mediaItems;
+    private MediaItemDto latestItemAdded;
+    private MediaItemDto latestItemUpdated;
+    private int bookCount;
+    private int movieCount;
+    private int showCount;
+    
+    private bool loading = true;
+
+    protected override async Task OnInitializedAsync()
+    {
+        loading = true;
+        StateHasChanged();
+        mediaItems = await Http.GetFromJsonAsync<List<MediaItemDto>>("api/MediaItem");
+        latestItemAdded = mediaItems.OrderByDescending(mi => mi.CreatedDate).FirstOrDefault();
+        latestItemUpdated = mediaItems.OrderByDescending(mi => mi.UpdatedDate).FirstOrDefault();
+        movieCount = mediaItems.Count(mi => mi.MediaType == MediaTypeValue.Movie);
+        showCount = mediaItems.Count(mi => mi.MediaType == MediaTypeValue.TV);
+        loading = false;
+        StateHasChanged();
+    }
+
+    private void ToggleMenu()
+    {
+        Console.WriteLine("Toggle menu clicked");
+        // Logic to toggle the dropdown menu
+    }
+}

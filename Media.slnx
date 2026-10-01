@@ -1,0 +1,8 @@
+<Solution>
+  <Project Path="Media.Automations/Medias.Automations.csproj" />
+  <Project Path="Media.Client/Medias.Client.csproj" />
+  <Project Path="Media.Data/Medias.Data.csproj" />
+  <Project Path="Media.Server/Medias.Server.csproj" />
+  <Project Path="Media.Shared/Medias.Shared.csproj" />
+  <Project Path="Media.Tests/Medias.Tests.csproj" />
+</Solution>

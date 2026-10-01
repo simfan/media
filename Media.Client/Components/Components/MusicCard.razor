@@ -1,0 +1,33 @@
+﻿@using Microsoft.AspNetCore.Components;
+@using Medias.Shared.DTOs;
+
+    <BSCard CardType="CardType.Body">
+        <BSRow>
+            <BSCol>
+                <p>Description: @Music.Description</p>
+                <p>Artist: @Music.Artist</p>
+                <p>Writer: @Music.Writer</p>
+                <p>Runtime: @Music.RuntimeMinutes Minutes @Music.RuntimeSeconds Seconds</p>
+                <p>Release Date: @((DateTime)Music.FirstReleased).ToShortDateString()</p>
+                <p>Genre: @Music.Genre</p>
+                <p>Rating: <div>@for(int i = 0; i < Music.Rating; i++) { <span>★</span> }</div></p>
+            </BSCol>
+            <BSCol>
+        <BSImage Source="@Music.CoverArtPath" />
+            </BSCol>
+        </BSRow>
+        @if(Music.LibraryId != null)
+        {
+            <p>Library: @Music.LibraryId</p>
+        }
+    </BSCard>
+
+    <MediaPlayer/>
+
+
+
+@code {
+    [Parameter]
+    public MusicDto Music{ get; set; }
+
+}

@@ -1,0 +1,52 @@
+﻿@page "/import/movie/{TmdbId}";
+
+@using Blazor.Sonner;
+@using Blazor.Sonner.Services;
+@using Medias.Client.Components;
+@using Medias.Client.Components.Components;
+@using Medias.Shared.DTOs;
+@using Medias.Shared.DTOConversions;
+
+@inject HttpClient Http;
+@inject ToastService Toast;
+<h3>Import Movie</h3>
+
+@if(loading == true)
+{
+    <p>loading TMDb Movie...</p>
+}
+
+    else
+{
+    if(importMovie.ExistsInLibrary == false)
+    {  
+        <EditMovie MediaItemId="0" Movie="importMovie.TMDbMovie" />
+    }
+    else
+    {
+        <span>Override Existing Data</span>
+        <ImportMovieForm ImportInfo = "importMovie"/>
+    }
+}
+
+
+
+@code {
+    [Parameter]
+    public string TmdbId { get; set; }
+
+    private TMDbMovieSearchRecord tmdbMovie;
+    private ImportMovieResultsDto importMovie;
+    private UpdateMovieDto movie;
+
+    private bool loading;
+
+    protected override async Task OnInitializedAsync()
+    {
+        loading = true;
+        StateHasChanged();
+        importMovie = await Http.GetFromJsonAsync<ImportMovieResultsDto>($"api/tmdb/movie/{TmdbId}/import");
+        loading = false;
+        StateHasChanged();
+    }
+}

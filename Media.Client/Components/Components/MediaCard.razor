@@ -1,0 +1,12 @@
+﻿@using Microsoft.AspNetCore.Components;
+@using Medias.Shared.DTOs;
+    <BSCard CardType="CardType.Body">
+        <p>Description: @MediaItemFull.Description</p>
+        <p>Library: @MediaItemFull.LibraryId</p>
+    </BSCard>
+
+
+@code {
+    [Parameter]
+    public MediaItemDtoFull MediaItemFull { get; set; }
+}

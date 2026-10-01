@@ -1,0 +1,140 @@
+﻿@page "/collections/{CollectionId}";
+
+@using Medias.Client.Components;
+@using Medias.Client.Components.Components
+@using Medias.Shared.DTOs;
+@using Medias.Shared.Enums;
+@using Medias.Shared.Helpers;
+@inject HttpClient Http;
+@if (collection == null && loading == true)
+{
+    <BSSpinner SpinnerType="SpinnerType.Grow" />
+}
+else
+{
+    <h3>Collection Details</h3>
+
+    <BSCard>
+        <BSCard CardType="CardType.Header">
+            <div class="d-flex justify-content-between align-items-center">
+                <span>@collection.Name</span><BSButton Class="text-end" OnClick="DisplayAddToCollectionModal">Add Items To Collection</BSButton>
+            </div></BSCard>
+        <BSCard CardType="CardType.Body">
+        <div>@collection.Description</div>
+        @if(collection.Items.Any())
+            {
+                <h4>Collection Items</h4>
+                <MediaGrid MediaItems="collection.Items"/>
+            }
+        </BSCard>
+    </BSCard>
+    <BSModal @ref="addToCollectionModal" HeaderClass="AddMediaHeader">
+        <Header >Add to Collection</Header>
+        <Content>
+            
+                <BSTable style:"border: 1px solid black">
+                    <BSRow stye:"background-color:red"> </BSRow>
+                @foreach (var mediaItem in unaddedMediaItems)
+                {
+                    <BSRow style="background: lightblue">
+                        <BSCol ColumnLarge="10">@mediaItem.Title</BSCol>
+                        <BSCol ColumnLarge="2" Class="d-flex justify-content-end"><BSButton class="@mediaItem.AddedToCollecton" T OnClick="(() => ToggleMediaItem(mediaItem.Id))">@mediaItem.AddedToCollecton</BSButton></BSCol>
+                    </BSRow>
+                     
+                }
+            </BSTable>    
+        </Content>
+        <Footer><BSButton Color="BSColor.Default" OnClick="AddToCollection">Add To Collection</BSButton></Footer>
+    </BSModal>
+    <style>
+        
+            .Add{
+                background: green !important;
+                border-color: green !important;
+                color: white !important;
+                
+                
+           
+            }
+
+            .Remove{
+                background: red !important;
+                border-color: red !important;
+                color: white !important;
+                
+                
+            }
+
+            .AddMediaHeader
+            {
+                background: #210f96;
+                color: #39cfed;
+            }
+        
+    </style>
+}
+@code {
+    [Parameter]
+    public string CollectionId { get; set; }
+
+    private CollectionDto collection;
+    private BSModal? addToCollectionModal = new BSModal();
+    private MediaItemDto[]? allMediaItems;
+    private MediaItemDto[]? unaddedMediaItems;
+    private List<MediaItemCollectionDto>? selectedMediaItems = new();
+    private HashSet<int> selectedToAdd = new();
+
+    private string addItemValue;
+
+    private bool loading;
+    protected override async Task OnInitializedAsync()
+    {
+        loading = true;
+        StateHasChanged();
+        collection = await Http.GetFromJsonAsync<CollectionDto>($"api/Collections/{CollectionId}");
+        allMediaItems = await Http.GetFromJsonAsync<MediaItemDto[]>("api/MediaItem");
+        var collectionIds = collection.Items.Select(i => i.Id).ToHashSet();
+        unaddedMediaItems = allMediaItems.Where(ami => !collectionIds.Contains(ami.Id)).ToArray();
+        Array.ForEach(unaddedMediaItems, u => { if (u != null) u.AddedToCollecton = "Add"; });
+    }
+
+    private async Task DisplayAddToCollectionModal()
+    {
+        Array.ForEach(unaddedMediaItems, u => { if (u != null) u.AddedToCollecton = "Add"; });
+        await addToCollectionModal.ShowAsync();
+    }
+
+    private async Task HideAddToCollectoinModal()
+    {
+        await addToCollectionModal.HideAsync();
+    }
+
+    private void ToggleMediaItem(int mediaItemId)
+    {
+        var mediaItemIndex = Array.FindIndex(unaddedMediaItems, umi => umi.Id == mediaItemId);
+
+        if(selectedToAdd.Any(s => s == mediaItemId) == false)
+        {
+            unaddedMediaItems[mediaItemIndex].AddedToCollecton = "Remove";
+            selectedToAdd.Add(mediaItemId);
+        }
+        else
+        {
+            unaddedMediaItems[mediaItemIndex].AddedToCollecton = "Add";
+            selectedToAdd.Remove(mediaItemId);
+        }
+        StateHasChanged();
+    }
+
+    private void AddToCollection()
+    {
+        foreach(var selectedItem in selectedToAdd)
+        {
+            MediaItemCollectionDto selectedMediaItem = new();
+            selectedMediaItem.CollectionId = collection.CollectionId;
+            selectedMediaItem.MediaItemId = selectedItem;
+            selectedMediaItems.Add(selectedMediaItem);
+        }
+        var result = Http.PostAsJsonAsync<List<MediaItemCollectionDto>>("api/Collections/mediaCollections", selectedMediaItems);
+    }
+}

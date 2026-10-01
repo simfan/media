@@ -1,0 +1,187 @@
+﻿@using Microsoft.AspNetCore.Components;
+@using Medias.Shared.DTOs;
+@using Medias.Shared.Enums;
+@using Medias.Shared.Helpers;
+@using Blazor.Sonner;
+@using Blazor.Sonner.Services;
+@inject HttpClient Http;
+@inject ToastService Toast;
+
+<BSForm  TValue="MusicDto" EditContext="EC" OnValidSubmit="ModifyMediaItem">
+    <div>
+        <BSRow>
+            <BSCol>
+                
+            </BSCol>
+
+        </BSRow>
+        <BSRow><hr/></BSRow>
+        <BSRow>
+            <BSCol>
+                <div class="@(@BS.Form_Floating) mb-1">
+                <BSInput InputType="InputType.Text" @bind-Value="NewMusic.Title"/>
+                <BSLabel IsFloating="true">Title</BSLabel>
+                </div>
+            </BSCol>
+        </BSRow>
+        <BSRow>
+            <BSCol>
+                <div class="@(@BS.Form_Floating) mb-1">
+                    <BSInput InputType="InputType.Text" @bind-Value="NewMusic.Description" />
+                    <BSLabel IsFloating="true">Description</BSLabel>
+                </div>
+            </BSCol>
+        </BSRow>
+        <BSRow>
+            <BSCol>
+                <div class="@(@BS.Form_Floating) mb-1">
+                    <BSInput InputType="InputType.Text" @bind-Value="NewMusic.RuntimeMinutes" />
+                    <BSLabel IsFloating="true">Runtime (Minutes)</BSLabel>
+                </div>
+            </BSCol>
+            <BSCol>
+                <div class="@(@BS.Form_Floating) mb-1">
+                    <BSInput InputType="InputType.Text" @bind-Value="NewMusic.RuntimeSeconds" />
+                    <BSLabel IsFloating="true">Runtime (Seconds)</BSLabel>
+                </div>
+            </BSCol>
+            <BSCol>
+                <div class="@(@BS.Form_Floating) mb-1">
+                    <BSInput InputType="InputType.Date" @bind-Value="NewMusic.FirstReleased" />
+                    <BSLabel IsFloating="true">First Date</BSLabel>
+                    </div>
+            </BSCol>
+        </BSRow>
+        <BSRow>
+            <BSCol>
+                <div class="@(@BS.Form_Floating) mb-1">
+                    <BSInput InputType="InputType.Text" @bind-Value="NewMusic.Artist" />
+                    <BSLabel IsFloating="true">Artist</BSLabel>
+                </div>
+            </BSCol>
+            <BSCol>
+                <div class="@(@BS.Form_Floating) mb-1">
+                    <BSInput InputType="InputType.Text" @bind-Value="NewMusic.Writer" />
+                    <BSLabel IsFloating="true">Writer</BSLabel>
+                </div>
+            </BSCol>
+            <BSCol>
+                <div class="@(@BS.Form_Floating) mb-1">
+                    <BSInput InputType="InputType.Text" @bind-Value="NewMusic.Studio" />
+                    <BSLabel IsFloating="true">Studio</BSLabel>
+                </div>
+            </BSCol>
+        </BSRow>
+
+        <BSRow>
+            <BSCol>
+                <div class="@(@BS.Form_Floating) mb-1">
+                    <BSInput InputType="InputType.Text" @bind-Value="NewMusic.Genre" />
+                    <BSLabel IsFloating="true">Genre</BSLabel>
+                </div>
+            </BSCol>
+            <BSCol>
+                <div class="@(@BS.Form_Floating) mb-1">
+                    <BSInput InputType="InputType.Text" @bind-Value="NewMusic.Rating" />
+                    <BSLabel IsFloating="true">Rating</BSLabel>
+                </div>
+            </BSCol>
+        </BSRow>
+        <BSRow>
+            <BSCol>
+                <div class="@(@BS.Form_Floating) mb-1">
+                    <BSInput InputType="InputType.Text" @bind-Value="NewMusic.ThumbnailPath" />
+                    <BSLabel IsFloating="true">Thumbnail</BSLabel>
+                </div>
+            </BSCol>
+        </BSRow>
+        <BSRow>
+            <BSCol>
+                <div class="@(@BS.Form_Floating) mb-1">
+                    <BSInput InputType="InputType.Text" @bind-Value="NewMusic.LibraryId" />
+                    <BSLabel IsFloating="true">Library ID (Enter 0 if not assigned)</BSLabel>
+                </div>
+            </BSCol>
+        </BSRow>
+        <BSButton Color="BSColor.Primary" IsSubmit>Save</BSButton>
+    </div>
+</BSForm>
+<Blazor.Sonner.Toaster @rendermode="InteractiveServer" RichColors="@true"/>
+@code {
+    [Parameter]
+    public int MediaItemId { get; set; }
+    /*[Parameter]
+    public UpdateMovieDto? Movie{ get; set; }*/
+    [Parameter]
+    public UpdateMusicDto? Music{ get; set; }
+
+    //public CreateMovieDto NewMovie = new();
+    public CreateMusicDto NewMusic = new();
+
+    private EditContext EC;
+    private int mediaTypeInt;
+
+    protected override void OnParametersSet()
+    {
+        EC = new EditContext(NewMusic);
+        if (Music != null)
+        {
+            NewMusic = Music.ToCreateMusic();
+        }
+    }
+
+    protected async Task ModifyMediaItem()
+    {
+        NewMusic.MediaType = MediaTypeValue.Music;
+        if(MediaItemId != 0)
+        {
+            //Movie = Movie?.LoadFromCreate(NewMovie, Movie);
+            await UpdateMediaItem();
+        }
+        else
+        {
+            await CreateMediaItem();
+        }
+    }
+
+    protected async Task CreateMediaItem()
+    {
+        if (NewMusic.MusicBrainzRecordingId == null)
+        {
+            NewMusic.MusicBrainzRecordingId = " ";
+        }
+        var response = await Http.PostAsJsonAsync<CreateMusicDto>("api/MediaItem/music", NewMusic);
+        var body = await response.Content.ReadAsStringAsync();
+        Console.WriteLine(body);
+        if(response.IsSuccessStatusCode)
+        {
+            MusicDto responseValue = await response.Content.ReadFromJsonAsync<MusicDto>();
+            if(responseValue != null)
+            {
+                Console.WriteLine($"Created Music Recording: {responseValue.Title}");
+                Toast.Success($"Created Music Recording: {responseValue.Title}");
+            }
+        }
+        else
+        {
+            Toast.Error($"Could not create Music Recording: {response.ReasonPhrase}");
+        }
+    }
+
+    protected async Task UpdateMediaItem()
+    {
+        /*Toast.Show("Updating Music..."); 
+        var response = await Http.PutAsJsonAsync($"api/MediaItem/{MediaItemId}/music", Movie);        
+        if(response.IsSuccessStatusCode)
+        {
+            Console.WriteLine($"Updated Music: {Music.Title}");    
+            Toast.Success($"Updated Music:  {Music.Title}");
+        }*/
+    }
+
+    private void ShowToast()
+    {
+        Toast.Show("This is a toast message!");
+    }
+
+}
