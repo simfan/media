@@ -99,5 +99,24 @@ namespace Medias.Shared.Helpers
             return target;
         }
 
+        public static double CalculateTitleMatch(string searchTitle, string resultTitle) 
+        {
+            if(string.IsNullOrWhiteSpace(searchTitle) || string.IsNullOrWhiteSpace(resultTitle))
+            {
+                return 0;
+            }
+
+            if(string.Equals(searchTitle,resultTitle, StringComparison.OrdinalIgnoreCase))
+            {
+                return 100;
+            }
+
+
+            //int distance = Math.LevenshteinDistance(searchTitle.ToLowerInvariant(), resultTitle.ToLowerInvariant());
+            // Convert Levenshtein distance to a similarity score (0-100)
+            int maxLength = Math.Max(searchTitle.Length, resultTitle.Length);
+            return Math.Round(100.0 * (1.0 - (double)maxLength / maxLength), 1);
+        }
+
     }
 }

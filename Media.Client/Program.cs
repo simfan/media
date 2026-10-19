@@ -9,6 +9,8 @@ using Medias.Server.Services;
 using Medias.Server.Services.Interfaces;
 using Medias.Server.Settings;
 using Microsoft.EntityFrameworkCore;
+using Medias.Server.Repositories.Interfaces;
+using Medias.Integrations;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,15 +26,25 @@ builder.Services.AddHttpClient<ITMDbService, TMDbService>();
 builder.Services.AddHttpClient<IMusicBrainzService, MusicBrainzService>();
 builder.Services.AddSingleton<IMovieBarcodeResolver, TemporaryMovieBarcodeResolver>();
 builder.Services.Configure<TMDbSettings>(builder.Configuration.GetSection("TMDb"));
+builder.Services.AddScoped<IMediaIdentificationService, MediaIdentificationService>();
 builder.Services.AddScoped<IMediaItemService, MediaItemService>();
 builder.Services.AddScoped<ILibraryService, LibraryService>();
+builder.Services.AddScoped<IBarcodeProductRepository, BarcodeProductRepository>();
 builder.Services.AddScoped<IMediaItemRepository, MediaItemRepository>();
 builder.Services.AddScoped<ILibraryRepository, LibraryRepository>();
+//builder.Services.AddScoped<IMediaItemService, MediaItemApiClient>();
 builder.Services.AddScoped(sp => new HttpClient
 {
+    //BaseAddress = new Uri("https://localhost:7294/")
     BaseAddress = new Uri(builder.Configuration["Api:BaseUrl"] ?? sp.GetRequiredService<Microsoft.AspNetCore.Components.NavigationManager>().BaseUri)
 });
+builder.Services.AddMediaIntegrations(builder.Configuration);
+var dbPath = Path.GetFullPath(
+    Path.Combine(builder.Environment.ContentRootPath, "..", "Media.Server", "Data", "media.db"));
+Directory.CreateDirectory(Path.GetDirectoryName(dbPath)!);
 
+builder.Services.AddDbContext<MediaDbContext>(options =>
+    options.UseSqlite($"Data Source={dbPath}"));
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -63,9 +75,16 @@ app.MapRazorComponents<App>()
 
 using (var scope = app.Services.CreateScope())
 {
-    Directory.CreateDirectory("Data");
+    /*var dbPath = Path.GetFullPath(
+    Path.Combine(builder.Environment.ContentRootPath, "..", "Medias.Server", "Data", "media.db"));
+    Directory.CreateDirectory(Path.GetDirectoryName(dbPath)!);
+
+    builder.Services.AddDbContext<MediaDbContext>(options =>
+        options.UseSqlite($"Data Source={dbPath}"));*/
+       //Directory.CreateDirectory("Data");
     var db = scope.ServiceProvider.GetRequiredService<MediaDbContext>();
     db.Database.Migrate();
+    app.Logger.LogInformation("Using database: {Path}", db.Database.GetDbConnection().DataSource);
 }
     
 

@@ -5,4 +5,6 @@
   <Project Path="Media.Server/Medias.Server.csproj" />
   <Project Path="Media.Shared/Medias.Shared.csproj" />
   <Project Path="Media.Tests/Medias.Tests.csproj" />
+  <Project Path="Medias.Integrations/Medias.Integrations.csproj" Id="5002ffd7-a19d-4f08-bd6b-4740d97e39d1" />
+  <Project Path="Medias.Scanner/Medias.Scanner.csproj" />
 </Solution>

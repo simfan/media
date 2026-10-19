@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<ContentPage
+    x:Class="Medias.Scanner.Pages.BarcodeProductReviewPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    Title="Review Barcode Product"
+    BackgroundColor="{AppThemeBinding Light=White, Dark=#1E1E1E}">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="16">
+
+            <Label
+                Text="Barcode Product Review"
+                FontSize="24"
+                FontAttributes="Bold" />
+
+            <Image
+                Source="{Binding ImageUrl}"
+                HeightRequest="220"
+                Aspect="AspectFit"
+                HorizontalOptions="Center" />
+
+            <VerticalStackLayout Spacing="4">
+                <Label Text="Barcode" FontAttributes="Bold" />
+                <Entry
+                    Text="{Binding Barcode}"
+                    IsReadOnly="True" />
+            </VerticalStackLayout>
+
+            <VerticalStackLayout Spacing="4">
+                <Label Text="Original Title" FontAttributes="Bold" />
+                <Editor
+                    Text="{Binding Title}"
+                    IsReadOnly="True"
+                    AutoSize="TextChanges"
+                    MinimumHeightRequest="50" />
+            </VerticalStackLayout>
+
+            <VerticalStackLayout Spacing="4">
+                <Label
+                    Text="Normalized Title"
+                    FontAttributes="Bold" />
+                <Entry
+                    x:Name="NormalizedTitleEntry"
+                    Text="{Binding NormalizedTitle, Mode=TwoWay}"
+                    Placeholder="Edit normalized title" />
+            </VerticalStackLayout>
+
+            <VerticalStackLayout Spacing="4">
+                <Label Text="Category" FontAttributes="Bold" />
+                <Entry
+                    Text="{Binding Category}"
+                    IsReadOnly="True" />
+            </VerticalStackLayout>
+
+            <VerticalStackLayout Spacing="4">
+                <Label Text="Brand" FontAttributes="Bold" />
+                <Entry
+                    Text="{Binding Brand}"
+                    IsReadOnly="True" />
+            </VerticalStackLayout>
+
+            <VerticalStackLayout Spacing="4">
+                <Label Text="Description" FontAttributes="Bold" />
+                <Editor
+                    Text="{Binding Description}"
+                    IsReadOnly="True"
+                    AutoSize="TextChanges"
+                    MinimumHeightRequest="100" />
+            </VerticalStackLayout>
+
+            <Button
+                Text="Search"
+                IsEnabled="False"
+                SemanticProperties.Hint="Search functionality is not implemented yet." />
+
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentPage>

@@ -192,5 +192,22 @@ namespace Medias.Data.Conversions
                 RuntimeSeconds = entity.Runtime % 60
             };
         }
+
+        public static BarcodeProductDTO ToBarcodeProductDTO(this MediaItem entity)
+        {
+            return new BarcodeProductDTO
+            {
+                Id = entity.Id,
+                Barcode = entity.Barcode,
+                Title = entity.Title,
+                NormalizedTitle = entity.Title,
+                Description = entity.Description,
+                //Brand = entity.MovieDetail?.Studio ?? entity.TelevisionShowDetail?.Studio ?? entity.MusicDetail?.Studio,
+                Category = entity.MediaType.ToString(),
+                ImageUrl = entity.ThumbnailPath
+            };
+        }
     }
+
+
 }

@@ -1,4 +1,6 @@
-﻿namespace Medias.Scanner;
+﻿using Medias.Scanner.Pages;
+
+namespace Medias.Scanner;
 
 public partial class App : Application
 {
@@ -9,6 +11,7 @@ public partial class App : Application
 
     protected override Window CreateWindow(IActivationState? activationState)
     {
+        //MainPage = new NavigationPage(new ScannerPage());
         return new Window(new AppShell());
     }
 }

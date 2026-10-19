@@ -1,0 +1,99 @@
+﻿@page "/barcode/{Barcode}"
+@using Medias.Shared.DTOs
+@inject HttpClient Http;
+
+<PageTitle>Barcode Product Review</PageTitle>
+
+<h3>Barcode Product Review</h3>
+
+@if (product is null)
+{
+    <p>No barcode product was provided.</p>
+}
+else
+{
+    <div class="container">
+        @if (!string.IsNullOrWhiteSpace(product.ImageUrl))
+        {
+            <img src="@product.ImageUrl"
+                 alt="@product.Title"
+                 style="max-width: 250px; max-height: 250px;
+            object-fit: contain;" />
+        }
+
+        <div class="mb-3">
+            <label class="form-label">Barcode</label>
+            <input class="form-control"
+                   value="@product.Barcode"
+                   readonly />
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Original Title</label>
+            <input class="form-control"
+                   value="@product.Title"
+                   readonly />
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Normalized Title</label>
+            <input class="form-control"
+                   @bind="NormalizedTitle" />
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Category</label>
+            <input class="form-control"
+                   value="@product.Category"    
+                   readonly />
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Brand</label>
+            <input class="form-control"
+                   value="@product.Brand"
+                   readonly />
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Description</label>
+            <textarea class="form-control"
+                      rows="4"
+                      readonly>@product.Description</textarea>
+        </div>
+
+        <button class="btn btn-primary"
+                disabled>
+            Search
+        </button>
+    </div>
+}
+
+@code {
+    [Parameter]
+    public string? Barcode { get; set; }
+    
+    private BarcodeProductDTO? product = new BarcodeProductDTO();
+    private string NormalizedTitle = string.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+        
+        if (!string.IsNullOrWhiteSpace(Barcode))
+        {
+            Console.WriteLine($"Calling: {Http.BaseAddress}api/barcode-test/{Barcode}");
+            
+            product = await Http.GetFromJsonAsync<BarcodeProductDTO>($"api/barcode-test/{Barcode}");
+        }
+    }
+
+    protected override void OnParametersSet()
+    {
+        if (product is not null)
+        {
+            NormalizedTitle = product.NormalizedTitle
+                ?? product.Title
+                ?? string.Empty;
+        }
+    }
+}

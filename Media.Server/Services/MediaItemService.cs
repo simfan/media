@@ -19,7 +19,7 @@ namespace Medias.Server.Services
         {
             var mediaItems =  await _mediaItemRepository.GetMediaItems();
             List<MediaItemDtoFull> mediaItemFullDtos = new List<MediaItemDtoFull>();
-            foreach (var mediaItem in mediaItems) {
+            foreach (var mediaItem in mediaItems) { 
                var mediaItemFullDto = mediaItem.ToMediaItemDtoFull();
                 mediaItemFullDtos.Add(mediaItemFullDto);
             }

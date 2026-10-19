@@ -12,6 +12,7 @@ namespace Medias.Data.Contexts
     {
         public DbSet<Album> Albums { get; set; }
         public DbSet<AlbumTrack> AlbumTracks { get; set; }
+        public DbSet<BarcodeProduct> BarcodeProducts { get; set; }
         public DbSet<Collection> Collections { get; set; }
         public DbSet<Library> Libraries { get; set; }
         public DbSet<MediaFile> MediaFiles { get; set; }

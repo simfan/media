@@ -20,6 +20,7 @@ namespace Medias.Shared.DTOs
         public LibraryDto Library { get; set; }
         public MovieDetailsDto? MovieDetails { get; set; }
         public TelevisionShowDto? TelevisionShowDetails { get; set; }
+        //public TeleveiosnEpisodeDto? TelevisionEpisodeDetails { get; set; }
         public MusicDto? MusicDetails { get; set; }
         public List<CollectionDto> Collections { get; set; }
         public MediaItemDto ToMediaItemDto ()

@@ -8,7 +8,9 @@ public partial class ScannerPage : ContentPage
 {
     private static readonly HttpClient _httpClient = new()
     {
-        BaseAddress = new Uri("http://10.0.0.2:5113") // Default server address
+        BaseAddress = new Uri("http://10.0.2.2:5113") // Android emulator address for localhost
+                                                      //BaseAddress = new Uri("https://localhost:7259")
+                                                      // BaseAddress = new Uri("http://localhost:5113") // Default server address
     };
 
     public ScannerPage()
@@ -59,6 +61,22 @@ public partial class ScannerPage : ContentPage
 
         try
         {
+            using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(5));
+            Console.WriteLine($"Calling: {_httpClient.BaseAddress}api/barcode-test/{value}");
+            System.Diagnostics.Debug.WriteLine($"Calling: {_httpClient.BaseAddress}api/barcode-test/{value}");
+            /*var results = await _httpClient.GetAsync($"api/barcode-test/{value}", cts.Token);
+            var barcodeProductDTO = await results.Content.ReadFromJsonAsync<BarcodeProductDTO>();
+            if (barcodeProductDTO != null)
+            {
+                await OpenProductReviewAsync(barcodeProductDTO);
+            }
+            else
+            {
+                MainThread.BeginInvokeOnMainThread(() => {
+                    StatusLabel.Text = $"Server error: {results.StatusCode}";
+                });
+            }
+            */
             var response = await _httpClient.GetAsync($"api/Scans/movies/{value}");
 
             if (response.IsSuccessStatusCode)
@@ -86,6 +104,10 @@ public partial class ScannerPage : ContentPage
                 });
             }
         }
+        catch (OperationCanceledException)
+        {
+            MainThread.BeginInvokeOnMainThread(() => { StatusLabel.Text = "Request timed out."; });
+        }
         catch (Exception ex)
         {
             MainThread.BeginInvokeOnMainThread(() =>
@@ -94,5 +116,15 @@ public partial class ScannerPage : ContentPage
             });
             System.Diagnostics.Debug.WriteLine($"API Error: {ex.Message}");
         }
+    }
+
+    private async Task OpenProductReviewAsync(
+    BarcodeProductDTO product)
+    {
+        await MainThread.InvokeOnMainThreadAsync(async () =>
+        {
+            await Navigation.PushAsync(
+                new BarcodeProductReviewPage(product));
+        });
     }
 }

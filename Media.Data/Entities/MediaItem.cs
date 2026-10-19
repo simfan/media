@@ -14,11 +14,13 @@ namespace Medias.Data.Entities
         public DateTime CreatedDate {  get; set; }
         public DateTime UpdatedDate { get; set; }
         public int? LibraryId { get; set; }
-        public string ThumbnailPath{ get; set; }
+        public string ThumbnailPath { get; set; }
+        public string? Barcode { get; set; }
         public List<MediaFile>? MediaFiles { get; set; } 
         public Library? Library { get; set; }
         public MovieDetail? MovieDetail { get; set; }
         public TelevisionShowDetail? TelevisionShowDetail { get; set; }
+        //public TelevisionEpisode? TelevisionEpisodeDetail { get; set; }
         public MusicDetail? MusicDetail { get; set; }
         public List<MediaItemCollection> MediaItemCollections { get; set; } = new();
     }

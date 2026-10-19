@@ -30,7 +30,18 @@ namespace Medias.Server.Repositories
             var mediaItem = await _context.MediaItems.FindAsync(id);
             return mediaItem;
         }
+        public async Task<MediaItem> GetMediaItemByBarcode(string barcode)
+        {
+            var mediaItem = await _context.MediaItems
+                .Include(mi => mi.MediaFiles)
+                .FirstOrDefaultAsync(mi => mi.Barcode == barcode);
 
+            /*if (mediaItem == null)
+            {
+                return NotFound();
+            }*/
+            return mediaItem;
+        }
         public async Task<MediaItem> AddMediaItem(MediaItem mediaItem)
         {
             await _context.MediaItems.AddAsync(mediaItem);

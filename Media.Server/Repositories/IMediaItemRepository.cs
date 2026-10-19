@@ -7,6 +7,7 @@ namespace Medias.Server.Repositories
     {
         Task <IEnumerable<MediaItem>>GetMediaItems();
         Task<MediaItem> GetMediaItemById(int id);
+        Task<MediaItem> GetMediaItemByBarcode(string barcode);
         Task<MediaItem> AddMediaItem(MediaItem mediaItem);
         Task<bool> UpdateMediaItem(MediaItem mediaItem);
         Task<bool> DeleteMediaItem(int id);

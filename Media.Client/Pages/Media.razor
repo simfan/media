@@ -126,7 +126,7 @@
                                     <BSTBody>
                                         @foreach (var item in filteredMediaItems)
                                         {
-                                            <BSTR>
+                                            <BSTR @onclick="() => NavToDetails(item)">
                                                 <BSTD>@item.MediaType</BSTD>
                                                 <BSTD>@item.Title</BSTD>
                                                 <BSTD>@item.Description</BSTD>
@@ -265,5 +265,10 @@
     private void NavToImportMovie(int tmdbId)
     {
         Nav.NavigateTo($"/import/movie/{tmdbId}");
+    }
+
+    private void NavToDetails(MediaItemDto mediaItem)
+    {
+        Nav.NavigateTo($"/media/{mediaItem.Id}");
     }
 }

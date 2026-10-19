@@ -141,5 +141,34 @@ namespace Medias.Shared.DTOs
     }
 
 
+    //Revamped TelevisionShowDto inheriting from CollectionDto instead of MediaItemDto
+    public class TelevisionShowDto2 : CollectionDto
+    {
+        public string CreatedBy { get; set; }
+        public string Studio { get; set; }
+        public string Genre { get; set; }
+        public decimal Rating { get; set; }
+        public string? Status { get; set; }
+        public int? TmdbTvId { get; set; }
+        public string? ImdbId { get; set; }
+        public int SeasonCount { get; set; }
+        public List<TelevisionSeasonDto>? Seasons { get; set; }
+        public List<TelevisionEpisodeDto>? Episodes { get; set; }
+
+        public TelevisionShowDto2 LoadFromCollectionDto(CollectionDto collectionDto)
+        {
+            return new TelevisionShowDto2()
+            {
+                CollectionId = collectionDto.CollectionId,
+                Name = collectionDto.Name,
+                Description = collectionDto.Description,
+                CreatedDate = collectionDto.CreatedDate,
+                UpdatedDate = collectionDto.UpdatedDate,
+                CollectionMediaType = collectionDto.CollectionMediaType,
+
+            };
+        }
+    }
+
 
 }
