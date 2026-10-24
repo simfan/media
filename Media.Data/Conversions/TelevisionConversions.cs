@@ -12,7 +12,7 @@ namespace Medias.Data.Conversions
         {
             var tvShow =  new TelevisionShowDetail
             {
-                MediaItemId = televisionShowDto.Id,
+                //MediaItemId = televisionShowDto.Id,
                 CreatedBy = televisionShowDto.CreatedBy,
                 Studio = televisionShowDto.Studio,
                 Genre = televisionShowDto.Genre,
@@ -79,7 +79,7 @@ namespace Medias.Data.Conversions
         {
             return new TelevisionShowDetail
             {
-                MediaItemId = mediaItemId,
+                //MediaItemId = mediaItemId,
                 CreatedBy = dto.CreatedBy,
                 Studio = dto.Studio,
                 Genre = dto.Genre,

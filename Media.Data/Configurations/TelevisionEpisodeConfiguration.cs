@@ -39,6 +39,10 @@ namespace Medias.Data.Configurations
                 .WithMany(s => s.Episodes)
                 .HasForeignKey(e => e.SeasonId)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            builder.HasOne(e => e.MediaItem)
+                .WithMany()
+                .HasForeignKey(e => e.MediaItemId);
         }
     }
 }

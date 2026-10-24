@@ -87,7 +87,7 @@ namespace Medias.Server.Repositories
             return true;
         }*/
 
-        public async Task<bool> UpdateTelevisionShowDetaio(TelevisionShowDetail televisionShowDetail)
+        /*public async Task<bool> UpdateTelevisionShowDetaio(TelevisionShowDetail televisionShowDetail)
         {
             var existingShow = await _context.TelevisionShowDetails.FindAsync(televisionShowDetail.MediaItemId);
             if (existingShow is null)
@@ -97,7 +97,7 @@ namespace Medias.Server.Repositories
             _context.Entry(existingShow).CurrentValues.SetValues(televisionShowDetail);
             await _context.SaveChangesAsync();
             return true;
-        }
+        }*/
 
         public async Task<bool> DeleteMediaItem(int id)
         {

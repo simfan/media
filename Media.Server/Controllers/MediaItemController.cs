@@ -72,13 +72,13 @@ namespace Medias.Server.Controllers
                         .FirstOrDefaultAsync(md => md.MediaItemId == id);
                     mediaItem.MovieDetail = movieDetails;
                     break;
-                case MediaTypeValue.TV:
+               /* case MediaTypeValue.TV:
                     var tvDetails = await _context.TelevisionShowDetails
                         .Include(tv => tv.Seasons)
                         .ThenInclude(s => s.Episodes)
                         .FirstOrDefaultAsync(tv => tv.MediaItemId == id);
                         mediaItem.TelevisionShowDetail = tvDetails;
-                    break;
+                    break;*/
                 case MediaTypeValue.Music:
                     var musicDetails = await _context.MusicDetails
                         .FirstOrDefaultAsync(md => md.MediaItemId == id);
@@ -321,7 +321,7 @@ namespace Medias.Server.Controllers
         }
 
         [HttpPut("{id}/tv")]
-        public async Task<IActionResult> UpdateShow(int id, UpdateTelevisionShowDto updateDto)
+        /*public async Task<IActionResult> UpdateShow(int id, UpdateTelevisionShowDto updateDto)
         {
             if (id != updateDto.Id)
             {
@@ -373,7 +373,7 @@ namespace Medias.Server.Controllers
              
             return NoContent();
             
-        }
+        }*/
 
         [HttpPut("{id}/music")]
         public async Task<IActionResult> UpdateMusic(int id, UpdateMusicDto updateDto)
@@ -416,14 +416,14 @@ namespace Medias.Server.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!TVShowExists(id))
+                /*if (!TVShowExists(id))
                 {
                     return NotFound();
                 }
                 else
                 {
                     throw;
-                }
+                }*/
             }
             return NoContent();
         }
@@ -451,9 +451,9 @@ namespace Medias.Server.Controllers
             return _context.MovieDetails.Any(e => e.MediaItemId == id);
         }
 
-        private bool TVShowExists(int id)
+        /*private bool TVShowExists(int id)
         {
             return _context.TelevisionShowDetails.Any(e => e.MediaItemId == id);
-        }
+        }*/
     }
 }

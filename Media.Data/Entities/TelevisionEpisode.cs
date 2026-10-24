@@ -15,6 +15,8 @@ namespace Medias.Data.Entities
         public string? Description { get; set; }
         public string Director { get; set; }
         public int Runtime { get; set; }
+        public int MediaItemId { get; set; }
+        public MediaItem MediaItem { get; set; }
         public decimal? Rating { get; set; }
         public DateTime? AirDate { get; set; }
         public TelevisionSeason TelevisionSeason { get; set; }

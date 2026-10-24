@@ -54,9 +54,9 @@ namespace Medias.Data.Configurations
 
             //Relationships
 
-            builder.HasOne(tv => tv.MediaItem)
-                .WithOne(mi => mi.TelevisionShowDetail)
-                .HasForeignKey<TelevisionShowDetail>(tv => tv.MediaItemId);
+            builder.HasOne(tv => tv.Collection)
+                .WithMany()
+                .HasForeignKey(tv => tv.CollectionId);
         }
     }
 }

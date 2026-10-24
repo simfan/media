@@ -21,14 +21,19 @@ namespace Medias.Data.Configurations
             builder.Property(s => s.Description)
                 .HasMaxLength(2000);
 
-            builder.HasIndex(s => s.MediaItemId);
-
-            builder.HasIndex(s => new
+            //builder.HasIndex(s => s.MediaItemId);
+            builder.HasIndex(s => s.CollectionId);
+            /*builder.HasIndex(s => new
             {
                 s.MediaItemId,
                 s.SeasonNumber
+            }).IsUnique();*/
+            builder.HasIndex(s => new
+            {
+                s.CollectionId,
+                s.SeasonNumber
             }).IsUnique();
-
+            
             builder.HasOne(s => s.TelevisionShowDetail)
                 .WithMany(tv => tv.Seasons)
                 .HasForeignKey(s => s.MediaItemId)

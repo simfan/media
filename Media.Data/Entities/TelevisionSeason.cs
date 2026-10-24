@@ -9,6 +9,7 @@ namespace Medias.Data.Entities
     {
         public int SeasonId { get; set; }
         public int MediaItemId { get; set; }
+        public int? CollectionId { get; set; }
         public int SeasonNumber { get; set; }
         public string? Name { get; set; }
         public string? Description { get; set; }
