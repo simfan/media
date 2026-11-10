@@ -19,8 +19,8 @@ namespace Medias.Shared.DTOs
         public List<MediaFileDto>? MediaFiles { get; set; }
         public LibraryDto Library { get; set; }
         public MovieDetailsDto? MovieDetails { get; set; }
-        public TelevisionShowDto? TelevisionShowDetails { get; set; }
-        //public TeleveiosnEpisodeDto? TelevisionEpisodeDetails { get; set; }
+        //public TelevisionShowDto? TelevisionShowDetails { get; set; }
+        public TelevisionEpisodeDto? TelevisionEpisodeDetails { get; set; }
         public MusicDto? MusicDetails { get; set; }
         public List<CollectionDto> Collections { get; set; }
         public MediaItemDto ToMediaItemDto ()
@@ -58,7 +58,7 @@ namespace Medias.Shared.DTOs
             return movieDto;
         }
 
-        public TelevisionShowDto ToTelevisionShowDto(MediaItemDtoFull existingItem)
+        /*public TelevisionShowDto ToTelevisionShowDto(MediaItemDtoFull existingItem)
         {
             var televisionShowDto = new TelevisionShowDto()
             {
@@ -85,8 +85,30 @@ namespace Medias.Shared.DTOs
                 }
             }
             return televisionShowDto;
-        }
+        }*/
 
+        public TelevisionEpisodeDto ToTelevisionEpisodeDto()
+        {
+            var televisionEpisodeDto = new TelevisionEpisodeDto()
+            {
+                Id = Id,
+                Title = Title,
+                Description = Description,
+                MediaType = MediaType,
+                LibraryId = LibraryId,
+                ThumbnailPath = ThumbnailPath,
+                EpisodeNumber = TelevisionEpisodeDetails.EpisodeNumber,
+                TelevisionShowId = TelevisionEpisodeDetails.TelevisionShowId,
+                SeasonId = TelevisionEpisodeDetails.SeasonId,
+                SeasonNumber = TelevisionEpisodeDetails.SeasonNumber,
+                Director = TelevisionEpisodeDetails.Director,
+                Runtime = TelevisionEpisodeDetails.Runtime,
+                Rating = TelevisionEpisodeDetails.Rating,
+                AirDate = TelevisionEpisodeDetails.AirDate
+                //ReleaseDate = TelevisionEpisodeDetails.ReleaseDate
+            };
+            return televisionEpisodeDto;
+        }
         public MusicDto ToMusicDto()
         {
             var musicDto = new MusicDto()

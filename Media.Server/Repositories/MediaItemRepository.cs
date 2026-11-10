@@ -1,6 +1,7 @@
 ﻿using Medias.Data;
 using Medias.Data.Contexts;
 using Medias.Data.Entities;
+using Medias.Server.Repositories.Interfaces;
 using Medias.Shared.Enums;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
@@ -138,7 +139,7 @@ namespace Medias.Server.Repositories
                 .FirstOrDefaultAsync(mi => mi.MovieDetail.TmdbMovieId == tmdbId);
             return movie;
         }
-        public async Task<IEnumerable<MediaItem>> GetTVShows()
+        /*public async Task<IEnumerable<MediaItem>> GetTVShows()
         {
             var shows = await _context.MediaItems
                 .Include(m => m.TelevisionShowDetail)
@@ -157,6 +158,6 @@ namespace Medias.Server.Repositories
                                         .ThenInclude(s => s.Episodes)
                                 .FirstOrDefaultAsync(mi => mi.Id == id);
             return tvShow;
-        }
+        }*/
     }
 }

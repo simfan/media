@@ -38,14 +38,43 @@
                                     <Content>
                                         <BSDropdownItem OnClick="TMDbMovieSearch">Movie</BSDropdownItem>
                                         <BSDropdownItem OnClick="TMDbTVSearch">TV</BSDropdownItem>
-                                        <BSDropdownItem>Music (Song)</BSDropdownItem>
+                                        <BSDropdownItem OnClick="MusicBrainzRecordingSearch">Music (Song)</BSDropdownItem>
+                                        <BSDropdownItem OnClick="MusicBrainzAlbumSearch">Music (Album)</BSDropdownItem>
+                                        <BSDropdownItem OnClick="OpenLibrarySearch">Book</BSDropdownItem>
                                     </Content>
                                 </BSDropdown>
                                 </BSCol>
                             </BSRow>
                         </BSCard>
                     </BSCard>
-                    @if(movieSearchResults != null && movieSearchResults.Count > 0)
+                    @if(searchResults != null && searchResults.Count> 0)
+                    {
+                        foreach(var searchResult in searchResults)
+                        {
+                            <BSCard CardType="CardType.Card">
+                                <BSCard CardType="CardType.Header">
+                                    <div class="text-end"><BSButton>Import</BSButton></div>
+                                </BSCard>
+                                <BSCard CardType="CardType.Body">
+                                    <BSRow>
+                                        <BSCol>
+                                            <h4>@searchResult.Title</h4>
+                                            <span>@searchResult.ReleaseDate</span>
+                                            <p>@searchResult.Description</p>
+                                        </BSCol>
+                                        <BSCol>
+                                            @if(!string.IsNullOrEmpty(searchResult.PosterPath))
+                                            {
+                                                <BSImage Source="@searchResult.PosterPath" Class=@searchClass />
+                                            }
+                                        </BSCol>
+                                    </BSRow>
+                                </BSCard>
+                            </BSCard>
+                        }
+                    }   
+
+                    @*if(movieSearchResults != null && movieSearchResults.Count > 0)
                     {
                         foreach(var movieSearchResult in movieSearchResults)
                         {
@@ -90,7 +119,7 @@
                             </BSCard>
                         </BSCard>
                         }
-                    }
+                    }*@
                 </TabContent>
             </BSNavItem>
             @if(mediaItems.Count () >0)
@@ -192,9 +221,12 @@
     private MediaTypeValue? mediaFilter;
 
     private string? onlineSearchValue;
-    private List<TMDbMovieSearchRecord>? movieSearchResults = new();
-    private List<TMDbTVSearchRecord>? tvSearchResults = new();
-    private List<SearachResultDto>? musicSearchResults = new();
+    private string searchClass = "";
+    //private List<TMDbMovieSearchRecord>? movieSearchResults = new();
+    //private List<TMDbTVSearchRecord>? tvSearchResults = new();
+    private List<SearchResultDto>? musicSearchResults = new();
+    private List<SearchResultDto>? searchResults = new();
+    //private List<OpenLibrary>
     protected override async Task OnInitializedAsync()
     {
         // Simulate asynchronous loading to demonstrate streaming rendering
@@ -206,27 +238,64 @@
 
     private async Task TMDbMovieSearch()
     {
-        ClearOnlineSearchFields();
-        movieSearchResults = await Http.GetFromJsonAsync<List<TMDbMovieSearchRecord>>($"api/tmdb/movie/search?title={onlineSearchValue}");
+        try{
+            ClearOnlineSearchFields();
+            searchClass="movie-thumbnail";
+            searchResults = await Http.GetFromJsonAsync<List<SearchResultDto>>($"api/tmdb/movie/search?title={onlineSearchValue}");
+        }
+        catch(Exception ex)
+        {
+            var baseException = ex.GetBaseException();
+
+            Console.WriteLine($"TMDb Search Error: {ex.InnerException}");
+            Console.WriteLine($"Root Cause: {baseException.Message}");
+            Console.WriteLine($"Stack Trace: {ex.StackTrace}");
+        }
 
     }
 
     private async Task TMDbTVSearch()
     {
-        ClearOnlineSearchFields();
-        tvSearchResults = await Http.GetFromJsonAsync<List<TMDbTVSearchRecord>>($"api/tmdb/tv/search?name={onlineSearchValue}");
+        try
+        {
+            ClearOnlineSearchFields();
+            searchClass = "tv-thumbnail";
+            searchResults = await Http.GetFromJsonAsync<List<SearchResultDto>>($"api/tmdb/tv/search?name={onlineSearchValue}");
+        }
+        catch(Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+        }
     }
 
     private async Task MusicBrainzRecordingSearch()
     {
         ClearOnlineSearchFields();
-        musicSearchResults = await Http.GetFromJsonAsync<List<SearachResultDto>>($"api/musicbrainz/recording/search?title={onlineSearchValue}");
+        //musicSearchResults = await Http.GetFromJsonAsync<List<SearchResultDto>>($"api/musicbrainz/songs/search?title={onlineSearchValue}");
+        searchClass="album-thumbnail";
+        searchResults = await Http.GetFromJsonAsync<List<SearchResultDto>>($"api/musicbrainz/songs/search?title={onlineSearchValue}");
+
+    }
+
+    private async Task MusicBrainzAlbumSearch()
+    {
+        ClearOnlineSearchFields();
+        searchClass="album-thumbnail";
+        searchResults = await Http.GetFromJsonAsync<List<SearchResultDto>>($"api/musicbrainz/albums/search?title={onlineSearchValue}");
+    }
+
+    private async Task OpenLibrarySearch()
+    {
+        ClearOnlineSearchFields();
+        searchClass="book-thumbnail";
+        searchResults = await Http.GetFromJsonAsync<List<SearchResultDto>>($"api/openlibrary/search/books?title={onlineSearchValue}");
     }
 
     private void ClearOnlineSearchFields()
     {
-        movieSearchResults.Clear();
-        tvSearchResults.Clear();
+        searchResults.Clear();
+        //  movieSearchResults.Clear();
+        //tvSearchResults.Clear();
         musicSearchResults.Clear();
     }
 
@@ -265,6 +334,11 @@
     private void NavToImportMovie(int tmdbId)
     {
         Nav.NavigateTo($"/import/movie/{tmdbId}");
+    }
+    
+    private void NavToImportTVShow(int tmdbId)
+    {
+        Nav.NavigateTo($"/import/tv/show/{tmdbId}");
     }
 
     private void NavToDetails(MediaItemDto mediaItem)

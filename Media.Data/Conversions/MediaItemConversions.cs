@@ -86,9 +86,9 @@ namespace Medias.Data.Conversions
                 mediaItemFull.MovieDetails = entity.MovieDetail?.ToMovieDetailsDto();
             }
 
-            if(entity.TelevisionShowDetail != null)
+            /*if(entity.TelevisionEpisodeDetail != null)
             {
-                mediaItemFull.TelevisionShowDetails = entity.TelevisionShowDetail.ToTelevisionShowDto();
+                mediaItemFull.TelevisionEpisodeDetails = entity.TelevisionEpisodeDetail.ToTelevisionEpisodeDto();
             }
 
             /*if(entity.MusicDetail != null)
@@ -112,7 +112,7 @@ namespace Medias.Data.Conversions
             };
         }
 
-        public static TelevisionShowDto ToTelevisionShowDto(this TelevisionShowDetail entity)
+        /*public static TelevisionShowDto ToTelevisionShowDto(this TelevisionShowDetail entity)
         {
             var televisionShowDto = new TelevisionShowDto();
             televisionShowDto.CreatedBy = entity.CreatedBy;
@@ -157,7 +157,7 @@ namespace Medias.Data.Conversions
             }
             return televisionSeason;
         }
-
+        */
         public static TelevisionEpisodeDto ToTelevisionEpisodeDto(this TelevisionEpisode entity)
         {
             return new TelevisionEpisodeDto()

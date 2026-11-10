@@ -4,7 +4,6 @@ using System.Text;
 
 namespace Medias.Shared.Enums
 {
-    internal class Book
-    {
-    }
+    public class Book
+    { }
 }

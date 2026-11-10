@@ -44,11 +44,11 @@
             break;
         case MediaTypeValue.TV:
             // Display TV-specific details if needed
-            <TVCard Show="televisionShow" />
+            <TVEpisodeCard Episode="televisionEpisode" />
             break;
         case MediaTypeValue.Music:
             <MusicCard Music="musicRecording" />
-                break;
+            break;
             default:
             <MediaCard MediaItemFull="mediaItemFull" />
             break;
@@ -63,6 +63,7 @@
     private MediaItemDtoFull mediaItemFull = new MediaItemDtoFull();
     private MovieDto? movieItem = new MovieDto();
     private TelevisionShowDto? televisionShow = new TelevisionShowDto();
+    private TelevisionEpisodeDto? televisionEpisode = new TelevisionEpisodeDto();
     private MusicDto? musicRecording = new MusicDto();
 
     private int mediaId;
@@ -85,7 +86,8 @@
                     break;
                 case MediaTypeValue.TV:
                     // Load TV-specific details if needed
-                    televisionShow = mediaItemFull?.ToTelevisionShowDto(mediaItemFull);
+                    //televisionShow = mediaItemFull?.ToTelevisionShowDto(mediaItemFull);
+                    televisionEpisode = mediaItemFull?.ToTelevisionEpisodeDto();
                     break;
                 case MediaTypeValue.Music:
                     musicRecording = mediaItemFull?.ToMusicDto();

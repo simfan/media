@@ -22,7 +22,7 @@ namespace Medias.Data.Configurations
                 .HasMaxLength(2000);
 
             //builder.HasIndex(s => s.MediaItemId);
-            builder.HasIndex(s => s.CollectionId);
+            builder.HasIndex(s => s.CollectionId).IsUnique();
             /*builder.HasIndex(s => new
             {
                 s.MediaItemId,
@@ -30,13 +30,18 @@ namespace Medias.Data.Configurations
             }).IsUnique();*/
             builder.HasIndex(s => new
             {
-                s.CollectionId,
+                s.TelevisionShowCollectionId,
                 s.SeasonNumber
             }).IsUnique();
             
             builder.HasOne(s => s.TelevisionShowDetail)
                 .WithMany(tv => tv.Seasons)
-                .HasForeignKey(s => s.MediaItemId)
+                .HasForeignKey(s => s.TelevisionShowCollectionId)
+                .OnDelete(DeleteBehavior.NoAction);
+            
+            builder.HasOne(s => s.Collection)
+                .WithOne(c => c.TelevisionSeason)
+                .HasForeignKey<TelevisionSeason>(s => s.CollectionId)
                 .OnDelete(DeleteBehavior.Cascade);
         }
     }

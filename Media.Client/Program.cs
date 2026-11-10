@@ -4,13 +4,17 @@ using Medias.Client.Components;
 using BlazorStrap;
 using Blazor.Sonner.Extensions;
 using Medias.Data.Contexts;
+using Medias.Integrations;
 using Medias.Server.Repositories;
 using Medias.Server.Services;
 using Medias.Server.Services.Interfaces;
-using Medias.Server.Settings;
+using Medias.Shared.Configurations;
 using Microsoft.EntityFrameworkCore;
 using Medias.Server.Repositories.Interfaces;
 using Medias.Integrations;
+using Medias.Integrations.MusicBrainz;
+using Medias.Integrations.OpenLibrary;
+using Medias.Integrations.TMDb;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,13 +26,19 @@ builder.Services.AddControllers().AddApplicationPart(typeof(Medias.Server.Contro
 builder.Services.AddSonner();
 builder.Services.AddDbContext<MediaDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("MediaDatabase")));
-builder.Services.AddHttpClient<ITMDbService, TMDbService>();
-builder.Services.AddHttpClient<IMusicBrainzService, MusicBrainzService>();
+builder.Services.AddHttpClient<ITMDbClient, TMDbClient>();
+builder.Services.AddHttpClient<IMusicBrainzClient, MusicBrainzClient>();
+builder.Services.AddHttpClient<IOpenLibraryClient, OpenLibraryClient>();
 builder.Services.AddSingleton<IMovieBarcodeResolver, TemporaryMovieBarcodeResolver>();
 builder.Services.Configure<TMDbSettings>(builder.Configuration.GetSection("TMDb"));
 builder.Services.AddScoped<IMediaIdentificationService, MediaIdentificationService>();
 builder.Services.AddScoped<IMediaItemService, MediaItemService>();
+builder.Services.AddScoped<IMusicBrainzService, MusicBrainzService>();
+builder.Services.AddScoped<IOpenLibraryService, OpenLibraryService>();
 builder.Services.AddScoped<ILibraryService, LibraryService>();
+builder.Services.AddScoped<ITMDbService, TMDbService>();
+
+
 builder.Services.AddScoped<IBarcodeProductRepository, BarcodeProductRepository>();
 builder.Services.AddScoped<IMediaItemRepository, MediaItemRepository>();
 builder.Services.AddScoped<ILibraryRepository, LibraryRepository>();

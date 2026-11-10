@@ -1,4 +1,5 @@
-﻿using Medias.Server.DTOs;
+﻿using Medias.Integrations.MusicBrainz;
+//using Medias.Server.DTOs;
 using Medias.Shared.DTOs;
 using Medias.Shared.Enums;
 
@@ -9,10 +10,10 @@ namespace Medias.Server.Conversions
 {
     public static class SearchConversions
     {
-        public static SearachResultDto FromTMDbMovie(this TMDbMovieResult entity)
+        /*public static SearchResultDto FromTMDbMovie(this TMDbMovieResult entity)
         {
             var stringId = entity.ID.ToString();
-            return new SearachResultDto
+            return new SearchResultDto
             {
                 ImportId = stringId,
                 Title = entity.Title,
@@ -23,10 +24,10 @@ namespace Medias.Server.Conversions
             };
         }
 
-        public static SearachResultDto FromTMDbTV(this TMDbTVResult entity)
+        public static SearchResultDto FromTMDbTV(this TMDbTVResult entity)
         {
             var stringId = entity.ID.ToString();
-            return new SearachResultDto
+            return new SearchResultDto
             {
                 ImportId = stringId,
                 Title = entity.Name,
@@ -37,9 +38,9 @@ namespace Medias.Server.Conversions
             };
         }
 
-        public static SearachResultDto FromMusicBrainzRecording(this MusicBrainzRecording entity)
+        public static SearchResultDto FromMusicBrainzRecording(this MusicBrainzRecording entity)
         {
-            return new SearachResultDto
+            return new SearchResultDto
             {
                 ImportId = entity.Id.ToString(),
                 Title = entity.Title,
@@ -48,6 +49,6 @@ namespace Medias.Server.Conversions
                 MediaType = MediaTypeValue.Music,
                 //PosterPath = entity.CoverArtUrl
             };
-        }
+        }*/
     }
 }

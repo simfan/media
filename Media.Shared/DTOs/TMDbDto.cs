@@ -1,5 +1,5 @@
 ﻿namespace Medias.Shared.DTOs
-{
+{/*
     public class TMDbDto
     {
     }
@@ -7,7 +7,7 @@
     {
         public List<TMDbMovieSearchRecord> Results { get; set; } = [];
     }
-
+    
     public class TMDbMovieSearchRecord
     {
         public int ID { get; set;  }
@@ -16,12 +16,12 @@
         public string? Release_Date { get; set; }
         public string? Poster_Path { get; set; }
     }
-
+    /*
     public class TMDbTVSearchResults
     {
         public List<TMDbTVSearchRecord> Results { get; set; } = [];
     }
-
+    /*
     public class TMDbTVSearchRecord
     {
         public int ID { get; set; }
@@ -44,5 +44,5 @@
         public string? Poster_Path { get; set; }
         public int Season_Number { get; set; }
         public int Episode_Count { get; set; }
-    }
+    }*/
 }

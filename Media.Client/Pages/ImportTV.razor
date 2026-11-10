@@ -1,0 +1,52 @@
+﻿@page "/import/tv/show/{TmdbId}";
+
+@using Blazor.Sonner;
+@using Blazor.Sonner.Services;
+@using Medias.Client.Components;
+@using Medias.Client.Components.Components;
+@using Medias.Shared.DTOs;
+@using Medias.Shared.DTOConversions;
+
+@inject HttpClient Http;
+@inject ToastService Toast;
+<h3>Import Television Show</h3>
+
+@if(loading == true)
+{
+    <p>loading TMDb Television Show...</p>
+}
+
+    else
+{
+    if(importTV.ExistsInLibrary == false)
+    {  
+        <EditTelevisionShow MediaItemId="0" TelevisionShow="importTV.TMDbShow" />
+    }
+    else
+    {
+        <span>Override Existing Data</span>
+        <ImportTelevisionShowForm ImportInfo = "importTV"/>
+    }
+}
+
+
+
+@code {
+    [Parameter]
+    public string TmdbId { get; set; }
+
+    /*private TMDbTelevisionShowSearchRecord tmdbTV;*/
+    private ImportTelevisionShowResultsDto importTV;
+    private UpdateTelevisionShowDto tvShow;
+
+    private bool loading;
+
+    protected override async Task OnInitializedAsync()
+    {
+        loading = true;
+        StateHasChanged();
+        importTV = await Http.GetFromJsonAsync<ImportTelevisionShowResultsDto>($"api/tmdb/tv/{TmdbId}/import");
+        loading = false;
+        StateHasChanged();
+    }
+}

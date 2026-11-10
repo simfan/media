@@ -38,6 +38,43 @@ namespace Medias.Server.Controllers
             return albumDtos;
         }
 
+        [HttpGet("shows")]
+        public async Task<ActionResult<IEnumerable<TelevisionShowDto>>> GetTelevisionShows()
+        {
+            var collections = await _context.Collections.Include(c => c.TelevisionShowDetail).ToListAsync();
+            List<TelevisionShowDto> showDtos = new();
+            foreach (var collection in collections)
+            {
+                if (collection.TelevisionShowDetail != null)
+                {
+                    var showDto = collection.ToTelevisionShowDto();
+                    showDtos.Add(showDto);
+                }
+            }
+            return showDtos;
+        }
+
+        [HttpGet("shows/{id}/seasons")]
+        public async Task<ActionResult<IEnumerable<TelevisionSeasonDto>>> GetSeasons(int id)
+        {
+            var collections = await _context.Collections
+                .Include(c => c.TelevisionSeason)
+                .Where(c => c.TelevisionSeason != null && c.TelevisionSeason.TelevisionShowCollectionId == id)
+                .ToListAsync();
+
+            /*var seasons = await _context.TelevisionSeasons
+                .Where(s => s.TelevisionShowDetail.CollectionId == id)
+                .OrderBy(s => s.SeasonNumber)
+                .ToListAsync();
+            /*var seasons = await _context.Collections
+                .Include(c => c.TelevisionSeason)  
+                .Where(c => c.CollectionId == id)
+                .SelectMany(c => c.TelevisionShowDetail.Seasons)
+                .ToListAsync();*/
+            var seasonsDTOs = collections.Select(c => c.ToTelevisionSeasonDto()).ToList();
+            return seasonsDTOs;
+        }
+
         [HttpGet("{id}")]
         public async Task<ActionResult<CollectionDto>> GetCollection(int id)
         {
@@ -70,6 +107,29 @@ namespace Medias.Server.Controllers
             return album.ToAlbumDto();
             
         }
+
+        [HttpGet("shows/{id}")]
+        public async Task<ActionResult<TelevisionShowDto>> GetTVShow(int id)
+        {
+            var show = await _context.Collections
+                /*.Include(c => c.TelevisionShowDetail)
+                    .ThenInclude(ts => ts.Seasons)
+                        .ThenInclude(s => s.TelevisionShowDetail)
+                            .ThenInclude(md => md.MediaItem)
+                .Include(c => c.TelevisionShowDetail)
+                    .ThenInclude(ts => ts.Episodes)
+                             .ThenInclude(md => md.MediaItem)*/
+                .FirstOrDefaultAsync(c => c.CollectionId == id);
+
+            if (show == null)
+            {
+                return NotFound();
+            }
+
+            return show.ToTelevisionShowDto();
+
+        }
+
         [HttpPost]
         public async Task<ActionResult<CollectionDto>> CreateCollection(CreateCollectionDto createDto)
         {
@@ -135,6 +195,17 @@ namespace Medias.Server.Controllers
                 DiscNumber = trackDto.DiscNumber
             };
             _context.AlbumTracks.Add(albumTrack);
+            await _context.SaveChangesAsync();
+        }
+
+        [HttpPost("show")]
+        public async void AddTelevisionShow(CreateTelevisionShowDto createShowDto)
+        {
+            var collection = createShowDto.CreateDtoToCollection();
+            _context.Collections.Add(collection);
+            await _context.SaveChangesAsync();
+            var show = createShowDto.CreateDtoToTelevisionShowDetail(collection.CollectionId);
+            _context.TelevisionShowDetails.Add(show);
             await _context.SaveChangesAsync();
         }
 

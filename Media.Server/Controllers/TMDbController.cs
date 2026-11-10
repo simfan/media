@@ -1,4 +1,5 @@
-﻿using Medias.Server.Conversions;
+﻿using Medias.Integrations.TMDb;
+using Medias.Server.Conversions;
 using Medias.Server.Services;
 using Medias.Server.Services.Interfaces;
 using Medias.Shared.DTOs;
@@ -19,22 +20,10 @@ namespace Medias.Server.Controllers
             _mediaItemService = mediaItemService;
         }
         [HttpGet("movie/search")]
-        public async Task<ActionResult<IEnumerable<TMDbMovieSearchRecord>>> SearchMovie(string title)
+        public async Task<ActionResult<IEnumerable<SearchResultDto>>> SearchMovie(string title)
         {
             var results = await _tmdbService.SearchMoviesAsync(title);
-            List<TMDbMovieSearchRecord>? searchResults = new();
-            foreach (var result in results.Results) {
-                var searchResult = new TMDbMovieSearchRecord()
-                {
-                    ID = result.ID,
-                    Title = result.Title,
-                    Overview = result.Overview,
-                    Release_Date = result.Overview,
-                    Poster_Path = result.Poster_Path
-                };
-                searchResults.Add(searchResult);
-            }
-            return Ok(searchResults);
+            return Ok(results);
         }
 
         [HttpGet("movie/{id}")]
@@ -64,10 +53,10 @@ namespace Medias.Server.Controllers
         }
 
         [HttpGet("tv/search")]
-        public async Task<ActionResult<IEnumerable<TMDbTVSearchRecord>>> SearchTV(string name)
+        public async Task<ActionResult<IEnumerable<SearchResultDto>>> SearchTV(string name)
         {
             var results = await _tmdbService.SearchTvShowsAsync(name);
-            List<TMDbTVSearchRecord>? searchResults = new();
+            /*List<TMDbTVSearchRecord>? searchResults = new();
             foreach(var result in results.Results)
             {
                 var searchResult = new TMDbTVSearchRecord()
@@ -82,8 +71,8 @@ namespace Medias.Server.Controllers
                     Number_of_Episodes = result.Number_of_Episodes,
                 };
                 searchResults.Add(searchResult);
-            }
-            return Ok(searchResults);
+            }*/
+            return Ok(results);
         }
     }
 }

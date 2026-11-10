@@ -6,7 +6,7 @@ using Medias.Shared.DTOs;
 
 namespace Medias.Shared.DTOs
 {
-    public class TelevisionShowDto : MediaItemDto
+    public class TelevisionShowDto : CollectionDto
     {
         public string CreatedBy { get; set; }
         public string Studio { get; set; }
@@ -17,96 +17,15 @@ namespace Medias.Shared.DTOs
         public string? ImdbId { get; set; }
         public int SeasonCount { get; set; }
         public List<TelevisionSeasonDto>? Seasons { get; set; }
-
-        public TelevisionShowDto LoadFromMediaItemDto(MediaItemDto mediaItemDto)
-        {
-            return new TelevisionShowDto()
-            {
-                Id = mediaItemDto.Id,
-                Title = mediaItemDto.Title,
-                Description = mediaItemDto.Description,
-                MediaType = Enums.MediaTypeValue.TV,
-                LibraryId = mediaItemDto.LibraryId,
-                ThumbnailPath = mediaItemDto.ThumbnailPath
-            };
-        }
-
-        public CreateTelevisionShowDto ToCreateTelevisionShow()
-        {
-            var newTVShow = new CreateTelevisionShowDto()
-            {
-                Title = Title,
-                Description = Description,
-                MediaType = MediaType,
-                LibraryId = LibraryId,
-                ThumbnailPath = ThumbnailPath,
-                CreatedBy = CreatedBy,
-                Studio = Studio,
-                Genre = Genre,
-                Rating = Rating,
-                Status = Status,
-                TmdbTvId = TmdbTvId,
-                ImdbId = ImdbId,
-                SeasonCount = SeasonCount
-            };
-            return newTVShow;
-        }
-
-        public UpdateTelevisionShowDto ToUpdateTelevisionShow()
-        {
-            var updatedTelevisionShow = new UpdateTelevisionShowDto()
-            {
-                Id = Id,
-                Title = Title,
-                Description = Description,
-                MediaType = MediaType,
-                LibraryId = LibraryId,
-                ThumbnailPath = ThumbnailPath,
-                CreatedBy = CreatedBy,
-                Studio = Studio,
-                Genre = Genre,
-                Rating = Rating,
-                Status = Status,
-                TmdbTvId = TmdbTvId,
-                ImdbId = ImdbId,
-                SeasonCount = SeasonCount
-            };
-            return updatedTelevisionShow;
-        }
-    }
-
-    public class CreateTelevisionShowDto :CreateMediaItemDto
-    {
-        public string CreatedBy { get; set; }
-        public string Studio { get; set; }
-        public string Genre { get; set; }
-        public decimal Rating { get; set; }
-        public string? Status { get; set; }
-        public int? TmdbTvId { get; set; }
-        public string? ImdbId { get; set; }
-        public int SeasonCount { get; set; }
-    }
-
-    public class UpdateTelevisionShowDto : UpdateMediaItemDto
-    {
-        public string? CreatedBy { get; set; }
-        public string Studio { get; set; }
-        public string Genre { get; set; }
-        public decimal Rating { get; set; }
-        public string? Status { get; set; }
-        public int? TmdbTvId { get; set; }
-        public string? ImdbId { get; set; }
-        public int SeasonCount { get; set; }
+        public List<TelevisionEpisodeDto>? Episodes { get; set; }
 
         public CreateTelevisionShowDto ToCreateTelevisionShow()
         {
             var newShow = new CreateTelevisionShowDto()
             {
-                Title = Title,
+                Name = Name,
                 Description = Description,
-                MediaType = MediaType,
-                LibraryId = LibraryId,
-                ThumbnailPath = ThumbnailPath,
+                //CollectionMediaType = CollectionMediaType,
                 CreatedBy = CreatedBy,
                 Studio = Studio,
                 Genre = Genre,
@@ -115,49 +34,13 @@ namespace Medias.Shared.DTOs
                 TmdbTvId = TmdbTvId,
                 ImdbId = ImdbId,
                 SeasonCount = SeasonCount
-
             };
             return newShow;
         }
 
-        public UpdateTelevisionShowDto LoadFromCreate(CreateTelevisionShowDto createTelevisionShow, UpdateTelevisionShowDto existingTelevisionShow)
+        public TelevisionShowDto LoadFromCollectionDto(CollectionDto collectionDto)
         {
-            existingTelevisionShow.Title = createTelevisionShow.Title;
-            existingTelevisionShow.Description = createTelevisionShow.Description;
-            existingTelevisionShow.MediaType = createTelevisionShow.MediaType;
-            existingTelevisionShow.LibraryId = createTelevisionShow.LibraryId;
-            existingTelevisionShow.ThumbnailPath = createTelevisionShow.ThumbnailPath;
-            existingTelevisionShow.CreatedBy = createTelevisionShow.CreatedBy;
-            existingTelevisionShow.Studio = createTelevisionShow.Studio;
-            existingTelevisionShow.Genre = createTelevisionShow.Genre;
-            existingTelevisionShow.Rating = createTelevisionShow.Rating;
-            existingTelevisionShow.Status = createTelevisionShow.Status;
-            existingTelevisionShow.TmdbTvId = createTelevisionShow.TmdbTvId;
-            existingTelevisionShow.ImdbId = createTelevisionShow.ImdbId;
-            existingTelevisionShow.SeasonCount = createTelevisionShow.SeasonCount;
-            return existingTelevisionShow;
-        }
-
-    }
-
-
-    //Revamped TelevisionShowDto inheriting from CollectionDto instead of MediaItemDto
-    public class TelevisionShowDto2 : CollectionDto
-    {
-        public string CreatedBy { get; set; }
-        public string Studio { get; set; }
-        public string Genre { get; set; }
-        public decimal Rating { get; set; }
-        public string? Status { get; set; }
-        public int? TmdbTvId { get; set; }
-        public string? ImdbId { get; set; }
-        public int SeasonCount { get; set; }
-        public List<TelevisionSeasonDto>? Seasons { get; set; }
-        public List<TelevisionEpisodeDto>? Episodes { get; set; }
-
-        public TelevisionShowDto2 LoadFromCollectionDto(CollectionDto collectionDto)
-        {
-            return new TelevisionShowDto2()
+            return new TelevisionShowDto()
             {
                 CollectionId = collectionDto.CollectionId,
                 Name = collectionDto.Name,
@@ -170,5 +53,110 @@ namespace Medias.Shared.DTOs
         }
     }
 
+    public class CreateTelevisionShowDto : CreateCollectionDto
+    {
+        public string CreatedBy { get; set; }
+        public string Studio { get; set; }
+        public string Genre { get; set; }
+        public decimal Rating { get; set; }
+        public string? Status { get; set; }
+        public int? TmdbTvId { get; set; }
+        public string? ImdbId { get; set; }
+        public int SeasonCount { get; set; }
+        public List<CreateTelevisionSeasonDto>? Seasons { get; set; }
+        public List<CreateTelevisionEpisodeDto>? Episodes { get; set; }
+    }
 
+    public class UpdateTelevisionShowDto : UpdateCollectionDto
+    {
+        public string? CreatedBy { get; set; }
+        public string Studio { get; set; }
+        public string Genre { get; set; }
+        public decimal Rating { get; set; }
+        public string? Status { get; set; }
+        public int? TmdbTvId { get; set; }
+        public string? ImdbId { get; set; }
+        public int SeasonCount { get; set; }
+        public List<UpdateTelevisionSeasonDto>? Seasons { get; set; }
+        public List<UpdateTelevisionEpisodeDto>? Episodes { get; set; }
+
+        public CreateTelevisionShowDto ToCreateTelevisionShow()
+        {
+            var newShow = new CreateTelevisionShowDto()
+            {
+                Name = Name,
+                Description = Description,
+                CreatedBy = CreatedBy,
+                Studio = Studio,
+                Genre = Genre,
+                Rating = Rating,
+                Status = Status,
+                TmdbTvId = TmdbTvId,
+                ImdbId = ImdbId,
+                SeasonCount = SeasonCount
+            };
+
+            if(Seasons != null)
+            {
+               newShow.Seasons = new List<CreateTelevisionSeasonDto>();
+                foreach (var season in Seasons)
+                {
+                    var newSeason = season.ToCreateTelevisionSeason();
+                    newShow.Seasons.Add(newSeason);
+                }
+            }
+
+            if(Episodes != null)
+            {
+                newShow.Episodes = new List<CreateTelevisionEpisodeDto>();
+                foreach (var episode in Episodes)
+                {
+                    var newEpisode = episode.ToCreateTelevisionEpisode();
+                    newShow.Episodes.Add(newEpisode);
+                }
+            }
+            return newShow;
+        }
+
+        public UpdateTelevisionShowDto ToUpdateTelevisionShow()
+        {
+            var updatedTelevisionShow = new UpdateTelevisionShowDto()
+            {
+                CollectionId = CollectionId,
+                CreatedBy = CreatedBy,
+                Studio = Studio,
+                Genre = Genre,
+                Rating = Rating,
+                Status = Status,
+                TmdbTvId = TmdbTvId,
+                ImdbId = ImdbId,
+                SeasonCount = SeasonCount
+            };
+            return updatedTelevisionShow;
+        }
+
+        public UpdateTelevisionShowDto LoadFromCreate(CreateTelevisionShowDto createShow, UpdateTelevisionShowDto existingShow)
+        {
+            return new UpdateTelevisionShowDto()
+            {
+                CollectionId = existingShow.CollectionId,
+                Name = createShow.Name,
+                Description = createShow.Description,
+                CreatedBy = createShow.CreatedBy,
+                Studio = createShow.Studio,
+                Genre = createShow.Genre,
+                Rating = createShow.Rating,
+                Status = createShow.Status,
+                TmdbTvId = createShow.TmdbTvId,
+                ImdbId = createShow.ImdbId,
+                SeasonCount = createShow.SeasonCount
+            };
+        }
+    }
+    public class ImportTelevisionShowResultsDto
+    {
+        public UpdateTelevisionShowDto TMDbShow{ get; set; }
+        public UpdateTelevisionShowDto? UpdateTelevisionShow { get; set; }
+        public bool ExistsInLibrary { get; set; }
+    }
 }

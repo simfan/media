@@ -8,7 +8,7 @@ namespace Medias.Data.Entities
     public class TelevisionShowDetail
     {
         public int MediaItemId { get; set; }
-        public int? CollectionId { get; set; }
+        public int CollectionId { get; set; }
         public string CreatedBy { get; set; }
         public string Studio { get; set; }
         public string Genre { get; set; }
@@ -18,6 +18,7 @@ namespace Medias.Data.Entities
         public string? ImdbId { get; set; }
         public int SeasonCount { get; set; }
         public List<TelevisionSeason>? Seasons { get; set; }
+        public List<TelevisionEpisode>? Episodes { get; set; }
         public MediaItem MediaItem { get; set; }
         public Collection Collection { get; set; }
     }

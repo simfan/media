@@ -15,8 +15,9 @@ namespace Medias.Data.Configurations
             builder.ToTable("TelevisionShowDetails");
 
             //Primary Key
-            builder.HasKey(tv => tv.MediaItemId);
-
+            //builder.HasKey(tv => tv.MediaItemId);
+            //builder.HasIndex(tv => tv.CollectionId).IsUnique();
+            builder.HasKey(tv => tv.CollectionId);
             //Properties
             builder.Property(tv => tv.CreatedBy)
                 .HasMaxLength(200)
@@ -55,8 +56,11 @@ namespace Medias.Data.Configurations
             //Relationships
 
             builder.HasOne(tv => tv.Collection)
-                .WithMany()
-                .HasForeignKey(tv => tv.CollectionId);
+                .WithOne(c => c.TelevisionShowDetail)
+                .HasForeignKey<TelevisionShowDetail>(tv => tv.CollectionId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            builder.Ignore(tv => tv.MediaItem);
         }
     }
 }

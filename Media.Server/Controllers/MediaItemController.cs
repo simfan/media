@@ -52,6 +52,23 @@ namespace Medias.Server.Controllers
             return movieDtos;
         }
 
+        [HttpGet("books")]
+        public async Task<ActionResult<IEnumerable<BookDto>>> GetBooks()
+        {
+            var books = await _context.MediaItems
+                .Include(mi => mi.MediaFiles)
+                .Include(mi => mi.BookDetail)
+                .Where(mi => mi.MediaType == MediaTypeValue.Book)
+                .ToListAsync();
+            var bookDtos = new List<BookDto>();
+            foreach (var book in books)
+            {
+                var bookDto = BookConversions.ToBookDto(book.BookDetail);
+                bookDtos.Add(bookDto);
+            }
+            return bookDtos;
+        }
+
         [HttpGet("{id}")]
         public async Task<ActionResult<MediaItemDtoFull>> GetMediaItemFull(int id)
         {
@@ -129,18 +146,16 @@ namespace Medias.Server.Controllers
         }
 
         [HttpGet("/tv/{id}")]
-        public async Task<ActionResult<TelevisionShowDto>> GetTV(int id) {
+        public async Task<ActionResult<TelevisionEpisodeDto>> GetTV(int id) {
             var tv = await _context.MediaItems
                    .Include(mi => mi.MediaFiles)
-                   .Include(mi => mi.TelevisionShowDetail)
-                        .ThenInclude(tv => tv.Seasons)
-                        .ThenInclude(ts => ts.Episodes)
+                   .Include(mi => mi.TelevisionEpisode)
                    .FirstOrDefaultAsync(mi => mi.Id == id && mi.MediaType == MediaTypeValue.TV);
             if(tv == null)
             {  
                 return NotFound(); 
             }
-            return TelevisionConversions.ToTelevisionShowDto(tv);
+            return TelevisionConversions.ToTelevisionEpisodeDto(tv);
         }
 
         [HttpGet("/music/{id}")]
@@ -190,7 +205,26 @@ namespace Medias.Server.Controllers
         }
 
         [HttpPost("tv")]
-        public async Task<ActionResult<TelevisionSeasonDto>> CreateTVShow(CreateTelevisionShowDto createDto)
+        public async Task<ActionResult<TelevisionEpisodeDto>> CreateTVEpisode(CreateTelevisionEpisodeDto createDto)
+        {
+            var mediaItem = createDto.CreateDtoToMediaItem();
+            _context.MediaItems.Add(mediaItem);
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.InnerException.ToString());
+                throw;
+            }
+            var episodeDetails = createDto.CreateDtoToTelevisionEpisode(mediaItem.Id);
+            _context.TelevisionEpisodes.Add(episodeDetails);
+            await _context.SaveChangesAsync();
+            mediaItem.TelevisionEpisode = episodeDetails;
+            return CreatedAtAction(nameof(GetTV), new { id = mediaItem.Id }, TelevisionConversions.ToTelevisionEpisodeDto(mediaItem));
+        }
+        /*public async Task<ActionResult<TelevisionSeasonDto>> CreateTVShow(CreateTelevisionShowDto createDto)
         {
             var mediaItem = createDto.CreateDtoToMediaItem();
             _context.MediaItems.Add(mediaItem);
@@ -209,7 +243,12 @@ namespace Medias.Server.Controllers
             mediaItem.TelevisionShowDetail = showDetails;
 
             return CreatedAtAction(nameof(GetTV), new { id = mediaItem.Id }, TelevisionConversions.ToTelevisionShowDto(mediaItem));
-        }
+        }*/
+        /*public async Task<ActionResult<TelevisionEpisodeDto>> CreateTVEpisode(CreateTelevisionEpisodeDto createDto)
+        {
+            var mediaItem = createDto.CreateDtoToMediaItem();
+            return CreatedAtActionResult(nameof(GetTVEpisode), new { id = mediaItem.Id }, TelevisionConversions.ToTelevisionEpisodeDto(mediaItem));
+        }*/
 
         [HttpPost("music")]
         public async Task<ActionResult<MusicDto>> CreateMusic(CreateMusicDto createDto)

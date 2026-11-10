@@ -1,4 +1,5 @@
-﻿using Medias.Server.Services;
+﻿using Medias.Integrations.MusicBrainz;
+using Medias.Server.Services;
 using Medias.Server.DTOs;
 using Medias.Server.Services.Interfaces;
 using Medias.Shared.DTOs;
@@ -17,19 +18,25 @@ namespace Medias.Server.Controllers
             _musicBrainzService = musicBrainzService;
             _mediaItemService = mediaItemService;
         }
-        [HttpGet("search/albums")]
-        public async Task<ActionResult<MusicBrainzReleaseGroupSearchResult>> SearchAlbums(string title)
+        [HttpGet("albums/search")]
+        //public async Task<ActionResult<MusicBrainzReleaseGroupSearchResult>> SearchAlbums(string title)
+        public async Task<ActionResult<IEnumerable<SearchResultDto>>> SearchAlbums(string title)
         {
             var results = await _musicBrainzService.SearchAlbumsAsync(title);
             return Ok(results);
         }
 
-        [HttpGet("search/songs")]
-        public async Task<ActionResult<MusicBrainzRecordingSearchResult>> SearchSongs(string title)
+        [HttpGet("songs/search")]
+        public async Task<ActionResult<IEnumerable<SearchResultDto>>> SearchSongs(string title)
         {
             var results = await _musicBrainzService.SearchSongsAsync(title);
             return Ok(results);
         }
+        /*public async Task<ActionResult<MusicBrainzRecordingSearchResult>> SearchSongs(string title)
+        {
+            var results = await _musicBrainzService.SearchSongsAsync(title);
+            return Ok(results);
+        }*/
 
         [HttpGet("album/{id}")]
         public async Task<ActionResult<MusicBrainzReleaseGroupSearchResult>> GetAlbumById(string id)

@@ -19,9 +19,10 @@ namespace Medias.Data.Entities
         public List<MediaFile>? MediaFiles { get; set; } 
         public Library? Library { get; set; }
         public MovieDetail? MovieDetail { get; set; }
-        public TelevisionShowDetail? TelevisionShowDetail { get; set; }
-        //public TelevisionEpisode? TelevisionEpisodeDetail { get; set; }
+        //public TelevisionShowDetail? TelevisionShowDetail { get; set; }
+        public TelevisionEpisode? TelevisionEpisode{ get; set; }
         public MusicDetail? MusicDetail { get; set; }
+        public BookDetail? BookDetail { get; set; }
         public List<MediaItemCollection> MediaItemCollections { get; set; } = new();
     }
 }

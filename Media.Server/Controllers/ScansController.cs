@@ -1,3 +1,4 @@
+using Medias.Integrations.TMDb;
 using Medias.Server.Services.Interfaces;
 using Medias.Shared.DTOs;
 using Microsoft.AspNetCore.Mvc;
@@ -23,23 +24,22 @@ public sealed class ScansController(
         }
 
         var tmdbResults = await tmdbService.SearchMoviesAsync(title);
-        var results = tmdbResults?.Results
-            .Select(movie => new TMDbMovieSearchRecord
+        /*var results = tmdbResults?.Select(movie => new TMDbMovieSearchResponse
             {
-                ID = movie.ID,
+                ID = movie.ImportId
                 Title = movie.Title,
-                Overview = movie.Overview,
-                Release_Date = movie.Release_Date,
-                Poster_Path = movie.Poster_Path
+                Overview = movie.Description,
+                Release_Date = movie.ReleaseDate,
+                Poster_Path = movie.PosterPath
             })
             .ToList()
-            ?? [];
+            ?? [];*/
 
         return Ok(new MovieBarcodeLookupDto
         {
             Barcode = barcode,
             SearchTitle = title,
-            Results = results
+            Results = tmdbResults.ToList()
         });
     }
 }

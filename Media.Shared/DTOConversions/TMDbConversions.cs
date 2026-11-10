@@ -9,7 +9,7 @@ namespace Medias.Shared.DTOConversions
 {
     public static class TMDbConversions 
     {
-        public static UpdateMovieDto ToUpdateMovieDto(this TMDbMovieSearchRecord movieDto)
+        /*public static UpdateMovieDto ToUpdateMovieDto(this TMDbMovieSearchRecord movieDto)
         {
             return new UpdateMovieDto
             {
@@ -20,6 +20,6 @@ namespace Medias.Shared.DTOConversions
                 ReleaseDate = Helpers.Helpers.ToDateTime((string) movieDto.Release_Date),
                 TmdbMovieId = movieDto.ID
             };
-        }
+        }*/
     }
 }

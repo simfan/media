@@ -32,6 +32,14 @@ namespace Medias.Shared.DTOs
         public string Name { get; set; }
         public string? Description { get; set; }
         public DateTime CreatedDate { get; set; }
+
+        public UpdateCollectionDto LoadFromCreate(CreateCollectionDto createCollection, UpdateCollectionDto existingCollection)
+        {
+            existingCollection.Name = createCollection.Name;
+            existingCollection.Description = createCollection.Description;
+            return existingCollection;
+        }
+        
     }
 
 }

@@ -79,6 +79,28 @@ namespace Medias.Data.Conversions
             return dto;
 
         }
-        
+
+ 
+        public static TelevisionSeasonDto ToTelevisionSeasonDto(this TelevisionSeason entity)
+        {
+            var televisionSeason = new TelevisionSeasonDto();
+            televisionSeason.SeasonId = entity.SeasonId;
+            televisionSeason.TelevisionShowId = entity.MediaItemId;
+            televisionSeason.SeasonNumber = entity.SeasonNumber;
+            televisionSeason.Name = entity.Name;
+            televisionSeason.Description = entity.Description;
+            televisionSeason.EpisodeCount = entity.EpisodeCount;
+            televisionSeason.Episodes?.Clear();
+            televisionSeason.Episodes = new List<TelevisionEpisodeDto>();
+            if (entity.Episodes != null && entity.Episodes.Count > 0)
+            {
+                foreach (var episode in entity.Episodes)
+                {
+                    var episodeDto = episode.ToTelevisionEpisodeDto();
+                    televisionSeason.Episodes.Add(episodeDto);
+                }
+            }
+            return televisionSeason;
+        }
     }
 }

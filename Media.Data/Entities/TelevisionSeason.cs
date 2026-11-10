@@ -10,13 +10,15 @@ namespace Medias.Data.Entities
         public int SeasonId { get; set; }
         public int MediaItemId { get; set; }
         public int? CollectionId { get; set; }
+        public int? TelevisionShowCollectionId { get; set; }
         public int SeasonNumber { get; set; }
         public string? Name { get; set; }
         public string? Description { get; set; }
         public int EpisodeCount { get; set; }
         public TelevisionShowDetail TelevisionShowDetail { get; set; }
         public List<TelevisionEpisode>? Episodes { get; set; }
-       
+        public Collection Collection { get; set; }
+
 
     }
 }

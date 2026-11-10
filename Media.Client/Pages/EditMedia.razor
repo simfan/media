@@ -36,11 +36,11 @@
                         <EditBook MediaItemId="MediaId" MediaItem="updateMediaItem"/>
                         break;*@
                     case MediaTypeValue.Movie:
-                        <EditMovie MediaItemId="MediaId" Movie="updateMovie"/>
+                        <EditMovie  MediaItemId="MediaId" Movie="updateMovie"/>
                                 
                         break;
                     case MediaTypeValue.TV:
-                        <EditTV MediaItemId="MediaId" Show="updateTvShow" />
+                        <EditEpisode MediaItemId="MediaId" Episode="updateTvEpisode" />
                         break;
                     case MediaTypeValue.Music:
                     <EditMusic MediaItemId="MediaId" Music="updateMusic" />
@@ -61,9 +61,11 @@
     private MediaItemDtoFull mediaItemFull = new MediaItemDtoFull();
     private MovieDto? movieItem = new MovieDto();
     private TelevisionShowDto tvShow = new TelevisionShowDto();
+    private TelevisionEpisodeDto tvEpisode = new TelevisionEpisodeDto();
     private UpdateMediaItemDto updateMediaItem = new UpdateMediaItemDto();
     private UpdateMovieDto updateMovie = new UpdateMovieDto();
     private UpdateTelevisionShowDto updateTvShow = new UpdateTelevisionShowDto();
+    private UpdateTelevisionEpisodeDto updateTvEpisode = new UpdateTelevisionEpisodeDto();
     private UpdateMusicDto updateMusic = new UpdateMusicDto();
     private MediaTypeValue selectedMediaType;
     protected override async Task OnInitializedAsync()
@@ -81,8 +83,10 @@
                     updateMovie = movieItem.ToUpdateMovie();
                     break;
                 case MediaTypeValue.TV:
-                    tvShow = mediaItemFull?.ToTelevisionShowDto(mediaItemFull);
-                    updateTvShow = tvShow.ToUpdateTelevisionShow();
+                    //tvShow = mediaItemFull?.ToTelevisionShowDto(mediaItemFull);
+                    tvEpisode = mediaItemFull?.ToTelevisionEpisodeDto();
+                    updateTvEpisode = tvEpisode.ToUpdateTelevisionEpisode();
+                    //updateTvShow = tvShow.ToUpdateTelevisionShow();
                     break;
                 default:
                     mediaItem = mediaItemFull.ToMediaItemDto();
@@ -136,8 +140,9 @@
                     break;
                 case MediaTypeValue.TV:
                     /*updateMediaItem = mediaItem?.ToUpdateTV();*/
-                    tvShow = Helpers.MediaItemConverter<TelevisionShowDto>(currentItem);
-                    updateTvShow = tvShow.ToUpdateTelevisionShow();
+                    tvEpisode = Helpers.MediaItemConverter<TelevisionEpisodeDto>(currentItem);
+                    updateTvEpisode = tvEpisode.ToUpdateTelevisionEpisode();
+                    //updateTvShow = tvShow.ToUpdateTelevisionShow();
                     break;
                 default:
                         updateMediaItem = mediaItem?.ToUpdateMediaItem();

@@ -4,19 +4,20 @@
     <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <UserSecretsId>e2751351-f260-4996-92c2-45d65764ef8a</UserSecretsId>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="TMDb\TMDbClient.cs" />
+  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Media.Shared\Medias.Shared.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="MusicBrainz\" />
-    <Folder Include="TMDb\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="10.0.12" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="6.0.1" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.12" />
     <PackageReference Include="Microsoft.Extensions.Http" Version="10.0.12" />
     <PackageReference Include="Microsoft.Extensions.Options" Version="10.0.12" />

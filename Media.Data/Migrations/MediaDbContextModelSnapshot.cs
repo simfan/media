@@ -135,6 +135,53 @@ namespace Medias.Data.Migrations
                     b.ToTable("BarcodeProducts", (string)null);
                 });
 
+            modelBuilder.Entity("Medias.Data.Entities.BookDetail", b =>
+                {
+                    b.Property<int>("MediaItemId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Author")
+                        .HasMaxLength(200)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("BookFormat")
+                        .HasMaxLength(50)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Edition")
+                        .HasMaxLength(100)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Genre")
+                        .HasMaxLength(100)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ISBN")
+                        .HasMaxLength(20)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("OpenLibraryId")
+                        .HasMaxLength(50)
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("Pages")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int?>("TimeToRead")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("MediaItemId");
+
+                    b.HasIndex("Author");
+
+                    b.HasIndex("ISBN")
+                        .IsUnique();
+
+                    b.HasIndex("OpenLibraryId");
+
+                    b.ToTable("Books", (string)null);
+                });
+
             modelBuilder.Entity("Medias.Data.Entities.Collection", b =>
                 {
                     b.Property<int>("CollectionId")
@@ -428,7 +475,6 @@ namespace Medias.Data.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Director")
-                        .IsRequired()
                         .HasMaxLength(200)
                         .HasColumnType("TEXT");
 
@@ -442,7 +488,7 @@ namespace Medias.Data.Migrations
                         .HasPrecision(3, 1)
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("Runtime")
+                    b.Property<int?>("Runtime")
                         .HasColumnType("INTEGER");
 
                     b.Property<int>("SeasonId")
@@ -461,9 +507,12 @@ namespace Medias.Data.Migrations
 
                     b.HasKey("EpisodeId");
 
-                    b.HasIndex("MediaItemId");
+                    b.HasIndex("MediaItemId")
+                        .IsUnique();
 
                     b.HasIndex("SeasonId");
+
+                    b.HasIndex("TelevisionShowId");
 
                     b.HasIndex("SeasonId", "EpisodeNumber")
                         .IsUnique();
@@ -497,13 +546,15 @@ namespace Medias.Data.Migrations
                     b.Property<int>("SeasonNumber")
                         .HasColumnType("INTEGER");
 
+                    b.Property<int?>("TelevisionShowCollectionId")
+                        .HasColumnType("INTEGER");
+
                     b.HasKey("SeasonId");
 
-                    b.HasIndex("CollectionId");
+                    b.HasIndex("CollectionId")
+                        .IsUnique();
 
-                    b.HasIndex("MediaItemId");
-
-                    b.HasIndex("CollectionId", "SeasonNumber")
+                    b.HasIndex("TelevisionShowCollectionId", "SeasonNumber")
                         .IsUnique();
 
                     b.ToTable("TelevisionSeasons", (string)null);
@@ -511,10 +562,7 @@ namespace Medias.Data.Migrations
 
             modelBuilder.Entity("Medias.Data.Entities.TelevisionShowDetail", b =>
                 {
-                    b.Property<int>("MediaItemId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int?>("CollectionId")
+                    b.Property<int>("CollectionId")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("CreatedBy")
@@ -530,6 +578,9 @@ namespace Medias.Data.Migrations
                     b.Property<string>("ImdbId")
                         .HasMaxLength(20)
                         .HasColumnType("TEXT");
+
+                    b.Property<int>("MediaItemId")
+                        .HasColumnType("INTEGER");
 
                     b.Property<decimal>("Rating")
                         .HasPrecision(3, 1)
@@ -550,9 +601,7 @@ namespace Medias.Data.Migrations
                     b.Property<int?>("TmdbTvId")
                         .HasColumnType("INTEGER");
 
-                    b.HasKey("MediaItemId");
-
-                    b.HasIndex("CollectionId");
+                    b.HasKey("CollectionId");
 
                     b.HasIndex("CreatedBy");
 
@@ -593,6 +642,17 @@ namespace Medias.Data.Migrations
                     b.Navigation("Album");
 
                     b.Navigation("MusicDetail");
+                });
+
+            modelBuilder.Entity("Medias.Data.Entities.BookDetail", b =>
+                {
+                    b.HasOne("Medias.Data.Entities.MediaItem", "MediaItem")
+                        .WithOne("BookDetail")
+                        .HasForeignKey("Medias.Data.Entities.BookDetail", "MediaItemId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("MediaItem");
                 });
 
             modelBuilder.Entity("Medias.Data.Entities.MediaFile", b =>
@@ -660,8 +720,8 @@ namespace Medias.Data.Migrations
             modelBuilder.Entity("Medias.Data.Entities.TelevisionEpisode", b =>
                 {
                     b.HasOne("Medias.Data.Entities.MediaItem", "MediaItem")
-                        .WithMany()
-                        .HasForeignKey("MediaItemId")
+                        .WithOne("TelevisionEpisode")
+                        .HasForeignKey("Medias.Data.Entities.TelevisionEpisode", "MediaItemId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -671,18 +731,32 @@ namespace Medias.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Medias.Data.Entities.TelevisionShowDetail", "TelevisionShowDetail")
+                        .WithMany("Episodes")
+                        .HasForeignKey("TelevisionShowId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
                     b.Navigation("MediaItem");
 
                     b.Navigation("TelevisionSeason");
+
+                    b.Navigation("TelevisionShowDetail");
                 });
 
             modelBuilder.Entity("Medias.Data.Entities.TelevisionSeason", b =>
                 {
+                    b.HasOne("Medias.Data.Entities.Collection", "Collection")
+                        .WithOne("TelevisionSeason")
+                        .HasForeignKey("Medias.Data.Entities.TelevisionSeason", "CollectionId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
                     b.HasOne("Medias.Data.Entities.TelevisionShowDetail", "TelevisionShowDetail")
                         .WithMany("Seasons")
-                        .HasForeignKey("MediaItemId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("TelevisionShowCollectionId")
+                        .OnDelete(DeleteBehavior.NoAction);
+
+                    b.Navigation("Collection");
 
                     b.Navigation("TelevisionShowDetail");
                 });
@@ -690,18 +764,12 @@ namespace Medias.Data.Migrations
             modelBuilder.Entity("Medias.Data.Entities.TelevisionShowDetail", b =>
                 {
                     b.HasOne("Medias.Data.Entities.Collection", "Collection")
-                        .WithMany()
-                        .HasForeignKey("CollectionId");
-
-                    b.HasOne("Medias.Data.Entities.MediaItem", "MediaItem")
                         .WithOne("TelevisionShowDetail")
-                        .HasForeignKey("Medias.Data.Entities.TelevisionShowDetail", "MediaItemId")
+                        .HasForeignKey("Medias.Data.Entities.TelevisionShowDetail", "CollectionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Collection");
-
-                    b.Navigation("MediaItem");
                 });
 
             modelBuilder.Entity("Medias.Data.Entities.Album", b =>
@@ -714,6 +782,10 @@ namespace Medias.Data.Migrations
                     b.Navigation("Album");
 
                     b.Navigation("MediaItemCollections");
+
+                    b.Navigation("TelevisionSeason");
+
+                    b.Navigation("TelevisionShowDetail");
                 });
 
             modelBuilder.Entity("Medias.Data.Entities.Library", b =>
@@ -723,6 +795,8 @@ namespace Medias.Data.Migrations
 
             modelBuilder.Entity("Medias.Data.Entities.MediaItem", b =>
                 {
+                    b.Navigation("BookDetail");
+
                     b.Navigation("MediaFiles");
 
                     b.Navigation("MediaItemCollections");
@@ -731,7 +805,7 @@ namespace Medias.Data.Migrations
 
                     b.Navigation("MusicDetail");
 
-                    b.Navigation("TelevisionShowDetail");
+                    b.Navigation("TelevisionEpisode");
                 });
 
             modelBuilder.Entity("Medias.Data.Entities.MusicDetail", b =>
@@ -746,6 +820,8 @@ namespace Medias.Data.Migrations
 
             modelBuilder.Entity("Medias.Data.Entities.TelevisionShowDetail", b =>
                 {
+                    b.Navigation("Episodes");
+
                     b.Navigation("Seasons");
                 });
 #pragma warning restore 612, 618

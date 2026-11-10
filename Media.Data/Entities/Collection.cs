@@ -15,5 +15,7 @@ namespace Medias.Data.Entities
         //public  CollectionTypeValue? CollectionType { get; set; }
         public List<MediaItemCollection> MediaItemCollections { get; set; }
         public Album? Album { get; set; }
+        public TelevisionShowDetail? TelevisionShowDetail { get; set; }
+        public TelevisionSeason? TelevisionSeason { get; set; }
     }
 }

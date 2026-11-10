@@ -1,0 +1,24 @@
+/* CSS for Media component */
+.album-thumbnail {
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+}
+
+.movie-thumbnail {
+    width: 150px;
+    height: 225px;
+    object-fit: cover;
+}
+
+.tv-thumbnail {
+    width: 150px;
+    height: 225px;
+    object-fit: cover;
+}
+
+.book-thumbnail {
+    width: 120px;
+    height: 180px;
+    object-fit: cover;
+}

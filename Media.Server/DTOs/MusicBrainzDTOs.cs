@@ -2,7 +2,7 @@
 
 namespace Medias.Server.DTOs
 {
-    public class MusicBrainzDTOs
+    /*public class MusicBrainzDTOs
     {
     }
     public class MusicBrainzReleaseGroupResults

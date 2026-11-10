@@ -1,0 +1,289 @@
+﻿@using Microsoft.AspNetCore.Components;
+@using Medias.Shared.DTOs;
+@using Medias.Shared.Enums;
+@using Medias.Shared.Helpers;
+@using Blazor.Sonner;
+@using Blazor.Sonner.Services;
+@inject HttpClient Http;
+@inject ToastService Toast;
+@inject NavigationManager Nav;
+
+<BSForm  TValue="TelevisionShowDto" EditContext="EC" OnValidSubmit="ModifyMediaItem">
+    <div>
+        
+        @*<BSRow>
+            <BSCol>
+                <div class="@(BS.Form_Floating) mb-1">
+                    @*<BSInput InputType="InputType.Select" @bind-Value="NewMovie.MediaType">
+                        @foreach (var mediaType in Enum.GetValues<MediaTypeValue>())
+                        {
+                            <option value="@mediaType">
+                                @mediaType.GetDisplayName()
+                            </option>
+                        }
+                    </BSInput>
+                    <BSLabel IsFloating="true">"Media Type</BSLabel>"
+                </div>
+            </BSCol>
+        </BSRow>*@
+        <BSRow>
+            <BSCol>
+                <div class="@(@BS.Form_Floating) mb-1">
+                <BSInput InputType="InputType.Text" @bind-Value="NewEpisode.Title"/>
+                <BSLabel IsFloating="true">Title</BSLabel>
+                </div>
+            </BSCol>
+        </BSRow>
+        <BSRow>
+            <BSCol>
+                <div class="@(@BS.Form_Floating) mb-1">
+                    <BSInput InputType="InputType.Text" @bind-Value="NewEpisode.Description" />
+                    <BSLabel IsFloating="true">Description</BSLabel>
+                </div>
+            </BSCol>
+        </BSRow>
+        <BSRow>
+            <BSCol>
+                <div class="@(@BS.Form_Floating) mb-1">
+                    <BSInput InputType="InputType.Select" @bind-Value="NewEpisode.TelevisionShowId" @onchange="TVShowChanged">
+                        @*foreach (var mediaType in Enum.GetValues<MediaTypeValue>())
+                        {
+                            <option value="@mediaType">
+                                @mediaType.GetDisplayName()
+                            </option>
+                        }*@
+                        <option value="0" disabled>Select Show</option>
+                        @foreach (var show in shows)
+                        {
+                            <option value="@show.CollectionId">@show.Name</option>
+                        }
+                        <option value="-1" onclick ="Console.WriteLine('New Show selected')">New Show</option>
+                    </BSInput>
+                    <BSLabel IsFloating="true">Show</BSLabel>
+                </div>
+            </BSCol>
+            </BSRow>
+        @if (NewEpisode.TelevisionShowId > 0)
+        {
+            <BSRow>
+                <BSCol>
+                    <div class="@(@BS.Form_Floating) mb-1">
+                        <BSInput InputType="InputType.Select" @bind-Value="NewEpisode.SeasonId">
+                            <option value="0" disabled>Select Season</option>
+                            @foreach (var season in existingSeasons)
+                            {
+                                <option value="@season.CollectionId">@season.Name</option>
+                            }
+                            <option value="-1" ">New Season</option>
+                        </BSInput>
+                        <BSLabel IsFloating="true">Season Number</BSLabel>
+                    </div>
+                </BSCol>
+            </BSRow>
+            <BSRow>
+                <BSCol>
+                    <div class="@(@BS.Form_Floating) mb-1">
+                        <BSInput InputType="InputType.Text" @bind-Value="NewEpisode.EpisodeNumber" />
+                        <BSLabel IsFloating="true">Episode Number</BSLabel>
+                    </div>
+                </BSCol>
+            </BSRow>
+
+
+            @*<BSRow>
+            <BSCol>
+                <div class="@(@BS.Form_Floating) mb-1">
+                    <BSInput InputType="InputType.Text" @bind-Value="NewEpisode.CreatedBy" />
+                    <BSLabel IsFloating="true">Created By</BSLabel>
+                </div>
+            </BSCol>
+            <BSCol>
+                <div class="@(@BS.Form_Floating) mb-1">
+                    <BSInput InputType="InputType.Text" @bind-Value="NewEpisode.Studio" />
+                    <BSLabel IsFloating="true">Studio</BSLabel>
+                </div>
+            </BSCol>
+        </BSRow>*@
+
+            <BSRow>
+                @*<BSCol>
+                <div class="@(@BS.Form_Floating) mb-1">
+                    <BSInput InputType="InputType.Text" @bind-Value="NewEpisode.Genre" />
+                    <BSLabel IsFloating="true">Genre</BSLabel>
+                </div>
+            </BSCol>*@
+                <BSCol> </BSCol>
+                <BSCol>
+                    <div class="@(@BS.Form_Floating) mb-1">
+                        <BSInput InputType="InputType.Text" @bind-Value="NewEpisode.Rating" />
+                        <BSLabel IsFloating="true">Rating</BSLabel>
+                    </div>
+                </BSCol>
+            </BSRow>
+            <BSRow>
+                @*<BSCol>
+                <div class="@(@BS.Form_Floating) mb-1">
+                    <BSInput InputType="InputType.Text" @bind-Value="NewEpisode.SeasonCount" />
+                    <BSLabel IsFloating="true"># of Seasons</BSLabel>
+                </div>
+            </BSCol>*@
+            </BSRow>
+            <BSRow>
+                @*<BSCol>
+                <div class="@(@BS.Form_Floating) mb-1">
+                    <BSInput InputType="InputType.Text" @bind-Value="NewEpisode.ThumbnailPath" />
+                    <BSLabel IsFloating="true">Thumbnail</BSLabel>
+                </div>
+            </BSCol>*@
+            </BSRow>
+            @*<BSRow>
+            <BSCol>
+                <div class="@(@BS.Form_Floating) mb-1">
+                    <BSInput InputType="InputType.Text" @bind-Value="NewEpisode.TmdbTvId" />
+                    <BSLabel IsFloating="true">TMDb ID</BSLabel>
+                </div>
+            </BSCol>
+            <BSCol>
+                <div class="@(@BS.Form_Floating) mb-1">
+                    <BSInput InputType="InputType.Text" @bind-Value="NewEpisode.ImdbId" />
+                    <BSLabel IsFloating="true">IMDB ID</BSLabel>
+                </div>
+            </BSCol>
+        </BSRow>*@
+            <BSRow>
+                @*<BSCol>
+                <div class="@(@BS.Form_Floating) mb-1">
+                    <BSInput InputType="InputType.Text" @bind-Value="NewEpisode.LibraryId" />
+                    <BSLabel IsFloating="true">Library ID (Enter 0 if not assigned)</BSLabel>
+                </div>
+            </BSCol>*@
+            </BSRow>
+        }
+        <BSButton Color="BSColor.Primary" IsSubmit>Save</BSButton>
+    </div>
+</BSForm>
+
+<BSModal @ref="newShowModal" HeaderClass=" ">
+    <Header >Create New Show</Header>
+        <Content>
+            <EditTV CollectionId="0" Show="newTelevisionShow"/>
+        </Content>
+        <Footer></Footer>
+</BSModal>
+@*
+<BSModal @ref="newSeasonModal" HeaderClass="AddMediaHeader">
+
+</BSModal>*@
+<Blazor.Sonner.Toaster @rendermode="InteractiveServer" RichColors="@true"/>
+@code {
+    [Parameter]
+    public int MediaItemId { get; set; }
+    [Parameter]
+    /*public UpdateTelevisionShowDto? Show{ get; set; }
+    public CreateTelevisionShowDto NewShow = new();*/
+    public UpdateTelevisionEpisodeDto Episode{ get; set; }
+    public CreateTelevisionEpisodeDto NewEpisode { get; set; } = new();
+    private EditContext EC;
+    private int mediaTypeInt;
+    private List<TelevisionShowDto> shows = new List<TelevisionShowDto>();
+    private List<TelevisionSeasonDto> existingSeasons = new List<TelevisionSeasonDto>();
+
+    private UpdateTelevisionShowDto newTelevisionShow = new UpdateTelevisionShowDto();
+
+    private BSModal? newShowModal = new BSModal();
+    private BSModal? newSeasonModal = new BSModal();
+    protected async override Task OnParametersSetAsync()
+    {
+        EC = new EditContext(NewEpisode);
+        if (Episode != null)
+        {
+            NewEpisode = Episode.ToCreateTelevisionEpisode();
+        }
+        shows = await Http.GetFromJsonAsync<List<TelevisionShowDto>>("api/Collections/shows");
+    }
+
+    protected async Task ModifyMediaItem()
+    {
+        NewEpisode.MediaType = MediaTypeValue.TV;
+        if(MediaItemId != 0)
+        {
+            //NewEpisode.Lo
+            //Episode = NewEpisode.LoadFromCreate(NewEpisode, Episode);
+            //Show = Show?.LoadFromCreate(NewShow, Show);
+            await UpdateMediaItem();
+        }
+        else
+        {
+            await CreateMediaItem();
+        }
+    }
+
+    protected async Task CreateMediaItem()
+    {
+        Console.WriteLine($"TV Episode Details: {NewEpisode}");
+        var response = await Http.PostAsJsonAsync<CreateTelevisionEpisodeDto>("api/MediaItem/tv", NewEpisode);
+        if(response.IsSuccessStatusCode)
+        {
+            TelevisionEpisodeDto responseValue = await response.Content.ReadFromJsonAsync<TelevisionEpisodeDto>();
+            if(responseValue != null)
+            {
+                Console.WriteLine($"Created TV Episode: {responseValue.Title}");
+                Toast.Success($"Created TV Episode: {responseValue.Title}");
+            }
+        }
+        else
+        {
+            Toast.Error($"Could not create TV Episode: {response.ReasonPhrase}");
+        }
+    }
+
+    protected async Task UpdateMediaItem()
+    {
+        Toast.Show("Updating TV Episode...");
+        var response = await Http.PutAsJsonAsync($"api/MediaItem/{MediaItemId}/tv", Episode);        
+        if(response.IsSuccessStatusCode)
+        {
+            Console.WriteLine($"Updated TV Episode: {Episode.Title}");
+            Toast.Success($"Updated TV Episode:  {Episode.Title}");
+            await Task.Delay(5000);
+            Nav.NavigateTo($"media/{MediaItemId}");
+        }
+    }
+
+    private void TVShowChanged(ChangeEventArgs e)
+    {
+        var selectedShowId = Convert.ToInt32(e.Value);
+        if (selectedShowId == 0)
+        {
+
+        }
+        else
+        {
+            if (selectedShowId == -1)
+            {
+                // Handle the "New Show" option
+                Console.WriteLine("New Show selected");
+                DisplayShowModal();
+                // You can navigate to a new page or show a modal for creating a new show here
+            }
+            else
+            {
+                existingSeasons = Http.GetFromJsonAsync<List<TelevisionSeasonDto>>($"api/Collections/shows/{selectedShowId}/seasons").Result;
+                // Handle the selection of an existing show
+                // Console.WriteLine($"Selected Show ID: {selectedShowId}");
+                NewEpisode.TelevisionShowId = selectedShowId;
+            }
+        }
+    }
+
+    private async Task DisplayShowModal()
+    {
+        await newShowModal.ShowAsync();
+    }
+
+    private void ShowToast()
+    {
+        Toast.Show("This is a toast message!");
+    }
+
+}

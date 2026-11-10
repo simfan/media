@@ -1,10 +1,13 @@
 using Medias.Data.Contexts;
 using Medias.Integrations;
+using Medias.Integrations.MusicBrainz;
+using Medias.Integrations.OpenLibrary;
+using Medias.Integrations.TMDb;
 using Medias.Server.Repositories;
 using Medias.Server.Repositories.Interfaces;
 using Medias.Server.Services;
 using Medias.Server.Services.Interfaces;
-using Medias.Server.Settings;
+using Medias.Shared.Configurations;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -26,14 +29,19 @@ builder.Services.AddCors(options =>
               .AllowAnyMethod());
 });
 
-builder.Services.AddHttpClient<ITMDbService, TMDbService>();
-builder.Services.AddHttpClient<IMusicBrainzService, MusicBrainzService>();
+builder.Services.AddHttpClient<ITMDbClient, TMDbClient>();
+builder.Services.AddHttpClient<IMusicBrainzClient, MusicBrainzClient>();
+builder.Services.AddHttpClient<IOpenLibraryClient, OpenLibraryClient>();
 builder.Services.AddSingleton<IMovieBarcodeResolver, TemporaryMovieBarcodeResolver>();
 
 //Services
 builder.Services.AddScoped<IMediaIdentificationService, MediaIdentificationService>();
 builder.Services.AddScoped<IMediaItemService, MediaItemService>();
+builder.Services.AddScoped<IMusicBrainzService, MusicBrainzService>();
+
 builder.Services.AddScoped<ILibraryService, LibraryService>();
+builder.Services.AddScoped<IOpenLibraryService, OpenLibraryService>();
+builder.Services.AddScoped<ITMDbService, TMDbService>();
 
 //Repositories
 builder.Services.AddScoped<IBarcodeProductRepository, BarcodeProductRepository>();

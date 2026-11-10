@@ -1,6 +1,6 @@
 ﻿namespace Medias.Server.DTOs
 {
-    public class TMDbDTOs
+    /*public class TMDbDTOs
     {
     }
     public class TMDbMovieSearchResponse
@@ -43,5 +43,5 @@
         public string? Poster_Path { get; set; }
         public int Season_Number { get; set; }
         public int Episode_Count { get; set; }
-    }
+    }*/
 }

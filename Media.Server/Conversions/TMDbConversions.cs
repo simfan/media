@@ -1,4 +1,5 @@
-﻿using Medias.Server.DTOs;
+﻿using Medias.Integrations.TMDb;
+using Medias.Server.DTOs;
 using Medias.Shared.DTOs;
 using Medias.Shared.Enums;
 using System;
@@ -8,7 +9,7 @@ namespace Medias.Server.Conversions
 {
     public static class TMDbConversions
     {
-        public static UpdateMovieDto ToMovieDto(this Medias.Server.DTOs.TMDbMovieResult entity)
+        public static UpdateMovieDto ToMovieDto(this TMDbMovieResult entity)
         {
             //DateTime releaseDate = DateTime.ParseExact(entity.Release_Date,)
             return new UpdateMovieDto

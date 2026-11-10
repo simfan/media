@@ -1,6 +1,7 @@
 ﻿using Medias.Data.Conversions;
 using Medias.Data.Entities;
 using Medias.Server.Repositories;
+using Medias.Server.Repositories.Interfaces;
 using Medias.Shared.DTOs;
 
 namespace Medias.Server.Services

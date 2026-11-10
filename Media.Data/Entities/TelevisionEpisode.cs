@@ -13,12 +13,13 @@ namespace Medias.Data.Entities
         public int SeasonNumber { get; set; }
         public string Title { get; set; }
         public string? Description { get; set; }
-        public string Director { get; set; }
-        public int Runtime { get; set; }
+        public string? Director { get; set; }
+        public int? Runtime { get; set; }
         public int MediaItemId { get; set; }
         public MediaItem MediaItem { get; set; }
         public decimal? Rating { get; set; }
         public DateTime? AirDate { get; set; }
         public TelevisionSeason TelevisionSeason { get; set; }
+        public TelevisionShowDetail TelevisionShowDetail { get; set; }
     }
 }
